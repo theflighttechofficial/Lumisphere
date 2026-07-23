@@ -431,12 +431,13 @@ function SceneElements({ mouseRef }) {
         const elapsed = state.clock.elapsedTime;
         
         // --- 1. Compute lamp rotation & coordinates in sync with HTML ---
-        const targetRotDeg = isLoggedIn ? 4 : mouseRef.current.x * 4.8;
+        const isMobile = size.width < 1024;
+        const targetRotDeg = isLoggedIn ? (isMobile ? 0 : 4) : mouseRef.current.x * (isMobile ? 2.5 : 4.8);
         lampRotation.current = THREE.MathUtils.lerp(lampRotation.current, targetRotDeg * Math.PI / 180, 0.05);
 
-        const yOffset3D = (isLoggedIn ? -80 : 0) * (viewport.height / size.height);
-        const xOffset3D = isLoggedIn ? -0.32 * viewport.width : 0;
-        const scale3D = isLoggedIn ? 0.84 : 1;
+        const yOffset3D = (isLoggedIn ? (isMobile ? -60 : -80) : 0) * (viewport.height / size.height);
+        const xOffset3D = isLoggedIn ? (isMobile ? 0 : -0.32 * viewport.width) : 0;
+        const scale3D = isLoggedIn ? (isMobile ? 0.72 : 0.84) : (isMobile ? 0.85 : 1);
 
         const pivotX = xOffset3D;
         const pivotY = viewport.height / 2 + yOffset3D;
@@ -606,13 +607,23 @@ export default function SimulationCanvas() {
     const mouseRef = useRef(new THREE.Vector2(0, 0));
 
     useEffect(() => {
-        const handleMouseMove = (e) => {
-            const x = (e.clientX / window.innerWidth) * 2 - 1;
-            const y = -(e.clientY / window.innerHeight) * 2 + 1;
+        const handleMove = (e) => {
+            const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
+            const x = (clientX / window.innerWidth) * 2 - 1;
+            const y = -(clientY / window.innerHeight) * 2 + 1;
             mouseRef.current.set(x, y);
         };
-        window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
+
+        window.addEventListener("mousemove", handleMove);
+        window.addEventListener("touchstart", handleMove, { passive: true });
+        window.addEventListener("touchmove", handleMove, { passive: true });
+
+        return () => {
+            window.removeEventListener("mousemove", handleMove);
+            window.removeEventListener("touchstart", handleMove);
+            window.removeEventListener("touchmove", handleMove);
+        };
     }, []);
 
     return (

@@ -10,9 +10,11 @@ import PullChain from "./PullChain";
 import BulbGlow from "./BulbGlow";
 import { useLight } from "../../context/LightContext";
 import { AudioEngine } from "../../utils/AudioEngine";
+import useMobile from "../../hooks/useMobile";
 
 export default function Lamp() {
     const { isLightOn, toggleLight, isLoggedIn, lampIntensity } = useLight();
+    const isMobile = useMobile(1024);
 
     const firstRender = useRef(true);
     const [isFlickering, setIsFlickering] = useState(false);
@@ -51,24 +53,26 @@ export default function Lamp() {
     const ambientAngle = useMotionValue(0);
     
     // Base resting tilt angle (0 on login page, 3.5 deg on about page)
-    const baseAngle = useSpring(isLoggedIn ? 3.5 : 0, {
+    const baseAngle = useSpring(isLoggedIn ? (isMobile ? 0 : 3.5) : 0, {
         stiffness: 60,
         damping: 15,
     });
 
     useEffect(() => {
-        baseAngle.set(isLoggedIn ? 3.5 : 0);
-    }, [isLoggedIn, baseAngle]);
+        baseAngle.set(isLoggedIn ? (isMobile ? 0 : 3.5) : 0);
+    }, [isLoggedIn, isMobile, baseAngle]);
 
     const smoothX = useSpring(mouseX, {
         stiffness: 70,
         damping: 18,
     });
 
+    const windowW = typeof window !== "undefined" ? window.innerWidth : 1024;
+
     const mouseAngle = useTransform(
         smoothX,
-        [-window.innerWidth / 2, window.innerWidth / 2],
-        [-4.5, 4.5]
+        [-windowW / 2, windowW / 2],
+        isMobile ? [-2, 2] : [-4.5, 4.5]
     );
 
     // Continuous pendulum ambient swing loop
@@ -79,7 +83,7 @@ export default function Lamp() {
         const animateSwing = (currentTime) => {
             const elapsed = (currentTime - startTime) / 1000;
             // Smooth sine wave pendulum sway: amplitude 1.8 degrees, period ~2.8s
-            const currentAmbient = Math.sin(elapsed * 2.25) * 1.8;
+            const currentAmbient = Math.sin(elapsed * 2.25) * (isMobile ? 1.0 : 1.8);
             ambientAngle.set(currentAmbient);
             animationFrameId = requestAnimationFrame(animateSwing);
         };
@@ -87,7 +91,7 @@ export default function Lamp() {
         animationFrameId = requestAnimationFrame(animateSwing);
 
         return () => cancelAnimationFrame(animationFrameId);
-    }, [ambientAngle]);
+    }, [ambientAngle, isMobile]);
 
     // Combined total rotation for physical lamp assembly
     const totalRotate = useTransform(
@@ -96,17 +100,21 @@ export default function Lamp() {
     );
 
     useEffect(() => {
-        const handleMouseMove = (e) => {
-            mouseX.set(e.clientX - window.innerWidth / 2);
+        const handleMove = (e) => {
+            const clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+            const currentW = typeof window !== "undefined" ? window.innerWidth : 1024;
+            mouseX.set(clientX - currentW / 2);
         };
 
-        window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("mousemove", handleMove);
+        window.addEventListener("touchstart", handleMove, { passive: true });
+        window.addEventListener("touchmove", handleMove, { passive: true });
 
-        return () =>
-            window.removeEventListener(
-                "mousemove",
-                handleMouseMove
-            );
+        return () => {
+            window.removeEventListener("mousemove", handleMove);
+            window.removeEventListener("touchstart", handleMove);
+            window.removeEventListener("touchmove", handleMove);
+        };
     }, [mouseX]);
 
     return (
@@ -117,9 +125,9 @@ export default function Lamp() {
                 willChange: "transform",
             }}
             animate={{
-                y: isLoggedIn ? -80 : 0,
-                x: isLoggedIn ? "-42vw" : 0,
-                scale: isLoggedIn ? 0.84 : 1,
+                y: isLoggedIn ? (isMobile ? -60 : -80) : 0,
+                x: isLoggedIn ? (isMobile ? 0 : "-42vw") : 0,
+                scale: isLoggedIn ? (isMobile ? 0.72 : 0.84) : (isMobile ? 0.85 : 1),
             }}
             transition={{
                 y: { type: "spring", stiffness: 80, damping: 16 },
@@ -143,7 +151,7 @@ export default function Lamp() {
             >
             {/* ================= Cable ================= */}
 
-            <div className="relative h-44 w-[4px] bg-zinc-800 rounded-full shadow-md">
+            <div className="relative h-28 w-[4px] bg-zinc-800 rounded-full shadow-md">
                 {/* Braided Cord Highlight */}
                 <div
                     className="absolute inset-0 w-full h-full opacity-35 animate-[pulse_3s_ease-in-out_infinite]"
@@ -156,135 +164,139 @@ export default function Lamp() {
 
             {/* ================= Lamp ================= */}
 
-            <div className="relative">
+            <div className="relative flex flex-col items-center">
 
-                {/* Titanium Mounting Joint */}
+                {/* Top Mounting Collar */}
                 <motion.div
                     animate={{
-                        borderColor: isLightOn ? "rgba(255,255,255,0.15)" : "transparent"
+                        borderColor: isLightOn ? "rgba(251, 191, 36, 0.4)" : "rgba(120, 53, 15, 0.3)"
                     }}
-                    className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-4 bg-gradient-to-r from-zinc-700 via-zinc-500 to-zinc-800 rounded-t-md border-x border-t shadow-md z-15"
+                    className="relative w-8 h-4 bg-gradient-to-r from-amber-950 via-amber-800 to-amber-950 rounded-t-md border-x border-t border-amber-700/50 shadow-md z-20"
                 />
 
-                {/* Anodized Dark Titanium/Graphite Shroud Spotlight Case */}
-                <motion.div
-                    animate={{
-                        background: isLightOn
-                            ? "linear-gradient(to bottom, #2b2b2e, #1a1a1c, #0d0d0e)"
-                            : "linear-gradient(to bottom, #161618, #0e0e0f, #050506)",
-                        borderColor: isLightOn ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.03)",
-                    }}
-                    transition={{
-                        duration: 0.8,
-                    }}
-                    className="
-                        relative
-                        w-40
-                        h-22
-                        border
-                        rounded-t-3xl
-                        rounded-b-lg
-                        shadow-[0_20px_50px_rgba(0,0,0,0.8)]
-                        z-10
-                        overflow-hidden
-                    "
-                >
-                    {/* Metal Cooling Fins (Horizontal Grooves) */}
-                    <div className="absolute top-4 inset-x-0 h-10 flex flex-col justify-between opacity-80 z-20 pointer-events-none">
-                        <div className="h-[2px] bg-zinc-950 shadow-[inset_0_1px_rgba(255,255,255,0.05)]" />
-                        <div className="h-[2px] bg-zinc-950 shadow-[inset_0_1px_rgba(255,255,255,0.05)]" />
-                        <div className="h-[2px] bg-zinc-950 shadow-[inset_0_1px_rgba(255,255,255,0.05)]" />
-                        <div className="h-[2px] bg-zinc-950 shadow-[inset_0_1px_rgba(255,255,255,0.05)]" />
-                    </div>
+                {/* Plain Brown Cone Lamp Housing */}
+                <div className="relative w-[156px] h-[110px] z-10 flex flex-col items-center">
+                    <motion.div
+                        animate={{
+                            background: isLightOn
+                                ? "linear-gradient(140deg, #92400e 0%, #78350f 45%, #451a03 100%)"
+                                : "linear-gradient(140deg, #78350f 0%, #451a03 50%, #270e02 100%)",
+                        }}
+                        transition={{
+                            duration: 0.8,
+                        }}
+                        style={{
+                            clipPath: "polygon(22% 0%, 78% 0%, 100% 100%, 0% 100%)",
+                        }}
+                        className="
+                            w-full
+                            h-full
+                            shadow-[0_25px_60px_rgba(0,0,0,0.95)]
+                            relative
+                            overflow-hidden
+                        "
+                    >
+                        {/* Smooth Satin Gloss Surface Highlight */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent via-50% to-black/50 pointer-events-none z-20" />
+                    </motion.div>
 
-                    {/* Chrome Parabolic Reflector Cup */}
-                    <div className="absolute inset-x-2.5 bottom-0 h-11 bg-gradient-to-t from-zinc-700 via-zinc-900 to-zinc-950 rounded-b-md overflow-hidden flex justify-center z-10">
-                        {/* Chrome Mirror Facets */}
-                        <div className="absolute inset-0 opacity-20 bg-[repeating-linear-gradient(30deg,transparent,transparent_3px,#ffffff_3px,#ffffff_6px)]" />
-                        <div className="absolute inset-0 opacity-15 bg-[repeating-linear-gradient(-30deg,transparent,transparent_3px,#ffffff_3px,#ffffff_6px)]" />
-                        {/* Ceramic Socket base */}
-                        <div className="w-8 h-4 bg-zinc-400 rounded-t-sm border border-zinc-500 absolute bottom-7" />
-                    </div>
+                    {/* Plain Brown Bottom Rim Bezel */}
+                    <motion.div
+                        animate={{
+                            borderColor: isLightOn ? "rgba(251, 191, 36, 0.5)" : "rgba(120, 53, 15, 0.4)",
+                            background: isLightOn
+                                ? "linear-gradient(to right, #78350f, #b45309, #451a03)"
+                                : "linear-gradient(to right, #451a03, #78350f, #1c0a02)",
+                        }}
+                        className="
+                            absolute
+                            -bottom-[2px]
+                            left-0
+                            w-full
+                            h-[6px]
+                            rounded-b-md
+                            border-b
+                            z-15
+                        "
+                    />
+                </div>
 
-                    {/* Outer Housing Refraction highlights */}
-                    <div className="absolute inset-x-0 top-0 h-full bg-gradient-to-r from-white/3 via-transparent to-black/30 pointer-events-none z-20" />
-                </motion.div>
-
-                {/* Sleek Aluminum/Chrome Rim Bezel at Bottom */}
-                <motion.div
-                    animate={{
-                        borderColor: isLightOn ? "rgba(255, 255, 255, 0.35)" : "transparent",
-                        background: isLightOn
-                            ? "linear-gradient(to right, #52525b, #e4e4e7, #3f3f46)"
-                            : "linear-gradient(to right, #1f1f23, #2e2e33, #0f0f12)",
-                        boxShadow: isLightOn
-                            ? "inset 0 -1px 3px rgba(255,255,255,0.6), 0 2px 8px rgba(255,255,255,0.15)"
-                            : "inset 0 -1px 3px rgba(0,0,0,0.8)",
-                    }}
-                    className="
-                        absolute
-                        -bottom-[2px]
-                        left-1/2
-                        -translate-x-1/2
-                        w-[150px]
-                        h-[8px]
-                        rounded-b-md
-                        border-b
-                        z-15
-                    "
-                />
-
-                {/* Sleek Quartz Halogen Capsule */}
+                {/* Traditional Bright Yellow Rounded Halogen Bulb Casing */}
                 <motion.div
                     animate={
                         isLightOn
                             ? isFlickering
                                 ? {
-                                    backgroundColor: ["rgba(255, 255, 255, 0.02)", "rgba(255, 255, 255, 0.16)", "rgba(255, 255, 255, 0.05)", "rgba(255, 255, 255, 0.22)", "rgba(255, 255, 255, 0.08)", "rgba(255, 255, 255, 0.16)"],
-                                    borderColor: ["rgba(255, 255, 255, 0.15)", "rgba(255, 255, 255, 0.65)", "rgba(255, 255, 255, 0.25)", "rgba(255, 255, 255, 0.75)", "rgba(255, 255, 255, 0.3)", "rgba(255, 255, 255, 0.65)"],
+                                    backgroundColor: ["rgba(253, 224, 71, 0.6)", "rgba(253, 224, 71, 0.98)", "rgba(253, 224, 71, 0.65)", "rgba(253, 224, 71, 1.0)", "rgba(253, 224, 71, 0.7)"],
+                                    borderColor: ["#fde047", "#ffffff", "#fde047", "#ffffff", "#fde047"],
                                     boxShadow: [
-                                        "0 0 10px rgba(255, 255, 255, 0.2)",
-                                        "0 0 35px rgba(255, 255, 255, 0.95)",
-                                        "0 0 15px rgba(255, 255, 255, 0.3)",
-                                        "0 0 45px rgba(255, 255, 255, 1.1)",
-                                        "0 0 20px rgba(255, 255, 255, 0.4)",
-                                        "0 0 35px rgba(255, 255, 255, 0.95)"
+                                        "0 0 20px #fbbf24, 0 0 40px #f59e0b",
+                                        "0 0 45px #fde047, 0 0 90px #fbbf24",
+                                        "0 0 25px #fbbf24, 0 0 50px #f59e0b",
+                                        "0 0 55px #fde047, 0 0 100px #fbbf24",
+                                        "0 0 30px #fbbf24, 0 0 60px #f59e0b"
                                     ],
                                     scale: [0.96, 1.02, 0.97, 1.04, 0.98, 1],
                                 }
                                 : {
-                                    backgroundColor: "rgba(255, 255, 255, 0.14)",
-                                    borderColor: "rgba(255, 255, 255, 0.65)",
-                                    boxShadow: "0 0 35px rgba(255, 255, 255, 0.95), 0 12px 50px rgba(255, 246, 209, 0.7), inset 0 2px 6px rgba(255, 255, 255, 0.6)",
-                                    scale: [1, 1.012, 1],
+                                    backgroundColor: "rgba(253, 224, 71, 0.95)",
+                                    borderColor: "#fde047",
+                                    boxShadow: "0 0 35px #fde047, 0 0 75px #fbbf24, 0 12px 50px rgba(255, 246, 209, 0.8), inset 0 2px 8px #ffffff",
+                                    scale: [1, 1.01, 1],
                                 }
                             : {
-                                backgroundColor: "rgba(255, 255, 255, 0.003)",
-                                borderColor: "rgba(255, 255, 255, 0.02)",
-                                boxShadow: "inset 0 1px 1px rgba(255, 255, 255, 0.03)",
-                                scale: 0.98,
+                                // CONTINUOUS OFF-STATE TRADITIONAL YELLOW HALOGEN FLICKER
+                                backgroundColor: [
+                                    "rgba(251, 191, 36, 0.20)",
+                                    "rgba(253, 224, 71, 0.75)",
+                                    "rgba(251, 191, 36, 0.25)",
+                                    "rgba(253, 224, 71, 0.85)",
+                                    "rgba(251, 191, 36, 0.30)",
+                                    "rgba(253, 224, 71, 0.70)",
+                                    "rgba(251, 191, 36, 0.20)"
+                                ],
+                                borderColor: [
+                                    "rgba(251, 191, 36, 0.6)",
+                                    "#fde047",
+                                    "rgba(251, 191, 36, 0.65)",
+                                    "#fde047",
+                                    "rgba(251, 191, 36, 0.7)",
+                                    "#fde047",
+                                    "rgba(251, 191, 36, 0.6)"
+                                ],
+                                boxShadow: [
+                                    "0 0 8px rgba(245, 158, 11, 0.4)",
+                                    "0 0 35px rgba(253, 224, 71, 0.9)",
+                                    "0 0 12px rgba(245, 158, 11, 0.45)",
+                                    "0 0 45px rgba(253, 224, 71, 1.0)",
+                                    "0 0 14px rgba(245, 158, 11, 0.5)",
+                                    "0 0 32px rgba(253, 224, 71, 0.85)",
+                                    "0 0 8px rgba(245, 158, 11, 0.4)"
+                                ],
+                                scale: [0.98, 1.02, 0.97, 1.03, 0.98, 1.01, 0.98],
                             }
                     }
                     transition={{
-                        duration: isFlickering ? 0.45 : isLightOn ? 4 : 0.8,
-                        repeat: isFlickering ? 0 : isLightOn ? Infinity : 0,
-                        ease: isFlickering ? "linear" : "easeInOut",
+                        duration: isFlickering ? 0.45 : isLightOn ? 4 : 2.5,
+                        repeat: Infinity,
+                        repeatType: "mirror",
+                        ease: "easeInOut",
                     }}
                     className="
                         absolute
                         left-1/2
-                        -bottom-[22px]
+                        top-[106px]
                         -translate-x-1/2
-                        w-6
-                        h-11
-                        rounded-md
-                        border
-                        backdrop-blur-[0.5px]
-                        z-10
+                        w-11
+                        h-14
+                        rounded-b-[22px]
+                        rounded-t-md
+                        border-2
+                        border-yellow-300
+                        z-30
                         flex
                         items-center
                         justify-center
-                        shadow-inner
                         overflow-hidden
                     "
                 >
@@ -299,23 +311,32 @@ export default function Lamp() {
                     />
 
                     {/* Bright Filament Glow Flare */}
-                    {isLightOn && (
-                        <motion.div
-                            animate={isFlickering ? {
-                                scale: [0.5, 1.2, 0.6, 1.1, 0.8, 1.0],
-                                opacity: [0.1, 0.9, 0.2, 0.95, 0.3, 0.75],
-                            } : {
-                                scale: [0.9, 1.15, 0.9],
-                                opacity: [0.75, 0.95, 0.75],
-                            }}
-                            transition={{
-                                duration: isFlickering ? 0.45 : 1.5,
-                                repeat: isFlickering ? 0 : Infinity,
-                                ease: "easeInOut"
-                            }}
-                            className="absolute w-5 h-5 rounded-full bg-white blur-[3.5px] z-5 pointer-events-none"
-                        />
-                    )}
+                    <motion.div
+                        animate={
+                            isLightOn
+                                ? isFlickering
+                                    ? {
+                                        scale: [0.5, 1.2, 0.6, 1.1, 0.8, 1.0],
+                                        opacity: [0.1, 0.9, 0.2, 0.95, 0.3, 0.75],
+                                    }
+                                    : {
+                                        scale: [0.9, 1.15, 0.9],
+                                        opacity: [0.75, 0.95, 0.75],
+                                    }
+                                : {
+                                    // Subtle off-state standby flicker flare
+                                    scale: [0.4, 0.95, 0.4, 1.1, 0.5, 0.85, 0.4],
+                                    opacity: [0.02, 0.35, 0.05, 0.45, 0.08, 0.30, 0.02],
+                                }
+                        }
+                        transition={{
+                            duration: isFlickering ? 0.45 : isLightOn ? 1.5 : 2.6,
+                            repeat: Infinity,
+                            repeatType: "mirror",
+                            ease: "easeInOut"
+                        }}
+                        className="absolute w-5 h-5 rounded-full bg-amber-200 blur-[3px] z-5 pointer-events-none"
+                    />
 
                     {/* Halogen Pin and Horizontal Coil Filament (SVG) */}
                     <svg width="12" height="20" viewBox="0 0 12 20" fill="none" className="z-10 relative mt-1 opacity-95">
@@ -351,13 +372,21 @@ export default function Lamp() {
                                         ]
                                     }
                                 : {
-                                    stroke: "#3f3f46",
-                                    strokeWidth: 1.0,
+                                    stroke: ["#52525b", "#fbbf24", "#3f3f46", "#f59e0b", "#52525b"],
+                                    strokeWidth: [0.8, 1.8, 0.9, 2.2, 0.8],
+                                    filter: [
+                                        "drop-shadow(0 0 0px transparent)",
+                                        "drop-shadow(0 0 4px #fbbf24)",
+                                        "drop-shadow(0 0 0px transparent)",
+                                        "drop-shadow(0 0 5px #f59e0b)",
+                                        "drop-shadow(0 0 0px transparent)"
+                                    ]
                                 }
                             }
                             transition={{
-                                duration: isFlickering ? 0.45 : 1.5,
-                                repeat: isLightOn ? (isFlickering ? 0 : Infinity) : 0,
+                                duration: isFlickering ? 0.45 : isLightOn ? 1.5 : 2.6,
+                                repeat: Infinity,
+                                repeatType: "mirror",
                                 ease: "easeInOut"
                             }}
                         />
@@ -424,7 +453,8 @@ export default function Lamp() {
                     className="
                         absolute
                         h-[900px]
-                        w-[440px]
+                        w-[90vw]
+                        max-w-[440px]
                         -translate-x-1/2
                         left-1/2
                     "
@@ -474,7 +504,8 @@ export default function Lamp() {
                     className="
                         absolute
                         h-[920px]
-                        w-[740px]
+                        w-[100vw]
+                        max-w-[740px]
                         -translate-x-1/2
                         left-1/2
                     "
@@ -506,8 +537,10 @@ export default function Lamp() {
                         absolute
                         left-1/2
                         -translate-x-1/2
-                        w-[850px]
-                        h-[850px]
+                        w-[90vw]
+                        max-w-[850px]
+                        h-[90vw]
+                        max-h-[850px]
                         rounded-full
                         bg-yellow-400/8
                         blur-[160px]

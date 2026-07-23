@@ -51,14 +51,12 @@ export default function LoginCard() {
         }
     });
 
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const width = typeof window !== "undefined" ? window.innerWidth : 1024;
+    const height = typeof window !== "undefined" ? window.innerHeight : 768;
+    const isSmall = width < 768;
 
-    const rotateY = ((x - width / 2) / width) * 10;
-    const rotateX = -((y - height / 2) / height) * 10;
-
-    const reflectionTx = (x / width - 0.5) * 80;
-    const reflectionTy = (y / height - 0.5) * 80;
+    const rotateY = isSmall ? 0 : ((x - width / 2) / width) * 8;
+    const rotateX = isSmall ? 0 : -((y - height / 2) / height) * 8;
 
     const triggerShake = () => {
         setShake(true);
@@ -121,278 +119,35 @@ export default function LoginCard() {
             className="
                 relative
                 overflow-hidden
-                w-[440px]
-                rounded-[30px]
-                bg-white/[0.06]
-                backdrop-blur-3xl
-                p-12
-                text-white
+                w-full
+                max-w-[440px]
+                rounded-[24px]
+                sm:rounded-[30px]
+                bg-black
+                p-6
+                sm:p-8
+                md:p-12
+                text-red-400
+                border
+                border-zinc-800/80
+                shadow-[0_30px_100px_rgba(0,0,0,0.95)]
+                mx-auto
             "
         >
             {/* Base Card Animating States */}
             <motion.div
-                className="absolute inset-0 rounded-[30px] pointer-events-none"
+                className="absolute inset-0 rounded-[24px] sm:rounded-[30px] pointer-events-none"
                 animate={{
                     x: shake ? [-12, 12, -8, 8, -4, 4, 0] : 0,
-                    boxShadow: isLightOn
-                        ? "0 30px 100px rgba(0,0,0,0.85), 0 0 90px rgba(251, 191, 36, 0.22)"
-                        : "0 18px 80px rgba(0,0,0,.95)",
+                    boxShadow: "0 30px 100px rgba(0,0,0,0.95)",
                 }}
                 transition={{
                     x: { duration: 0.45, ease: "easeInOut" },
-                    boxShadow: { duration: 0.8 },
                 }}
-            />
-
-            {/* Lamp Illumination */}
-            <motion.div
-                animate={{
-                    opacity: isLightOn ? 0.65 : 0,
-                }}
-                transition={{
-                    duration: 0.8,
-                }}
-                className="
-                    absolute
-                    left-1/2
-                    -translate-x-1/2
-                    -top-24
-                    w-[480px]
-                    h-[220px]
-                    rounded-full
-                    bg-yellow-200/25
-                    blur-[120px]
-                    pointer-events-none
-                "
-            />
-            <motion.div
-                animate={{
-                    opacity: isLightOn ? 0.55 : 0,
-                }}
-                transition={{
-                    duration: 0.8,
-                }}
-                className="
-                    absolute
-                    top-0
-                    left-0
-                    right-0
-                    h-56
-                    rounded-t-[30px]
-                    pointer-events-none
-                "
-                style={{
-                    background:
-                        "linear-gradient(to bottom, rgba(253,224,71,.30), rgba(253,224,71,.10), transparent)",
-                }}
-            />
-
-            {/* Top Glass Highlight */}
-            <motion.div
-                animate={{
-                    opacity: isLightOn ? 0.85 : 0.15,
-                }}
-                transition={{
-                    duration: 0.8,
-                }}
-                className="
-                    absolute
-                    top-0
-                    left-6
-                    right-6
-                    h-px
-                    rounded-full
-                    bg-yellow-300/80
-                    pointer-events-none
-                "
-            />
-
-            {/* Dynamic Reflection */}
-            <div className="absolute inset-0 rounded-[30px] overflow-hidden pointer-events-none">
-                <motion.div
-                    className="absolute pointer-events-none"
-                    style={{
-                        inset: "-80px",
-                        background: `
-                            radial-gradient(
-                                circle at 50% 50%,
-                                rgba(255,255,255,.30),
-                                transparent 30%
-                            ),
-                            radial-gradient(
-                                circle at 56% 58%,
-                                rgba(255,255,255,.08),
-                                transparent 50%
-                            )
-                        `,
-                        willChange: "transform, opacity",
-                    }}
-                    animate={{
-                        opacity: isLightOn ? 1 : 0.12,
-                        x: reflectionTx,
-                        y: reflectionTy,
-                    }}
-                    transition={{
-                        opacity: { duration: 0.8 },
-                        x: {
-                            type: "spring",
-                            stiffness: 35,
-                            damping: 18,
-                        },
-                        y: {
-                            type: "spring",
-                            stiffness: 35,
-                            damping: 18,
-                        }
-                    }}
-                />
-            </div>
-
-            {/* Side Reflection */}
-            <motion.div
-                animate={{
-                    x: ["-180%", "220%"],
-                    opacity: isLightOn ? 0.08 : 0,
-                }}
-                transition={{
-                    duration: 12,
-                    repeat: Infinity,
-                    ease: "linear",
-                }}
-                className="
-                    absolute
-                    top-0
-                    bottom-0
-                    w-32
-                    bg-white/8
-                    blur-2xl
-                    -skew-x-12
-                    pointer-events-none
-                "
-            />
-
-            {/* Glass Shine */}
-            <motion.div
-                animate={{
-                    opacity: isLightOn ? 1 : 0.2,
-                }}
-                className="
-                    absolute
-                    inset-0
-                    rounded-[30px]
-                    pointer-events-none
-                    bg-gradient-to-br
-                    from-white/14
-                    via-transparent
-                    to-transparent
-                "
-            />
-
-            {/* Bottom Inner Shadow */}
-            <motion.div
-                animate={{
-                    opacity: isLightOn ? 0.55 : 0.85,
-                }}
-                transition={{
-                    duration: 0.8,
-                }}
-                className="
-                    absolute
-                    bottom-0
-                    left-0
-                    right-0
-                    h-44
-                    rounded-b-[30px]
-                    pointer-events-none
-                "
-                style={{
-                    background:
-                        "linear-gradient(to top, rgba(0,0,0,.18), transparent)",
-                }}
-            />
-
-            {/* Glass Borders */}
-            <motion.div
-                animate={{
-                    opacity: isLightOn ? 0.55 : 0.15,
-                }}
-                className="
-                    absolute
-                    inset-0
-                    rounded-[30px]
-                    border
-                    border-white/10
-                    pointer-events-none
-                "
-            />
-
-            <motion.div
-                animate={{
-                    opacity: isLightOn ? 0.35 : 0.05,
-                }}
-                className="
-                    absolute
-                    inset-[1px]
-                    rounded-[29px]
-                    border
-                    border-yellow-400/35
-                    pointer-events-none
-                "
             />
 
             {/* Noise Layer */}
             <NoiseLayer />
-
-            {/* Glass Refraction */}
-            <motion.div
-                animate={{
-                    opacity: isLightOn ? 0.16 : 0.04,
-                }}
-                transition={{
-                    duration: 1,
-                }}
-                className="
-                    absolute
-                    inset-0
-                    rounded-[30px]
-                    overflow-hidden
-                    pointer-events-none
-                "
-            >
-                <motion.div
-                    animate={{
-                        x: ["-120%", "120%"],
-                    }}
-                    transition={{
-                        repeat: Infinity,
-                        duration: 18,
-                        ease: "linear",
-                    }}
-                    className="
-                        absolute
-                        top-0
-                        h-full
-                        w-40
-                        -skew-x-12
-                        blur-3xl
-                        bg-white/10
-                    "
-                />
-            </motion.div>
-            
-            <motion.div
-                animate={{
-                    opacity: isLightOn ? .14 : .04,
-                }}
-                className="
-                    absolute
-                    inset-12
-                    rounded-[22px]
-                    bg-white/5
-                    blur-xl
-                    pointer-events-none
-                "
-            />
 
             {/* Content */}
             <div
@@ -401,30 +156,32 @@ export default function LoginCard() {
                     transform: "translateZ(30px)",
                 }}
             >
-                {/* Secure Gateway Pulse Badge */}
-                <motion.div variants={childVariants} className="flex justify-start pl-2 mb-3">
-                    <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-yellow-500/20 bg-yellow-500/5 backdrop-blur-md">
-                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse" />
-                        <span className="text-[9px] font-bold tracking-[0.2em] text-yellow-300 uppercase">SECURE PORTAL</span>
+                {/* Secure Gateway Pulse Badge with Red Text Only */}
+                <motion.div variants={childVariants} className="flex justify-start pl-1 sm:pl-2 mb-3">
+                    <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/90 shadow-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping shadow-[0_0_8px_#ef4444]" />
+                        <span className="text-[8.5px] sm:text-[9.5px] font-black tracking-[0.2em] text-red-400 uppercase">SECURE PORTAL</span>
                     </div>
                 </motion.div>
 
+                {/* Pitch Black Card - Red Headline Text Only */}
                 <motion.h1
                     variants={childVariants}
                     animate={{
-                        opacity: isLightOn ? 1 : 0.8,
+                        opacity: isLightOn ? 1 : 0.85,
                     }}
-                    className="text-[34px] font-extrabold tracking-tight bg-gradient-to-r from-white via-zinc-100 to-yellow-300 bg-clip-text text-transparent drop-shadow-sm pl-2"
+                    className="text-2xl sm:text-3xl md:text-[34px] font-black tracking-tight text-red-500 drop-shadow-[0_0_12px_rgba(239,68,68,0.7)] pl-1 sm:pl-2"
                 >
                     Identify Yourself
                 </motion.h1>
 
+                {/* Pitch Black Card - Red Subtitle Text Only */}
                 <motion.p
                     variants={childVariants}
                     animate={{
-                        opacity: isLightOn ? 0.9 : 0.5,
+                        opacity: isLightOn ? 0.95 : 0.65,
                     }}
-                    className="mt-2.5 mb-9 text-sm text-zinc-400 font-medium tracking-wide pl-2"
+                    className="mt-2 mb-6 sm:mb-9 text-xs sm:text-sm text-red-400 font-bold tracking-wide pl-1 sm:pl-2"
                 >
                     Enter your details to view the portfolio.
                 </motion.p>

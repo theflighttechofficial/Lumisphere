@@ -13,9 +13,14 @@ export default function BulbGlow({
             opacity: [0.05 * dimFactor, 0.6 * dimFactor, 0.15 * dimFactor, 0.75 * dimFactor, 0.25 * dimFactor, 0.8 * dimFactor],
             scale: [0.6, 1.05, 0.7, 1.1, 0.85, 1],
         }
+        : isLightOn
+        ? {
+            opacity: 0.65 * dimFactor,
+            scale: 1,
+        }
         : {
-            opacity: isLightOn ? 0.65 * dimFactor : 0,
-            scale: isLightOn ? 1 : 0.8,
+            opacity: [0.02, 0.18, 0.04, 0.24, 0.05, 0.20, 0.02],
+            scale: [0.75, 0.90, 0.78, 0.94, 0.80, 0.88, 0.75],
         };
 
     const glowTransition = warmingUp
@@ -24,8 +29,15 @@ export default function BulbGlow({
             times: [0, 0.2, 0.4, 0.6, 0.8, 1],
             ease: "linear",
         }
+        : isLightOn
+        ? {
+            duration: 0.6,
+        }
         : {
-            duration: isLightOn ? 0.6 : 0.2,
+            duration: 2.6,
+            repeat: Infinity,
+            repeatType: "mirror",
+            ease: "easeInOut",
         };
 
     return (

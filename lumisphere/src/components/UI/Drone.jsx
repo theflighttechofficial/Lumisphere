@@ -3,11 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import { useLight } from "../../context/LightContext";
 import useMousePosition from "../../hooks/useMousePosition";
 import { AudioEngine } from "../../utils/AudioEngine";
+import useMobile from "../../hooks/useMobile";
 
 export default function Drone() {
     const { isLightOn } = useLight();
     const mouse = useMousePosition();
     const droneRef = useRef(null);
+    const isMobile = useMobile(768);
 
     const [tilt, setTilt] = useState(0);
     const [isScanning, setIsScanning] = useState(false);
@@ -27,20 +29,21 @@ export default function Drone() {
         const dx = mouse.x - cx;
         const dy = mouse.y - cy;
         const dist = Math.sqrt(dx * dx + dy * dy);
+        const radius = isMobile ? 140 : 220;
 
-        if (dist < 220) {
+        if (dist < radius) {
             if (!isScanning) {
                 setIsScanning(true);
                 AudioEngine.playDroneScan();
             }
             // Map the horizontal offset to a tilt angle (-25 to 25 degrees)
-            const angle = Math.max(-25, Math.min(25, (dx / 220) * 35));
+            const angle = Math.max(-25, Math.min(25, (dx / radius) * 35));
             setTilt(angle);
         } else {
             setIsScanning(false);
             setTilt(0);
         }
-    }, [mouse, isLightOn, isScanning]);
+    }, [mouse, isLightOn, isScanning, isMobile]);
 
     return (
         <motion.div
@@ -55,11 +58,11 @@ export default function Drone() {
                     }
                     : {
                         opacity: 1,
-                        scale: 1,
+                        scale: isMobile ? 0.85 : 1,
                         pointerEvents: "auto",
-                        // Large sweeping organic floating motion
-                        x: [0, 320, -280, 240, -340, 200, -180, 0],
-                        y: [0, -90, 140, -150, 200, -70, 120, 0],
+                        // Scaled organic floating motion to fit device boundaries
+                        x: isMobile ? [0, 40, -35, 30, -40, 25, -20, 0] : [0, 320, -280, 240, -340, 200, -180, 0],
+                        y: isMobile ? [0, -20, 25, -30, 35, -15, 20, 0] : [0, -90, 140, -150, 200, -70, 120, 0],
                         rotate: [0, 4, -3, 3, -2, 3, -2, 0],
                     }
             }
@@ -80,8 +83,9 @@ export default function Drone() {
             }
             className="
                 absolute
-                top-44
-                left-[calc(50%+110px)]
+                top-28 sm:top-44
+                left-1/2 sm:left-[calc(50%+110px)]
+                -translate-x-1/2 sm:translate-x-0
                 z-[100]
                 flex
                 flex-col
@@ -120,16 +124,17 @@ export default function Drone() {
                     py-1.5
                     rounded-lg
                     border
-                    border-cyan-500/35
-                    bg-cyan-950/40
+                    border-red-500/40
+                    bg-red-950/60
                     backdrop-blur-md
                     text-[10px]
-                    font-bold
+                    font-extrabold
                     tracking-widest
-                    text-cyan-300
+                    text-red-400
                     uppercase
                     whitespace-nowrap
-                    shadow-[0_0_15px_rgba(34,211,238,0.25)]
+                    shadow-[0_0_15px_rgba(239,68,68,0.3)]
+                    drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]
                 "
             >
                 <span className="relative flex h-2 w-2">

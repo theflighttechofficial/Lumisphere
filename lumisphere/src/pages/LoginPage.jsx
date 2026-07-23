@@ -54,7 +54,7 @@ export default function LoginPage() {
                 duration: 1.2,
                 ease: "easeOut",
             }}
-            className="relative w-screen h-screen overflow-hidden bg-black"
+            className="relative w-full min-h-screen min-h-[100dvh] overflow-x-hidden bg-black flex flex-col items-center justify-center p-3 sm:p-6"
             onScroll={(e) => {
                 e.currentTarget.scrollTop = 0;
                 e.currentTarget.scrollLeft = 0;
@@ -97,17 +97,19 @@ export default function LoginPage() {
                     ease: "easeOut",
                 }}
                 className="
-                    absolute
+                    relative sm:absolute
                     inset-0
                     z-[60]
                     flex
                     items-center
                     justify-center
-                    translate-y-24
+                    py-8 sm:py-0
+                    sm:translate-y-24
                     pointer-events-none
+                    w-full
                 "
             >
-                <div className={(isLightOn && !isLoggedIn) ? "pointer-events-auto" : "pointer-events-none"}>
+                <div className={(isLightOn && !isLoggedIn) ? "pointer-events-auto w-full flex justify-center px-3" : "pointer-events-none w-full flex justify-center px-3"}>
                     <LoginCard />
                 </div>
             </motion.div>

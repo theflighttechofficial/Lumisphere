@@ -33,12 +33,12 @@ export default function PullChain({
                 }
             }}
             style={{
-                left: "calc(50% + 28px)",
+                left: "calc(50% + 34px)",
                 transformOrigin: "top center",
             }}
             className="
                 absolute
-                top-[68px]
+                top-[94px]
                 -translate-x-1/2
                 z-50
                 flex

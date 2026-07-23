@@ -23,11 +23,11 @@ export default function AudioToggle() {
             whileTap={{ scale: 0.95, y: 1 }}
             className="
                 absolute
-                top-6
-                right-6
+                top-4 sm:top-6
+                right-4 sm:right-6
                 z-[200]
-                w-11
-                h-11
+                w-10 sm:w-11
+                h-10 sm:h-11
                 rounded-xl
                 flex
                 items-center

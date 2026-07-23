@@ -3,7 +3,10 @@ import {
     GitBranch, Briefcase, Mail, FileText, ArrowLeft, ExternalLink, 
     Cpu, Layout, Sparkles, ListTodo, LineChart, BookOpen, 
     Monitor, Compass, Terminal, CheckCircle2, ChevronRight, Zap, 
-    Activity, Shield, RefreshCw
+    Activity, Shield, RefreshCw, Globe, Phone, MapPin, Target,
+    LogOut, Download, Search, Copy, Check, X, Award, Layers, Eye,
+    GraduationCap, Trophy, Code2, Flame, Star, Palette, Play, HelpCircle,
+    Database, Brain, Server, TerminalSquare, User, Calendar, Share2
 } from "lucide-react";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -13,62 +16,211 @@ import { useLight } from "../../context/LightContext";
 import { AudioEngine } from "../../utils/AudioEngine";
 import NoiseLayer from "../UI/NoiseLayer";
 
-// --- Tab-specific color palette for Hologram and visualizer themes ---
-const tabColors = {
-    dashboard: { points: "#ffffff", lines: "#fff2cc", core: "#fbbf24" },
-    experience: { points: "#60a5fa", lines: "#3b82f6", core: "#2563eb" },
-    skills: { points: "#34d399", lines: "#22d3ee", core: "#10b981" },
-    projects: { points: "#a78bfa", lines: "#ec4899", core: "#8b5cf6" },
-    roadmap: { points: "#fbbf24", lines: "#fbbf24", core: "#d97706" }
+// Custom SVG Icons for GitHub, LinkedIn, Kaggle, Hashnode
+function GithubIcon({ size = 14, className = "" }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+            <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+        </svg>
+    );
+}
+
+function LinkedinIcon({ size = 14, className = "" }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+            <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+        </svg>
+    );
+}
+
+function KaggleIcon({ size = 14, className = "" }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+            <path d="M18.825 23.859h-3.26l-6.425-9.458-3.033 2.946v6.512H3.14V.141h2.967v12.242l8.847-12.242h3.585l-7.46 9.873 7.746 13.845z"/>
+        </svg>
+    );
+}
+
+function HashnodeIcon({ size = 14, className = "" }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+            <path d="M22.351 8.019l-6.37-6.37a5.63 5.63 0 0 0-7.962 0l-6.37 6.37a5.63 5.63 0 0 0 0 7.962l6.37 6.37a5.63 5.63 0 0 0 7.962 0l6.37-6.37a5.63 5.63 0 0 0 0-7.962zm-10.351 7.981a4 4 0 1 1 4-4 4.005 4.005 0 0 1-4 4z"/>
+        </svg>
+    );
+}
+
+function InstagramIcon({ size = 14, className = "" }) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+    );
+}
+
+// --- Dynamic Color Theme Palettes ---
+const themePalettes = {
+    amber: {
+        points: "#fbbf24", lines: "#fef08a", core: "#f59e0b",
+        accent: "text-yellow-400", border: "border-yellow-400/40", bg: "bg-yellow-400", glow: "shadow-yellow-400/30"
+    },
+    green: {
+        points: "#34d399", lines: "#a7f3d0", core: "#10b981",
+        accent: "text-emerald-400", border: "border-emerald-400/40", bg: "bg-emerald-400", glow: "shadow-emerald-400/30"
+    },
+    cyan: {
+        points: "#38bdf8", lines: "#bae6fd", core: "#0284c7",
+        accent: "text-sky-400", border: "border-sky-400/40", bg: "bg-sky-400", glow: "shadow-sky-400/30"
+    },
+    purple: {
+        points: "#c084fc", lines: "#f5d0fe", core: "#9333ea",
+        accent: "text-purple-400", border: "border-purple-400/40", bg: "bg-purple-400", glow: "shadow-purple-400/30"
+    },
+    red: {
+        points: "#f87171", lines: "#fecdd3", core: "#dc2626",
+        accent: "text-red-400", border: "border-red-400/40", bg: "bg-red-400", glow: "shadow-red-400/30"
+    }
 };
 
-// --- Count-up numeric animation component for CGPA statistics ---
+// --- Real Code Snippets Database ---
+const codeSnippets = {
+    rag: {
+        title: "L&T Hybrid RAG Spec Extractor (FAISS + BM25 + RRF)",
+        lang: "Python",
+        code: `def retrieve_hybrid_context(query: str, pdf_docs: list, top_k: int = 5):
+    # 1. Dense Vector Retrieval via FAISS
+    query_vector = sentence_encoder.encode([query])
+    faiss_distances, faiss_indices = vector_index.search(query_vector, top_k * 2)
+    
+    # 2. Sparse Keyword Retrieval via BM25
+    bm25_scores = bm25_index.get_scores(tokenize(query))
+    bm25_top_indices = np.argsort(bm25_scores)[::-1][:top_k * 2]
+    
+    # 3. Reciprocal Rank Fusion (RRF) algorithm
+    rrf_scores = defaultdict(float)
+    for rank, idx in enumerate(faiss_indices[0]):
+        rrf_scores[idx] += 1.0 / (60 + rank)
+    for rank, idx in enumerate(bm25_top_indices):
+        rrf_scores[idx] += 1.0 / (60 + rank)
+        
+    reranked = sorted(rrf_scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
+    # Token Cost Optimization ($22 -> $2 per 1,200+ page document run)
+    return [pdf_docs[idx] for idx, _ in reranked]`
+    },
+    ocr_sld: {
+        title: "L&T OCR-Based SLD Data Extractor (Tesseract + AutoCAD PDF)",
+        lang: "Python / Tesseract OCR",
+        code: `class SLDDiagramParser:
+    def __init__(self, pdf_path: str):
+        self.pages = convert_pdf_to_images(pdf_path, dpi=300)
+        self.ocr_engine = pyTesseractEngine(lang='eng', config='--psm 6')
+
+    def extract_electrical_nodes(self, image):
+        # Image Preprocessing for Zero-Text Layer AutoCAD Scans
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+        
+        # Iterative Diagram Symbol & Label Extractor
+        data = self.ocr_engine.image_to_data(thresh, output_type=Output.DICT)
+        electrical_specs = parse_voltage_ratings_and_breakers(data)
+        return electrical_specs`
+    },
+    roadai: {
+        title: "Road-AI YOLOv8 Uncertainty & Depth Fusion Engine",
+        lang: "Python / PyTorch / OpenCV",
+        code: `class RoadAIDetector:
+    def __init__(self, model_weights="yolov8m-rdd2022.pt"):
+        self.model = YOLO(model_weights)
+        self.depth_estimator = MiDaS_Small()
+        
+    def detect_with_uncertainty(self, frame_bgr, mc_samples=5):
+        # Monte-Carlo Dropout Sampling for 38% False Positive Reduction
+        predictions = [self.model(frame_bgr, augment=True) for _ in range(mc_samples)]
+        boxes, confs = self.merge_ensemble(predictions)
+        
+        # Physics-based Depth Estimation for NHAI Repair Costing
+        depth_map = self.depth_estimator.infer(frame_bgr)
+        damage_volume = self.calculate_damage_volume(boxes, depth_map)
+        
+        return { "boxes": boxes, "mAP50": 0.648, "est_cost_inr": damage_volume * 450 }`
+    },
+    hologram: {
+        title: "LumiSphere 3D Particle Morphing Shader Engine",
+        lang: "JavaScript / Three.js",
+        code: `useFrame((state, delta) => {
+    const elapsed = state.clock.elapsedTime;
+    const target = shapes[activeTab] || shapes.dashboard;
+    const positions = pointsRef.current.geometry.attributes.position.array;
+    
+    // Interpolated Morphing between 3D volumetric geometric topologies
+    for (let i = 0; i < count * 3; i++) {
+        positions[i] = THREE.MathUtils.lerp(positions[i], target[i], 0.08);
+    }
+    pointsRef.current.geometry.attributes.position.needsUpdate = true;
+    
+    // Halogen Orbiting Motion & Core Pulsing
+    pointsRef.current.rotation.y += delta * speed;
+    coreRef.current.material.opacity = 0.4 + 0.2 * Math.sin(elapsed * 4.5);
+});`
+    },
+    homefinder: {
+        title: "HomeFinder Sub-100ms MongoDB Multi-Attribute Search",
+        lang: "Node.js / Express / MongoDB",
+        code: `router.get("/properties/search", async (req, res) => {
+    const { city, minPrice, maxPrice, amenities, type } = req.query;
+    const filterQuery = {};
+    if (city) filterQuery.city = new RegExp(city, "i");
+    if (type) filterQuery.propertyType = type;
+    if (minPrice || maxPrice) {
+        filterQuery.price = {};
+        if (minPrice) filterQuery.price.$gte = Number(minPrice);
+        if (maxPrice) filterQuery.price.$lte = Number(maxPrice);
+    }
+    if (amenities) filterQuery.amenities = { $all: amenities.split(",") };
+    
+    // Sub-100ms Query Performance using Compound Indexing
+    const results = await Property.find(filterQuery).limit(50).lean();
+    res.json({ success: true, count: results.length, data: results });
+});`
+    }
+};
+
+// --- Count-up numeric animation component ---
 function CountUp({ to, duration = 1.2, decimals = 1 }) {
     const [count, setCount] = useState(0);
-
     useEffect(() => {
         let startTime = null;
-        const startValue = 0;
-
         const animate = (timestamp) => {
             if (!startTime) startTime = timestamp;
             const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-            const currentValue = progress * (to - startValue) + startValue;
-            setCount(currentValue);
-
-            if (progress < 1) {
-                requestAnimationFrame(animate);
-            }
+            setCount(progress * to);
+            if (progress < 1) requestAnimationFrame(animate);
         };
-
         requestAnimationFrame(animate);
     }, [to, duration]);
-
     return <span>{count.toFixed(decimals)}</span>;
 }
 
-// --- Live diagnostics logs typist reader ---
+// --- Live System Diagnostics ---
 function LiveSystemDiagnosticLog({ intensity }) {
     const [logs, setLogs] = useState([]);
-    
     useEffect(() => {
         const rawLogs = [
-            "SYS_STAT: HALOGEN CORE STABLE",
+            "SYS_STAT: HALOGEN CORE OPTIMAL",
             `POWER DRAW: ${(intensity * 0.5).toFixed(1)}W AT 12.0V`,
-            "THERMAL SHELL TEMP: NOMINAL",
-            "VOLUMETRIC RAYTRACER: ONLINE",
-            "SHOCKWAVE WAVEFRONT: ARMED",
-            "PARTICLE BUFFER: 2200 FLOATS",
-            "REFLECTOR FACTOR: 98.4% REFL",
-            "COOLING JOINT: PASSIVE VENT"
+            "SRIHER CSE AI & DATA MATRIX: VERIFIED",
+            "L&T PRODUCTION PIPELINE: ACTIVE",
+            "STANFORD ML SPECIALIZATION: SIGNED",
+            "GOOGLE PROMPTING ESSENTIALS: SIGNED",
+            "HACKERRANK GOLD BADGES: PYTHON & SQL",
+            "TARGET 2029: ARIZONA STATE UNIVERSITY MS"
         ];
-        
         setLogs([]);
         let logIdx = 0;
         const interval = setInterval(() => {
             if (logIdx < rawLogs.length) {
-                const nextLog = rawLogs[logIdx];
-                setLogs(prev => [...prev, nextLog]);
+                setLogs(prev => [...prev, rawLogs[logIdx]]);
                 logIdx++;
             } else {
                 clearInterval(interval);
@@ -80,7 +232,7 @@ function LiveSystemDiagnosticLog({ intensity }) {
     return (
         <div className="font-mono text-[8px] text-zinc-500 tracking-[0.18em] uppercase space-y-1">
             {logs.map((log, idx) => (
-                <div key={idx} className={log && (log.includes("ONLINE") || log.includes("STABLE")) ? "text-emerald-400/80" : "text-zinc-400/70"}>
+                <div key={idx} className={log && (log.includes("VERIFIED") || log.includes("ACTIVE") || log.includes("OPTIMAL") || log.includes("SIGNED")) ? "text-emerald-400/90 font-bold" : "text-zinc-400/70"}>
                     &gt; {log}
                 </div>
             ))}
@@ -88,24 +240,21 @@ function LiveSystemDiagnosticLog({ intensity }) {
     );
 }
 
-// --- Hologram 3D Visualizer Scene ---
-function HologramScene({ activeTab, speed }) {
+// --- Hologram Scene Component ---
+function HologramScene({ activeTab, speed, shapeOverride, theme }) {
     const pointsRef = useRef();
     const lineRef = useRef();
     const coreRef = useRef();
     const count = 216;
     
-    // Precompute target shape coordinates
     const shapes = useMemo(() => {
         const reactor = new Float32Array(count * 3);
         const brain = new Float32Array(count * 3);
         const matrix = new Float32Array(count * 3);
         const helix = new Float32Array(count * 3);
-        
-        const phi = Math.PI * (3 - Math.sqrt(5)); // Golden ratio
+        const phi = Math.PI * (3 - Math.sqrt(5));
         
         for (let i = 0; i < count; i++) {
-            // 1. Reactor Core (Double Helix)
             const isStrandB = i % 2 === 0;
             const angle = (i / count) * Math.PI * 12 + (isStrandB ? Math.PI : 0);
             const radius = 1.0;
@@ -114,7 +263,6 @@ function HologramScene({ activeTab, speed }) {
             reactor[i * 3 + 1] = h;
             reactor[i * 3 + 2] = Math.cos(angle) * radius;
             
-            // 2. Neural Constellation (Brain Network)
             const y = 1 - (i / (count - 1)) * 2;
             const rad = Math.sqrt(1 - y * y) * 1.5;
             const theta = i * phi;
@@ -122,7 +270,6 @@ function HologramScene({ activeTab, speed }) {
             brain[i * 3 + 1] = y * 1.5;
             brain[i * 3 + 2] = Math.sin(theta) * rad;
             
-            // 3. Digital Grid Matrix (6x6x6 Cube Grid)
             const ix = i % 6;
             const iy = Math.floor((i % 36) / 6);
             const iz = Math.floor(i / 36);
@@ -130,7 +277,6 @@ function HologramScene({ activeTab, speed }) {
             matrix[i * 3 + 1] = (iy - 2.5) * 0.52;
             matrix[i * 3 + 2] = (iz - 2.5) * 0.52;
             
-            // 4. Roadmap Ring Winding Helix
             const helixAngle = (i / count) * Math.PI * 10;
             const helixRadius = 1.2 - 0.5 * (i / count);
             const helixH = (i / count) * 3.2 - 1.6;
@@ -138,229 +284,223 @@ function HologramScene({ activeTab, speed }) {
             helix[i * 3 + 1] = helixH;
             helix[i * 3 + 2] = Math.cos(helixAngle) * helixRadius;
         }
-        
-        return { dashboard: reactor, skills: brain, projects: matrix, roadmap: helix, experience: reactor };
+        return { dashboard: reactor, skills: brain, projects: matrix, roadmap: helix, experience: reactor, reactor, neural: brain, matrix, helix };
     }, []);
 
     const currentPositions = useMemo(() => new Float32Array(count * 3), []);
-    
-    useEffect(() => {
-        const source = shapes[activeTab] || shapes.dashboard;
-        for (let i = 0; i < count * 3; i++) {
-            currentPositions[i] = source[i];
-        }
-    }, []);
 
     useFrame((state, delta) => {
         const elapsed = state.clock.elapsedTime;
-        const target = shapes[activeTab] || shapes.dashboard;
+        const shapeKey = shapeOverride || activeTab;
+        const target = shapes[shapeKey] || shapes.dashboard;
         
-        // Morph shapes
-        const positionAttr = pointsRef.current.geometry.attributes.position;
-        const positions = positionAttr.array;
-        
-        for (let i = 0; i < count * 3; i++) {
-            positions[i] = THREE.MathUtils.lerp(positions[i], target[i], 0.08);
-        }
-        positionAttr.needsUpdate = true;
-        
-        // Dynamic rotation using speed factor
-        pointsRef.current.rotation.y += delta * speed;
-        pointsRef.current.rotation.x = Math.sin(elapsed * 0.1) * 0.06;
-        
-        // Connect wire lines
-        if (lineRef.current) {
-            lineRef.current.rotation.copy(pointsRef.current.rotation);
-            const linePositionAttr = lineRef.current.geometry.attributes.position;
-            const linePositions = linePositionAttr.array;
-            let lineIdx = 0;
-            
-            const maxConnections = 120;
-            let connectionCount = 0;
-            
-            for (let i = 0; i < linePositions.length; i++) {
-                linePositions[i] = 0;
+        if (pointsRef.current) {
+            const positions = pointsRef.current.geometry.attributes.position.array;
+            for (let i = 0; i < count * 3; i++) {
+                positions[i] = THREE.MathUtils.lerp(positions[i], target[i], 0.08);
             }
+            pointsRef.current.geometry.attributes.position.needsUpdate = true;
+            pointsRef.current.rotation.y += delta * speed;
             
-            for (let i = 0; i < count; i++) {
-                if (connectionCount >= maxConnections) break;
-                
-                const px = positions[i * 3];
-                const py = positions[i * 3 + 1];
-                const pz = positions[i * 3 + 2];
-                
-                for (let j = i + 1; j < count; j++) {
-                    const qx = positions[j * 3];
-                    const qy = positions[j * 3 + 1];
-                    const qz = positions[j * 3 + 2];
-                    
-                    const distSq = (px-qx)*(px-qx) + (py-qy)*(py-qy) + (pz-qz)*(pz-qz);
-                    const maxDist = activeTab === "projects" ? 0.35 : 0.65;
-                    
-                    if (distSq < maxDist * maxDist) {
-                        linePositions[lineIdx++] = px;
-                        linePositions[lineIdx++] = py;
-                        linePositions[lineIdx++] = pz;
-                        linePositions[lineIdx++] = qx;
-                        linePositions[lineIdx++] = qy;
-                        linePositions[lineIdx++] = qz;
-                        
-                        connectionCount++;
-                        if (connectionCount >= maxConnections) break;
+            if (lineRef.current) {
+                lineRef.current.rotation.copy(pointsRef.current.rotation);
+                const linePositions = lineRef.current.geometry.attributes.position.array;
+                let lineIdx = 0;
+                let connectionCount = 0;
+                for (let i = 0; i < linePositions.length; i++) linePositions[i] = 0;
+                for (let i = 0; i < count; i++) {
+                    if (connectionCount >= 120) break;
+                    const px = positions[i * 3], py = positions[i * 3 + 1], pz = positions[i * 3 + 2];
+                    for (let j = i + 1; j < count; j++) {
+                        const qx = positions[j * 3], qy = positions[j * 3 + 1], qz = positions[j * 3 + 2];
+                        const distSq = (px-qx)*(px-qx) + (py-qy)*(py-qy) + (pz-qz)*(pz-qz);
+                        if (distSq < (shapeKey === "projects" ? 0.35 : 0.65) ** 2) {
+                            linePositions[lineIdx++] = px; linePositions[lineIdx++] = py; linePositions[lineIdx++] = pz;
+                            linePositions[lineIdx++] = qx; linePositions[lineIdx++] = qy; linePositions[lineIdx++] = qz;
+                            connectionCount++;
+                            if (connectionCount >= 120) break;
+                        }
                     }
                 }
+                lineRef.current.geometry.attributes.position.needsUpdate = true;
             }
-            linePositionAttr.needsUpdate = true;
-        }
 
-        // Color & Pulse morphing
-        const colors = tabColors[activeTab] || tabColors.dashboard;
-        const targetPointsCol = new THREE.Color(colors.points);
-        const targetLinesCol = new THREE.Color(colors.lines);
-        const targetCoreCol = new THREE.Color(colors.core);
-        
-        pointsRef.current.material.color.lerp(targetPointsCol, 0.08);
-        if (lineRef.current) {
-            lineRef.current.material.color.lerp(targetLinesCol, 0.08);
-        }
-        if (coreRef.current) {
-            coreRef.current.material.color.lerp(targetCoreCol, 0.08);
-            coreRef.current.material.opacity = 0.35 + 0.15 * Math.sin(elapsed * 4.5);
-            coreRef.current.scale.setScalar(1.0 + 0.08 * Math.sin(elapsed * 4.5));
+            const palette = themePalettes[theme] || themePalettes.amber;
+            pointsRef.current.material.color.lerp(new THREE.Color(palette.points), 0.08);
+            if (lineRef.current) lineRef.current.material.color.lerp(new THREE.Color(palette.lines), 0.08);
+            if (coreRef.current) {
+                coreRef.current.material.color.lerp(new THREE.Color(palette.core), 0.08);
+                coreRef.current.material.opacity = 0.4 + 0.2 * Math.sin(elapsed * 4.5);
+            }
         }
     });
 
     return (
         <group>
-            {/* Holographic Nodes */}
             <points ref={pointsRef}>
-                <bufferGeometry>
-                    <bufferAttribute
-                        attach="attributes-position"
-                        args={[currentPositions, 3]}
-                    />
-                </bufferGeometry>
-                <pointsMaterial
-                    color="#ffffff"
-                    size={0.06}
-                    transparent={true}
-                    opacity={0.8}
-                    depthWrite={false}
-                />
+                <bufferGeometry><bufferAttribute attach="attributes-position" args={[currentPositions, 3]} /></bufferGeometry>
+                <pointsMaterial color="#ffffff" size={0.065} transparent opacity={0.95} depthWrite={false} />
             </points>
-
-            {/* Connecting grid lines */}
             <lineSegments ref={lineRef}>
-                <bufferGeometry>
-                    <bufferAttribute
-                        attach="attributes-position"
-                        args={[new Float32Array(150 * 2 * 3), 3]}
-                    />
-                </bufferGeometry>
-                <lineBasicMaterial
-                    color="#fff2cc"
-                    transparent={true}
-                    opacity={0.25}
-                    depthWrite={false}
-                />
+                <bufferGeometry><bufferAttribute attach="attributes-position" args={[new Float32Array(150 * 2 * 3), 3]} /></bufferGeometry>
+                <lineBasicMaterial color="#fff2cc" transparent opacity={0.35} depthWrite={false} />
             </lineSegments>
-
-            {/* Center Pulsing Power Core */}
             <mesh ref={coreRef}>
-                <sphereGeometry args={[0.24, 16, 16]} />
-                <meshBasicMaterial
-                    color="#fbbf24"
-                    transparent={true}
-                    opacity={0.35}
-                />
-            </mesh>
-            <mesh>
-                <sphereGeometry args={[0.06, 16, 16]} />
-                <meshBasicMaterial
-                    color="#ffffff"
-                    transparent={true}
-                    opacity={0.8}
-                />
+                <sphereGeometry args={[0.26, 16, 16]} />
+                <meshBasicMaterial color="#fbbf24" transparent opacity={0.45} />
             </mesh>
         </group>
     );
 }
 
-function HologramCanvas({ activeTab, speed }) {
+function HologramCanvas({ activeTab, speed, shapeOverride, onSelectShape, theme }) {
     return (
-        <div className="w-full h-[220px] select-none pointer-events-auto cursor-grab active:cursor-grabbing relative overflow-hidden border border-white/5 bg-zinc-950/40 rounded-2xl shadow-inner my-3">
-            {/* Sci-fi scanner overlay lines */}
-            <div className="absolute inset-0 pointer-events-none border border-yellow-500/5 rounded-2xl z-10" />
-            <div className="absolute inset-x-0 top-0 h-[1.5px] bg-yellow-400/25 animate-[bounce_4s_infinite_ease-in-out] z-10" />
-            <div className="absolute bottom-2.5 left-3.5 font-mono text-[7px] tracking-widest text-yellow-400/70 uppercase z-10 flex items-center gap-1.5">
-                <span className="w-1 h-1 rounded-full bg-yellow-400 animate-ping" />
-                HOLOGRAPHIC EMITTER // SHAPE: {activeTab}
+        <div className="w-full h-[220px] select-none pointer-events-auto cursor-grab active:cursor-grabbing relative overflow-hidden border border-yellow-500/20 bg-gradient-to-b from-zinc-950/80 to-black/90 rounded-2xl shadow-[0_0_25px_rgba(251,191,36,0.08)] my-3">
+            <div className="absolute inset-0 pointer-events-none border border-yellow-400/20 rounded-2xl z-10" />
+            <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-yellow-400 to-transparent animate-[bounce_4s_infinite_ease-in-out] z-10 shadow-[0_0_10px_#facc15]" />
+            <div className="absolute bottom-2.5 left-3.5 font-mono text-[7.5px] tracking-widest text-yellow-400 uppercase z-10 flex items-center gap-1.5 font-bold">
+                <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-ping shadow-[0_0_8px_#facc15]" />
+                EMITTER // TOPOLOGY: {shapeOverride || activeTab}
             </div>
 
-            <Canvas
-                gl={{ antialias: true, alpha: true }}
-                camera={{ position: [0, 0, 4.0], fov: 45 }}
-                style={{ width: "100%", height: "100%" }}
-            >
-                <ambientLight intensity={0.5} />
-                <HologramScene activeTab={activeTab} speed={speed} />
-                <OrbitControls 
-                    enableZoom={false} 
-                    enablePan={false} 
-                    enableDamping={true}
-                    dampingFactor={0.06}
-                />
+            <div className="absolute top-2 right-2.5 z-20 flex gap-1 bg-zinc-950/80 p-1 rounded-lg border border-white/10 backdrop-blur-md shadow-lg">
+                {[
+                    { id: null, label: "AUTO" },
+                    { id: "reactor", label: "CORE" },
+                    { id: "neural", label: "NEURAL" },
+                    { id: "matrix", label: "GRID" },
+                    { id: "helix", label: "HELIX" }
+                ].map(item => (
+                    <button
+                        key={item.label}
+                        onClick={() => { AudioEngine.playUISelect(); onSelectShape(item.id); }}
+                        className={`px-1.5 py-0.5 text-[7px] font-mono font-bold rounded cursor-pointer transition-colors ${shapeOverride === item.id || (!shapeOverride && item.id === null) ? "bg-yellow-400 text-zinc-950" : "text-zinc-400 hover:text-white"}`}
+                    >
+                        {item.label}
+                    </button>
+                ))}
+            </div>
+
+            <Canvas gl={{ antialias: true, alpha: true }} camera={{ position: [0, 0, 4.0], fov: 45 }} style={{ width: "100%", height: "100%" }}>
+                <ambientLight intensity={0.6} />
+                <HologramScene activeTab={activeTab} speed={speed} shapeOverride={shapeOverride} theme={theme} />
+                <OrbitControls enableZoom={false} enablePan={false} enableDamping dampingFactor={0.06} />
             </Canvas>
         </div>
     );
 }
 
+const roadmapSteps = [
+    {
+        title: "B.Tech CSE (AI & Data Analytics) — SRIHER",
+        desc: "2024 – May 2028 | CGPA: 7.7/10 (6.86 → 7.68 upward trajectory). O grades in Data Analytics, ML, DBMS, Advanced C++, Linux. All Sem 2 arrears cleared in Sem 3.",
+        active: true,
+        checkpoints: [
+            "Current CGPA maintained at 7.7 / 10 with strong upward momentum",
+            "O Grades achieved in Data Analytics, ML, DBMS, Advanced C++, & Linux Labs",
+            "Demonstrated Road-AI vision model at SRIHER Research Day 2026",
+            "Innovation Day Cybercrime Prevention Showcase & Tech Expo 2025"
+        ]
+    },
+    {
+        title: "Data Analyst Intern — Larsen & Toubro (L&T Construction)",
+        desc: "May 2026 – Jul 2026 | First-of-its-kind PDF-to-Excel Spec Extractor & SLD Diagram OCR in L&T Analytics Division.",
+        active: false,
+        checkpoints: [
+            "Hybrid RAG (FAISS + BM25 + Reciprocal Rank Fusion) processing 1,200+ pages in minutes (down from 3-4 days)",
+            "Token cost optimized from $22 to $2 per run (90%+ savings) with 65-70% accuracy",
+            "OCR-based SLD extractor for AutoCAD PDFs with zero embedded text using Tesseract OCR",
+            "Signed LOR from Sr. Data Scientist Naveen Raj (NAVEEN-RAJ-B@LNTECC.COM) & Official Experience Letter"
+        ]
+    },
+    {
+        title: "Web Developer Intern — Neoshaan Technologies",
+        desc: "May 2025 – Jul 2025 | Production Web Applications & Lead Generation Backends.",
+        active: false,
+        checkpoints: [
+            "Built 3 client websites using React.js + Tailwind CSS with mobile responsiveness",
+            "Audited and resolved 20+ navigation and UX layout defects across live client properties",
+            "Engineered Node.js / Nodemailer lead capture backend API for conversion tracking"
+        ]
+    },
+    {
+        title: "Certification & Hackathon Sprint (Jul 2026 - Jun 2027)",
+        desc: "Targeting Google Data Analytics (Oct 2026), Orchestrate Hackathon (Aug 2026), 120+ StrataScratch SQL problems, & 2nd Internship (Jan-May 2027).",
+        active: false,
+        checkpoints: [
+            "Completed Stanford Machine Learning Specialization (Andrew Ng signed, 3 courses)",
+            "Completed Google Prompting Essentials (Amanda Brophy signed, 4 courses)",
+            "Earned HackerRank Python & SQL Gold Badges + SQL Intermediate Certificate",
+            "Preparing for GRE & IELTS (Feb-Mar 2027) & Mock Technical Interviews (Apr-Jun 2027)"
+        ]
+    },
+    {
+        title: "Placement Season & MS in Data Science @ ASU Target",
+        desc: "Oct 2027 – 2029+ | Securing ₹8-12 LPA Data Analyst role in 2028, leading to MS in Data Science at Arizona State University (2029).",
+        active: false,
+        checkpoints: [
+            "Placement Target (2028): Data Analyst / ML Engineer (₹8 - 12 LPA)",
+            "MS Enrollment (2029): Arizona State University (MS in Data Science)",
+            "Post-MS Target: US-based Data Science / ML Engineering role ($95K - $130K+)"
+        ]
+    }
+];
+
 export default function AboutPage() {
     const { isLightOn, setIsLightOn, setIsLoggedIn, lampIntensity, setLampIntensity, viewerName, college } = useLight();
     const [activeTab, setActiveTab] = useState("dashboard");
     const [skillsFilter, setSkillsFilter] = useState("all");
+    const [skillsSearch, setSkillsSearch] = useState("");
     const [isGlitching, setIsGlitching] = useState(false);
     const [hologramSpeed, setHologramSpeed] = useState(0.25);
-    
+    const [shapeOverride, setShapeOverride] = useState(null);
+    const [currentTheme, setCurrentTheme] = useState("amber");
+
+    // Interactive Modals & Snippets
+    const [selectedProject, setSelectedProject] = useState(null);
+    const [selectedSnippet, setSelectedSnippet] = useState(null);
+    const [isResumeOpen, setIsResumeOpen] = useState(false);
+
+    // Notification Toast State
+    const [toastMessage, setToastMessage] = useState(null);
+    const triggerToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(null), 3000);
+    };
+
     // CLI Interactive Console States
     const [cmdInput, setCmdInput] = useState("");
     const [history, setHistory] = useState([
-        { text: "LUMISPHERE OS v4.1 (BOOT_SEQUENCE_STABLE)", type: "system" },
-        { text: `Welcome, ${viewerName || "GuestViewer"} from ${college || "Unknown College"}!`, type: "system" },
-        { text: "Device identified: Quartz Halogen spotlight rig [50W].", type: "output" },
-        { text: "Type '/help' to display list of interactive command guidelines.", type: "output" }
+        { text: "LUMISPHERE OS v5.0 (S. VARUN VAIBHAV PROFILE MATRIX)", type: "system" },
+        { text: `Welcome, ${viewerName || "Guest Reviewer"} from ${college || "SRIHER / Partner Institution"}!`, type: "system" },
+        { text: "Target: MS in Data Science @ Arizona State University (2029)", type: "output" },
+        { text: "Type '/help', '/contact', '/profile', '/exp', '/skills', '/certs', or '/goals'. Try '/code'!", type: "output" }
     ]);
 
     const terminalEndRef = useRef(null);
 
     useEffect(() => {
-        // Reset scroll position of parent container on mount to fix layout misalignment caused by focusing input fields during login
         const parentContainer = document.querySelector(".w-screen.h-screen.overflow-hidden");
-        if (parentContainer) {
-            parentContainer.scrollTop = 0;
-        }
+        if (parentContainer) parentContainer.scrollTop = 0;
         window.scrollTo(0, 0);
     }, []);
 
     useEffect(() => {
         if (terminalEndRef.current) {
             const container = terminalEndRef.current.parentNode;
-            if (container) {
-                container.scrollTo({
-                    top: container.scrollHeight,
-                    behavior: "smooth"
-                });
-            }
+            if (container) container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
         }
     }, [history]);
 
     const [checklist, setChecklist] = useState([
-        { id: 1, text: "Build impressive L&T PDF extractor RAG pipelines", completed: true },
-        { id: 2, text: "Complete Google Data Analytics Professional Certificate", completed: false },
-        { id: 3, text: "Strengthen GitHub profile README & clean commits", completed: true },
-        { id: 4, text: "Practice Python and SQL algorithms on HackerRank", completed: false },
-        { id: 5, text: "Improve B.E. CGPA from 7.7 towards 8.5 target", completed: false },
-        { id: 6, text: "Prepare for placement mock interviews and DSA", completed: false }
+        { id: 1, text: "Deploy L&T PDF RAG Spec Extractor & SLD OCR Tools", completed: true },
+        { id: 2, text: "Stanford Machine Learning Specialization (Andrew Ng)", completed: true },
+        { id: 3, text: "Google Prompting Essentials Specialization", completed: true },
+        { id: 4, text: "HackerRank Python & SQL 5-Star Gold Badges", completed: true },
+        { id: 5, text: "Publish Hashnode Blog on L&T Automation & Host LumiSphere on Vercel", completed: true },
+        { id: 6, text: "Google Data Analytics Professional Certificate (Target Oct 2026)", completed: false },
+        { id: 7, text: "HackerRank Orchestrate Hackathon 2026 (Aug 1)", completed: false },
+        { id: 8, text: "Complete 120+ StrataScratch SQL problems & Secure 2nd Internship", completed: false }
     ]);
 
     const [expandedStage, setExpandedStage] = useState(0);
@@ -368,11 +508,6 @@ export default function AboutPage() {
     const completedTasks = checklist.filter(t => t.completed).length;
     const totalTasks = checklist.length;
     const taskPercent = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-
-    // SVG Circular Ring Math
-    const radius = 24;
-    const circumference = 2 * Math.PI * radius;
-    const strokeDashoffset = circumference - (taskPercent / 100) * circumference;
 
     const handleSignOut = () => {
         setIsGlitching(true);
@@ -389,17 +524,13 @@ export default function AboutPage() {
         setActiveTab(tabId);
     };
 
-    const toggleChecklist = (id) => {
-        AudioEngine.playUISelect();
-        setChecklist(prev => prev.map(item => 
-            item.id === id ? { ...item, completed: !item.completed } : item
-        ));
+    const executeCommand = (cmdStr) => {
+        setCmdInput(cmdStr);
+        runCommandLogic(cmdStr);
     };
 
-    // Command parser for CLI terminal
-    const handleCommandSubmit = (e) => {
-        e.preventDefault();
-        const raw = cmdInput.trim();
+    const runCommandLogic = (rawCommand) => {
+        const raw = rawCommand.trim();
         if (!raw) return;
 
         const newHistory = [...history, { text: `> ${raw}`, type: "input" }];
@@ -415,49 +546,76 @@ export default function AboutPage() {
         switch (cmd) {
             case "/help":
             case "help":
-                output = "System Console Commands:\n  /experience Switch workspace to Experience Tab\n  /skills     Switch workspace to Skills Tab\n  /projects   Switch workspace to Projects Tab\n  /roadmap    Switch workspace to Roadmap Tab\n  /dashboard  Switch workspace to Dashboard Tab\n  /dim <val>  Scale Halogen Dimmer output (0 - 100)\n  /glitch     Trigger visual terminal glitch diagnostic\n  /clear      Clear CLI terminal console buffer";
+                output = "System Commands:\n  /profile    Show Executive Profile Brief\n  /contact    View Phone, Email, & Location\n  /exp        View Internship Experience (L&T, Neoshaan)\n  /projects   Switch to Projects Matrix\n  /skills     Switch to Technical Skills\n  /certs      List 10+ Verified Certifications\n  /goals      View 2027-2029 Career Roadmap\n  /code       Inspect Production RAG / OCR / YOLO Code\n  /quiz       Launch Interactive Technical Quiz\n  /dim <val>  Calibrate Spotlight Output (0-100)\n  /theme <n>  Switch Palette (amber, green, cyan, purple, red)\n  /clear      Clear Console History";
                 break;
-            case "/experience":
-            case "experience":
-                setActiveTab("experience");
-                output = "SYSTEM COMMAND: Navigation to WORK_EXPERIENCE successful.";
+            case "/profile":
+            case "profile":
+                output = "S. VARUN VAIBHAV — PROFILE\n• Status: 2nd-year B.Tech (AI & Data Analytics) @ SRIHER Chennai\n• CGPA: 7.7/10 (Upward Trajectory: 6.86 -> 7.68, 2 arrears cleared)\n• Focus: Production Data Systems, Hybrid RAG, CV, & Full-Stack AI\n• Target: MS in Data Science @ Arizona State University (2029)";
                 break;
-            case "/skills":
-            case "skills":
-                setActiveTab("skills");
-                output = "SYSTEM COMMAND: Navigation to TECH_MATRIX successful.";
+            case "/contact":
+            case "contact":
+                output = "CONTACT DIRECTORY:\n• Email: Umasubramanian81@gmail.com\n• Phone: +91 9384000748\n• Location: Chennai, India\n• GitHub: github.com/theflighttechofficial\n• LinkedIn: linkedin.com/in/varun-vaibhav-s-11b69a2ba\n• Instagram: instagram.com/varunwashere__\n• Kaggle: kaggle.com/theflighttechofficial\n• Blog: theflighttechlabs.hashnode.dev";
+                break;
+            case "/exp":
+            case "exp":
+                output = "PROFESSIONAL INTERNSHIPS:\n1. L&T Construction — Data Analyst Intern (May-Jul 2026)\n   - PDF Spec Extractor: Hybrid RAG (FAISS + BM25 + RRF), 1200+ pgs (3-4 days -> mins), $22->$2 token cost.\n   - OCR SLD Extractor: Tesseract OCR for AutoCAD zero-text electrical PDFs.\n   - LOR from Sr. Data Scientist Naveen Raj (NAVEEN-RAJ-B@LNTECC.COM).\n2. Neoshaan Technologies — Web Developer (May-Jul 2025)\n   - Built 3 client sites (React + Tailwind) & Node.js/Nodemailer backend.";
+                break;
+            case "/certs":
+            case "certs":
+                output = "10+ VERIFIED CERTIFICATIONS:\n• Stanford Machine Learning Specialization (3 courses, Andrew Ng signed)\n• Google Prompting Essentials (4 courses, Amanda Brophy signed)\n• HackerRank Python Gold Badge (5 Stars) & SQL Gold Badge (5 Stars)\n• HackerRank SQL Intermediate Certificate\n• IBM Python 101 for Data Science & IBM Z Day AI & Data\n• Microsoft ML Models (Build 2026)\n• In Progress: Google Data Analytics Professional (Target Oct 2026)";
+                break;
+            case "/goals":
+            case "goals":
+                output = "CAREER ROADMAP & GOALS:\n• 2027: Certifications, 2nd Internship, Master SQL, GRE & IELTS\n• 2028: Graduate SRIHER, Secure Data Analyst Role (₹8-12 LPA)\n• 2029: Join MS in Data Science @ Arizona State University (ASU)\n• Post-MS: US Data Science / ML Engineering Role ($95K - $130K+)";
+                break;
+            case "/code":
+            case "code":
+                setSelectedSnippet(codeSnippets.rag);
+                output = "INSPECTOR INITIALIZED: Loaded L&T Hybrid RAG Pipeline Code.";
+                break;
+            case "/quiz":
+            case "quiz":
+                output = "QUIZ STARTED: [Q1] What vector search engine is combined with BM25 in Varun's L&T Hybrid RAG?\nAnswer options: A) ChromaDB  B) FAISS  C) Pinecone\nType '/ans B' to submit answer!";
+                break;
+            case "/ans":
+            case "ans":
+                if (arg && arg.toUpperCase() === "B") {
+                    output = "CORRECT ANSWER! (+100 XP)\nUnlocked Terminal Badge: [RAG_SYSTEMS_EXPERT]";
+                } else {
+                    output = "Incorrect answer! Hint: Facebook AI Similarity Search (FAISS).";
+                    isErr = true;
+                }
+                break;
+            case "/theme":
+            case "theme":
+                if (arg && themePalettes[arg.toLowerCase()]) {
+                    setCurrentTheme(arg.toLowerCase());
+                    output = `THEME UPDATED: Switched color palette to ${arg.toUpperCase()}.`;
+                } else {
+                    output = "Error: Available themes: amber, green, cyan, purple, red.";
+                    isErr = true;
+                }
                 break;
             case "/projects":
             case "projects":
                 setActiveTab("projects");
                 output = "SYSTEM COMMAND: Navigation to MISSION_LOGS successful.";
                 break;
-            case "/roadmap":
-            case "roadmap":
-                setActiveTab("roadmap");
-                output = "SYSTEM COMMAND: Navigation to MILESTONE_PIPELINE successful.";
-                break;
-            case "/dashboard":
-            case "dashboard":
-                setActiveTab("dashboard");
-                output = "SYSTEM COMMAND: Navigation to SYSTEM_METRICS successful.";
+            case "/skills":
+            case "skills":
+                setActiveTab("skills");
+                output = "SYSTEM COMMAND: Navigation to TECH_MATRIX successful.";
                 break;
             case "/dim":
             case "dim":
                 const val = parseInt(arg, 10);
                 if (!isNaN(val) && val >= 0 && val <= 100) {
                     setLampIntensity(val);
-                    output = `CALIBRATION SUCCESS: Halogen intensity set to ${val}% output.`;
+                    output = `CALIBRATION SUCCESS: Halogen intensity set to ${val}%.`;
                 } else {
-                    output = "Error: Invalid parameter. Intensity must be a number from 0 to 100. Example: /dim 60";
+                    output = "Error: Intensity must be a number 0 - 100. Example: /dim 60";
                     isErr = true;
                 }
-                break;
-            case "/glitch":
-            case "glitch":
-                setIsGlitching(true);
-                setTimeout(() => setIsGlitching(false), 750);
-                output = "CORRUPTING DISPLAY SHADERS... RETURNING STABLE STATE.";
                 break;
             case "/clear":
             case "clear":
@@ -465,7 +623,7 @@ export default function AboutPage() {
                 setCmdInput("");
                 return;
             default:
-                output = `Command not recognized: '${cmd}'. Type '/help' for command directory.`;
+                output = `Command not recognized: '${cmd}'. Type '/help' for options.`;
                 isErr = true;
         }
 
@@ -473,129 +631,191 @@ export default function AboutPage() {
         setCmdInput("");
     };
 
+    const handleCommandSubmit = (e) => {
+        e.preventDefault();
+        runCommandLogic(cmdInput);
+    };
+
+    const handleCopyEmail = () => {
+        AudioEngine.playUISelect();
+        navigator.clipboard.writeText("Umasubramanian81@gmail.com");
+        triggerToast("Email copied: Umasubramanian81@gmail.com");
+    };
+
+    const handleCopyPhone = () => {
+        AudioEngine.playUISelect();
+        navigator.clipboard.writeText("+91 9384000748");
+        triggerToast("Phone number copied: +91 9384000748");
+    };
+
+    const handleCopySnippet = (snippetText) => {
+        AudioEngine.playUISelect();
+        navigator.clipboard.writeText(snippetText);
+        triggerToast("Code snippet copied to clipboard!");
+    };
+
+    const engineeringPillars = [
+        { title: "Hybrid RAG & Doc AI", desc: "FAISS vector search, BM25 keyword matching, RRF reranking, 1200+ pg spec extractions ($22 -> $2 cost optimization)", icon: Brain },
+        { title: "Computer Vision & Edge AI", desc: "YOLOv8, MiDaS depth estimation, Tesseract OCR for AutoCAD SLD electrical PDFs, OpenCV 30 FPS", icon: Eye },
+        { title: "High-FPS WebGL Systems", desc: "React, Three.js 3D shaders, Framer Motion, LumiSphere Vercel portfolio, sub-second load times", icon: Layout },
+        { title: "Data Analytics & SQL", desc: "pandas, NumPy, MySQL, MongoDB schema indexing (<100ms queries), HackerRank 5-Star Gold Badges", icon: Database }
+    ];
+
     const skills = [
         // Languages
         { name: "Python", category: "languages", level: "Expert" },
         { name: "SQL", category: "languages", level: "Expert" },
-        { name: "JavaScript", category: "languages", level: "Advanced" },
+        { name: "JavaScript / React", category: "languages", level: "Advanced" },
         { name: "C / C++", category: "languages", level: "Advanced" },
         { name: "Java", category: "languages", level: "Intermediate" },
-        
-        // AI / ML & Data
-        { name: "Machine Learning / scikit-learn", category: "aiml", level: "Specialist" },
+        // AI & ML
+        { name: "scikit-learn & XGBoost", category: "aiml", level: "Specialist" },
         { name: "YOLOv8 & Computer Vision", category: "aiml", level: "Specialist" },
-        { name: "RAG & LLM (GPT-4o)", category: "aiml", level: "Expert" },
-        { name: "SentenceTransformers & FAISS", category: "aiml", level: "Advanced" },
-        { name: "Tesseract OCR & OpenCV", category: "aiml", level: "Advanced" },
-        { name: "pandas & NumPy", category: "aiml", level: "Expert" },
-        
-        // Web & Backend
-        { name: "React.js / Vite", category: "webdev", level: "Advanced" },
+        { name: "FAISS & BM25 Vector Search", category: "aiml", level: "Expert" },
+        { name: "Reciprocal Rank Fusion (RRF)", category: "aiml", level: "Expert" },
+        { name: "SHAP Explainability", category: "aiml", level: "Advanced" },
+        { name: "NLP & SentenceTransformers", category: "aiml", level: "Advanced" },
+        // Data
+        { name: "pandas & NumPy", category: "data", level: "Expert" },
+        { name: "Tesseract OCR & PyMuPDF", category: "data", level: "Expert" },
+        { name: "Statistical Data Analysis", category: "data", level: "Advanced" },
+        { name: "Data Engineering Pipelines", category: "data", level: "Advanced" },
+        // Web Dev
+        { name: "React.js & Vite", category: "webdev", level: "Expert" },
         { name: "Tailwind CSS", category: "webdev", level: "Expert" },
-        { name: "Node.js / Express", category: "webdev", level: "Advanced" },
-        { name: "HTML / CSS", category: "webdev", level: "Expert" },
+        { name: "Node.js & Express", category: "webdev", level: "Advanced" },
+        { name: "MongoDB & MySQL", category: "webdev", level: "Advanced" },
         { name: "Nodemailer & REST APIs", category: "webdev", level: "Advanced" },
-        
-        // Databases & Tools
-        { name: "MongoDB & MySQL", category: "tools", level: "Advanced" },
-        { name: "Git & GitHub", category: "tools", level: "Advanced" },
-        { name: "PyMuPDF & openpyxl", category: "tools", level: "Advanced" },
-        { name: "Linux & VS Code", category: "tools", level: "Expert" },
-        { name: "Data Analytics", category: "tools", level: "Expert" }
+        // Tools
+        { name: "Git & GitHub", category: "tools", level: "Expert" },
+        { name: "Linux Shell & CLI", category: "tools", level: "Expert" },
+        { name: "VS Code & Jupyter", category: "tools", level: "Expert" },
+        { name: "Vercel Deployment", category: "tools", level: "Advanced" }
     ];
 
     const projects = [
         {
-            title: "LumiSphere",
-            category: "webdev",
-            desc: "Highly interactive web experience featuring cinematic particle simulations, glassmorphism design, WebGL-inspired visuals, and fluid animation systems with sub-second load times.",
-            tags: ["React", "Vite", "Three.js", "WebGL", "Framer Motion"],
-            link: "https://github.com/theflighttechofficial/lumisphere"
-        },
-        {
             title: "Road-AI",
             category: "aiml",
-            desc: "Ensemble YOLOv8 detection system with temporal fusion and Monte Carlo Dropout uncertainty quantification. Achieved mAP50 of 0.648 on RDD2022. Integrated depth estimation, NHAI cost estimation, multilingual TTS, and blockchain tracking.",
-            tags: ["YOLOv8", "Computer Vision", "Depth Estimation", "Blockchain"],
+            desc: "YOLOv8 + depth estimation + NHAI cost analysis. mAP50: 0.648 on RDD2022, 38% false positive reduction. Physics-based depth & blockchain tracking.",
+            fullDesc: "Road-AI is an ensemble YOLOv8 computer vision system integrated with MiDaS physics-based depth estimation, an automated NHAI repair cost estimation engine, text-to-speech alerts, and an immutable blockchain inspection audit log. Presented at SRIHER Research Day 2026.",
+            metrics: "mAP50: 0.648 • 38% FP Reduction • 30 FPS OpenCV • Blockchain Audit Logs",
+            tags: ["YOLOv8", "Computer Vision", "Depth Estimation", "Blockchain", "Python"],
+            snippetKey: "roadai",
             link: "https://github.com/theflighttechofficial"
         },
         {
-            title: "HomeFinder",
-            category: "webdev",
-            desc: "Full-stack rental listing discovery platform supporting multi-attribute filtering (city, price, amenities) enabling city-level filtered search across India. Sub-100 ms query latency.",
-            tags: ["JavaScript", "HTML/CSS", "Tailwind CSS", "MongoDB"],
-            link: "https://github.com/theflighttechofficial"
-        },
-        {
-            title: "Invisibility Cloak",
+            title: "L&T Hybrid RAG Spec Extractor",
             category: "aiml",
-            desc: "Live video processing pipeline performing real-time colour-segmentation and background compositing on a 30 fps camera feed using OpenCV HSV masking logic.",
-            tags: ["Python", "OpenCV", "Numpy"],
+            desc: "Hybrid RAG pipeline (FAISS + BM25 + RRF) processing 1,200+ pages in minutes (down from 3-4 days). Optimized token costs from $22 to $2 per run.",
+            fullDesc: "Production-grade document intelligence tool deployed in L&T Construction Analytics. Combines FAISS dense vector search, BM25 sparse keyword search, and Reciprocal Rank Fusion with GPT-4o to extract technical specifications into structured Excel sheets at 65-70% accuracy.",
+            metrics: "1,200+ Pages/Run • 3-4 Days → Minutes • Token Cost: $22 → $2 • 65-70% Accuracy",
+            tags: ["Python", "FAISS", "BM25", "Reciprocal Rank Fusion", "RAG"],
+            snippetKey: "rag",
+            link: "https://github.com/theflighttechofficial"
+        },
+        {
+            title: "L&T OCR SLD Extractor",
+            category: "aiml",
+            desc: "First-of-its-kind Tesseract OCR tool extracting electrical data from AutoCAD PDF single line diagrams with zero embedded text.",
+            fullDesc: "Production OCR pipeline built for L&T Construction Analytics. Preprocesses rasterized electrical single-line diagrams (SLDs) with adaptive thresholding and iterative Tesseract parsing to extract circuit breaker ratings and node topology.",
+            metrics: "Zero-Text Layer PDF OCR • Deployed in L&T Analytics • Automated SLD Parsing",
+            tags: ["Python", "Tesseract OCR", "OpenCV", "AutoCAD PDF"],
+            snippetKey: "ocr_sld",
             link: "https://github.com/theflighttechofficial"
         },
         {
             title: "AgriYield AI",
             category: "aiml",
-            desc: "Crop yield prediction platform using ensemble regression models trained on weather, soil, and historical harvest data with a prediction dashboard built with pandas/scikit-learn.",
-            tags: ["Machine Learning", "Pandas", "Scikit-Learn", "Python"],
+            desc: "XGBoost crop yield prediction platform with SHAP explainability analysis. Published on Kaggle.",
+            fullDesc: "Agricultural machine learning system integrating weather, soil chemistry, and historical regional yield data. Uses XGBoost regressors and SHAP (SHapley Additive exPlanations) values for interpretable yield projections.",
+            metrics: "XGBoost Ensemble • SHAP Interpretability • Published on Kaggle",
+            tags: ["XGBoost", "scikit-learn", "SHAP", "pandas", "Kaggle"],
+            link: "https://github.com/theflighttechofficial"
+        },
+        {
+            title: "LumiSphere Portfolio",
+            category: "webdev",
+            desc: "Cinematic interactive WebGL portfolio hosted live on Vercel. React + Vite, Three.js shaders, halogen dimmer controls, & glassmorphism.",
+            fullDesc: "State-of-the-art developer portfolio platform featuring real-time WebGL particle shaders, Three.js 3D hologram morphing, custom audio feedback synthesis, dynamic halogen dimmer controls, and responsive UI.",
+            metrics: "Live on Vercel • 60 FPS WebGL Shaders • Custom AudioEngine FX",
+            tags: ["React", "Vite", "Three.js", "WebGL", "Framer Motion"],
+            snippetKey: "hologram",
+            link: "https://github.com/theflighttechofficial/lumisphere"
+        },
+        {
+            title: "HomeFinder Rental Platform",
+            category: "webdev",
+            desc: "Full-stack real estate rental platform built with React, Node.js, and MongoDB featuring sub-100ms multi-attribute queries.",
+            fullDesc: "Full-stack rental listing engine supporting city-level structured search, price range filtering, amenity matching, and property type classification with compound MongoDB indexing.",
+            metrics: "<100ms Query Latency • Compound Indexing • Clean Glass UI",
+            tags: ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
+            snippetKey: "homefinder",
+            link: "https://github.com/theflighttechofficial"
+        },
+        {
+            title: "Titanic ML Competition",
+            category: "aiml",
+            desc: "Classification pipeline achieving 78.71% accuracy on Kaggle Titanic benchmark with feature engineering.",
+            fullDesc: "Machine learning submission notebook incorporating family size grouping, title extraction, and Random Forest / XGBoost ensembling. Published on Kaggle.",
+            metrics: "78.71% Accuracy • Published Kaggle Notebook • Feature Engineering",
+            tags: ["Machine Learning", "Kaggle", "scikit-learn", "Python"],
+            link: "https://kaggle.com/theflighttechofficial"
+        },
+        {
+            title: "ROGII Wellbore Competition",
+            category: "aiml",
+            desc: "Active Kaggle competitive data science track focused on geological wellbore trajectory modeling.",
+            fullDesc: "Ongoing Kaggle competition notebook developing spatial regression algorithms for oil & gas wellbore spatial orientation.",
+            metrics: "Active Kaggle Track • Targeting Medal • Spatial Data Science",
+            tags: ["Kaggle", "Geospatial ML", "Python", "Data Science"],
+            link: "https://kaggle.com/theflighttechofficial"
+        },
+        {
+            title: "Invisibility Cloak",
+            category: "aiml",
+            desc: "Real-time OpenCV computer vision pipeline operating at 30 FPS for HSV color segmentation and background compositing.",
+            fullDesc: "Augmented video processing script isolating specific color spectrum bands in HSV space and dynamically blending stored background frames to render target objects invisible in real-time.",
+            metrics: "30 FPS Real-time Stream • Zero Latency Blending • HSV Filtering",
+            tags: ["Python", "OpenCV", "NumPy"],
             link: "https://github.com/theflighttechofficial"
         },
         {
             title: "Smart File Organiser",
             category: "tools",
-            desc: "Desktop C++ application built with Qt Creator GUI that automates file classification and relocation to category folders, reducing manual management time to near-zero.",
-            tags: ["C++", "Qt Creator", "GUI", "Desktop"],
+            desc: "C++ desktop application built with Qt GUI for automated directory sorting and file type organization.",
+            fullDesc: "Native high-performance desktop utility engineered in C++ and Qt, providing automated rule-based file organization, metadata indexing, and directory cleanup.",
+            metrics: "Native C++ Speed • Qt Desktop GUI • Instant Multi-threaded Sorting",
+            tags: ["C++", "Qt Framework", "Desktop App"],
             link: "https://github.com/theflighttechofficial"
         }
     ];
 
-    const roadmapSteps = [
-        { 
-            title: "Stage 1: B.Tech CSE (AI & Data Analytics) · SRIHER (Current)", 
-            desc: "Currently pursuing B.Tech in Computer Science at SRIHER, Chennai (Expected 2028). Strong focus on Data Analytics and AI models.", 
-            active: true,
-            checkpoints: [
-                "Maintain GPA (currently 7.7/10) and aim for graduation targets",
-                "Continue building ML and CV projects like Road-AI and Invisibility Cloak",
-                "Expand skills in RAG pipelines, NLP, and deep learning models"
-            ]
-        },
-        { 
-            title: "Stage 2: Technical Certifications & IBM Z Skills", 
-            desc: "Complete specialized courses and earn certifications from leading tech giants.", 
-            active: false,
-            checkpoints: [
-                "IBM / Cognitive Class: Python 101 for Data Science",
-                "Microsoft Learn: Creation of ML Models (Build 2026)",
-                "IBM Z Day 2025: AI & Data, IBM Z Skills, Modernization, Security"
-            ]
-        },
-        { 
-            title: "Stage 3: Hackathons & Presentations", 
-            desc: "Present research projects and compete in top hackathons.", 
-            active: false,
-            checkpoints: [
-                "Showcase Road-AI (Intelligent Road Damage Analyser) at SRIHER Research Day 2026 and IIT Madras Hackathon",
-                "Showcase real-time cybercrime prevention & active monitoring software at Innovation Day"
-            ]
-        },
-        { 
-            title: "Stage 4: Professional Career & Post-grad Goals", 
-            desc: "Leverage internship experiences at L&T and Neoshaan Technologies to transition into enterprise AI / Full-stack roles, or pursue MS abroad.", 
-            active: false,
-            checkpoints: [
-                "Scale L&T's PDF-to-Excel Spec Extractor using hybrid RAG pipelines",
-                "Maintain and deploy high-performance web systems utilizing React and Node.js",
-                "Target graduate studies in advanced CV and NLP"
-            ]
-        }
+    const certifications = [
+        { title: "Stanford Machine Learning Specialization", issuer: "Stanford Online / Coursera (Jul 20, 2026)", desc: "Supervised ML, Advanced Learning Algorithms, Unsupervised Learning. Signed by Andrew Ng.", badge: "STANFORD / ANDREW NG" },
+        { title: "Google Prompting Essentials", issuer: "Google / Coursera (Jul 5, 2026)", desc: "4-course specialization in prompt engineering, context framing, & LLM workflows. Signed by Amanda Brophy, Google.", badge: "GOOGLE VERIFIED" },
+        { title: "HackerRank Python Gold Badge", issuer: "HackerRank (Jul 8, 2026)", desc: "5-Star Gold Badge in Python algorithmic problem solving.", badge: "GOLD BADGE (5★)" },
+        { title: "HackerRank SQL Gold Badge & Intermediate", issuer: "HackerRank (Jul 18 & 22, 2026)", desc: "5-Star Gold Badge in SQL + Verified SQL Intermediate Certification.", badge: "GOLD BADGE (5★)" },
+        { title: "Google Data Analytics Professional", issuer: "Google / Coursera (In Progress - Target Oct 2026)", desc: "Comprehensive data processing, SQL query optimization, R & Tableau visualization.", badge: "IN PROGRESS" },
+        { title: "IBM Python 101 for Data Science", issuer: "IBM / Cognitive Class", desc: "Data structures, pandas, NumPy, and REST API integration.", badge: "IBM VERIFIED" },
+        { title: "Creation of ML Models 2026", issuer: "Microsoft Learn (Build 2026)", desc: "Scikit-Learn, Automated ML, and Azure ML model creation.", badge: "MICROSOFT" },
+        { title: "IBM Z Day AI & Data", issuer: "IBM Z Systems", desc: "Enterprise AI, Mainframe Data Security & Modernization.", badge: "ENTERPRISE AI" }
     ];
 
-    const filteredSkills = skillsFilter === "all" 
-        ? skills 
-        : skills.filter(s => s.category === skillsFilter);
+    const researchHighlights = [
+        { title: "SRIHER Research Day 2026", role: "Key Demonstrator", desc: "Presented Road-AI YOLOv8 ensemble vision model with physics depth calculation and NHAI cost engine." },
+        { title: "Innovation Day Showcase", role: "Innovator", desc: "Presented real-time cybercrime monitoring and active threat prevention software." },
+        { title: "L&T Analytics First-of-Kind", role: "Lead Analyst Intern", desc: "Pioneered PDF RAG Spec Extractor & SLD Diagram OCR, cutting token costs by 90%+ ($22 → $2)." },
+        { title: "Tech Expo 2025", role: "Presenter", desc: "Demonstrated full-stack lead generation systems and high-performance Web applications." }
+    ];
 
-    // Dynamic bulb diagnostic string helper
+    const filteredSkills = skills.filter(s => {
+        const matchesCategory = skillsFilter === "all" || s.category === skillsFilter;
+        const matchesSearch = s.name.toLowerCase().includes(skillsSearch.toLowerCase()) || 
+                              s.level.toLowerCase().includes(skillsSearch.toLowerCase());
+        return matchesCategory && matchesSearch;
+    });
+
     const getBulbStatusText = () => {
         if (lampIntensity === 0) return "OFF / DISCHARGED";
         if (lampIntensity <= 20) return "WARN / UNDERVOLT";
@@ -603,31 +823,436 @@ export default function AboutPage() {
     };
 
     return (
-        <div className="absolute inset-0 z-50 flex flex-row overflow-hidden pointer-events-none p-6 bg-black/45 backdrop-blur-[6px]">
+        <div className="absolute inset-0 z-50 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden pointer-events-none p-2 sm:p-4 lg:p-6 bg-black/70 lg:bg-black/40 backdrop-blur-md lg:backdrop-blur-[5px] scrollbar-thin">
             
-            {/* Ambient visual overlays */}
+            {/* Ambient background glows */}
+            <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-yellow-500/10 rounded-full blur-[160px] pointer-events-none animate-pulse" />
+            <div className="absolute -bottom-32 -right-32 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[180px] pointer-events-none animate-pulse" />
+
+            {/* Notification Toast */}
             <AnimatePresence>
-                {isGlitching && (
+                {toastMessage && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                        className="absolute top-6 left-1/2 -translate-x-1/2 z-[200] px-4.5 py-2.5 rounded-2xl bg-zinc-900/95 border border-yellow-400/40 text-yellow-300 font-mono text-[9.5px] font-bold shadow-[0_10px_35px_rgba(251,191,36,0.25)] flex items-center gap-2 backdrop-blur-md pointer-events-auto"
+                    >
+                        <CheckCircle2 size={13} className="text-yellow-400" />
+                        <span>{toastMessage}</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Interactive Executive Resume Modal */}
+            <AnimatePresence>
+                {isResumeOpen && (
                     <motion.div
                         initial={{ opacity: 0 }}
-                        animate={{ 
-                            opacity: [0, 0.9, 0.4, 0.95, 0],
-                            clipPath: [
-                                "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
-                                "polygon(0 14%, 100% 4%, 100% 92%, 0 78%)",
-                                "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
-                                "polygon(0 42%, 100% 32%, 100% 64%, 0 68%)",
-                                "polygon(0 0, 100% 0, 100% 100%, 0 100%)"
-                            ]
-                        }}
+                        animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.75, ease: "easeInOut" }}
-                        className="absolute inset-0 bg-zinc-950 z-[100] flex flex-col items-center justify-center font-mono text-[13px] text-red-500 uppercase tracking-widest pointer-events-auto"
+                        onClick={() => setIsResumeOpen(false)}
+                        className="absolute inset-0 z-[170] bg-black/90 backdrop-blur-2xl flex items-center justify-center p-2 sm:p-4 md:p-8 pointer-events-auto overflow-y-auto"
                     >
-                        <div className="text-center space-y-2.5">
-                            <div className="font-bold animate-pulse text-[16px]">DISCONNECTING GATEWAY...</div>
-                            <div className="text-[10px] text-zinc-500">CORRUPTING BUFFER DATA / DISCHARGING CIRCUIT SYSTEM</div>
-                        </div>
+                        <motion.div
+                            initial={{ scale: 0.92, y: 25 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.92, y: 25 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full max-w-4xl max-h-[92vh] bg-gradient-to-b from-zinc-950 via-zinc-900 to-black border border-yellow-400/40 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-[0_25px_90px_rgba(251,191,36,0.2)] relative flex flex-col justify-between overflow-y-auto scrollbar-thin select-text text-zinc-200 font-sans"
+                        >
+                            <button
+                                onClick={() => setIsResumeOpen(false)}
+                                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-white/10 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors z-20"
+                            >
+                                <X size={16} />
+                            </button>
+
+                            {/* Resume Header */}
+                            <div className="border-b border-white/15 pb-6">
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <h1 className="text-3xl font-black text-white tracking-tight">S. VARUN VAIBHAV</h1>
+                                        <p className="text-xs font-bold font-mono text-yellow-400 uppercase tracking-widest mt-1">
+                                            2nd-Year B.Tech (AI & Data Analytics) · SRIHER Chennai · Building AI & Data Systems
+                                        </p>
+                                        <p className="text-xs text-zinc-400 mt-1 font-medium">
+                                            Targeting MS in Data Science @ Arizona State University (2029)
+                                        </p>
+                                    </div>
+                                    <div className="flex flex-col gap-1 text-[11px] font-mono text-zinc-300">
+                                        <div className="flex items-center gap-2">
+                                            <Mail size={12} className="text-emerald-400" />
+                                            <a href="mailto:Umasubramanian81@gmail.com" className="hover:text-yellow-400 transition-colors">Umasubramanian81@gmail.com</a>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Phone size={12} className="text-yellow-400" />
+                                            <span>+91 9384000748</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <MapPin size={12} className="text-red-400" />
+                                            <span>Chennai, India</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-wrap gap-2.5 mt-4 pt-3 border-t border-white/10 font-mono text-[9px]">
+                                    <a href="https://github.com/theflighttechofficial" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-yellow-400 text-zinc-300 hover:text-white">
+                                        <GithubIcon size={12} className="text-yellow-400" /> github.com/theflighttechofficial (10+ Repos)
+                                    </a>
+                                    <a href="https://linkedin.com/in/varun-vaibhav-s-11b69a2ba" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-blue-400 text-zinc-300 hover:text-white">
+                                        <LinkedinIcon size={12} className="text-blue-400" /> LinkedIn (119+ followers)
+                                    </a>
+                                    <a href="https://kaggle.com/theflighttechofficial" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-sky-400 text-zinc-300 hover:text-white">
+                                        <KaggleIcon size={12} className="text-sky-400" /> Kaggle (3 Notebooks)
+                                    </a>
+                                    <a href="https://theflighttechlabs.hashnode.dev" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-purple-400 text-zinc-300 hover:text-white">
+                                        <HashnodeIcon size={12} className="text-purple-400" /> Hashnode Blog
+                                    </a>
+                                    <a href="https://www.instagram.com/varunwashere__/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-pink-400 text-zinc-300 hover:text-white">
+                                        <InstagramIcon size={12} className="text-pink-400" /> Instagram (@varunwashere__)
+                                    </a>
+                                </div>
+                            </div>
+
+                            {/* Resume Content Body */}
+                            <div className="space-y-6 py-6">
+                                {/* Summary */}
+                                <div>
+                                    <h3 className="text-xs font-mono font-bold text-yellow-400 uppercase tracking-widest border-b border-white/10 pb-1 mb-2 flex items-center gap-2">
+                                        <User size={13} /> Professional Summary
+                                    </h3>
+                                    <p className="text-xs text-zinc-300 leading-relaxed">
+                                        I build production-grade data systems and AI tools. Currently learning ML, Data Engineering, and Full Stack Development while shipping actual products. Targeting MS in Data Science at Arizona State University (2029).
+                                    </p>
+                                </div>
+
+                                {/* Experience */}
+                                <div>
+                                    <h3 className="text-xs font-mono font-bold text-yellow-400 uppercase tracking-widest border-b border-white/10 pb-1 mb-3 flex items-center gap-2">
+                                        <Briefcase size={13} /> Professional Experience
+                                    </h3>
+                                    
+                                    <div className="space-y-4">
+                                        <div className="bg-white/[0.02] border border-white/10 rounded-2xl p-4">
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                                                <div>
+                                                    <h4 className="text-sm font-bold text-white uppercase">Data Analyst Intern — L&T Construction</h4>
+                                                    <p className="text-xs text-yellow-400 font-semibold">May 2026 – Jul 2026 | Chennai, India</p>
+                                                </div>
+                                                <span className="text-[9px] font-mono bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 px-2 py-0.5 rounded self-start sm:self-center font-bold">PRODUCTION TOOLS</span>
+                                            </div>
+                                            <ul className="space-y-1.5 text-xs text-zinc-300">
+                                                <li className="flex gap-2">
+                                                    <span className="text-yellow-400 font-bold">•</span>
+                                                    <span><strong>PDF-to-Excel Spec Extractor (Production Tool):</strong> Engineered a Hybrid RAG pipeline combining FAISS dense vector search, BM25 keyword matching, and Reciprocal Rank Fusion (RRF). Automated 1,200+ pages per run (reducing turnaround from 3-4 days to minutes) at 65-70% accuracy. First-of-its-kind tool in L&T Analytics Division.</span>
+                                                </li>
+                                                <li className="flex gap-2">
+                                                    <span className="text-yellow-400 font-bold">•</span>
+                                                    <span><strong>Token Optimization:</strong> Reduced API token costs from $22 to $2 per document run (90%+ cost optimization) using rule-based skipping and sentence embeddings.</span>
+                                                </li>
+                                                <li className="flex gap-2">
+                                                    <span className="text-yellow-400 font-bold">•</span>
+                                                    <span><strong>OCR-Based SLD Data Extractor (Production Tool):</strong> Built a custom Tesseract OCR pipeline for processing AutoCAD electrical single-line diagrams (SLDs) with zero embedded text layer. Deployed and actively used.</span>
+                                                </li>
+                                                <li className="flex gap-2 text-zinc-400 font-mono text-[10px] pt-1">
+                                                    <span>📄 Credentials: Signed LOR from Naveen Raj (Sr. Data Scientist, NAVEEN-RAJ-B@LNTECC.COM) & Official Experience Letter.</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        <div className="bg-white/[0.02] border border-white/10 rounded-2xl p-4">
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
+                                                <div>
+                                                    <h4 className="text-sm font-bold text-white uppercase">Web Developer Intern — Neoshaan Technologies</h4>
+                                                    <p className="text-xs text-yellow-400 font-semibold">May 2025 – Jul 2025</p>
+                                                </div>
+                                                <span className="text-[9px] font-mono bg-white/10 text-zinc-300 px-2 py-0.5 rounded self-start sm:self-center">CLIENT DEV</span>
+                                            </div>
+                                            <ul className="space-y-1.5 text-xs text-zinc-300">
+                                                <li className="flex gap-2">
+                                                    <span className="text-yellow-400 font-bold">•</span>
+                                                    <span>Built 3 client websites in React.js + Tailwind CSS, improving mobile responsiveness and Lighthouse scores.</span>
+                                                </li>
+                                                <li className="flex gap-2">
+                                                    <span className="text-yellow-400 font-bold">•</span>
+                                                    <span>Engineered Node.js / Nodemailer lead capture backend APIs for conversion tracking. Audited and resolved 20+ UX navigation defects.</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Education */}
+                                <div>
+                                    <h3 className="text-xs font-mono font-bold text-yellow-400 uppercase tracking-widest border-b border-white/10 pb-1 mb-3 flex items-center gap-2">
+                                        <GraduationCap size={13} /> Education & Academic Credentials
+                                    </h3>
+                                    <div className="bg-white/[0.02] border border-white/10 rounded-2xl p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                                        <div>
+                                            <h4 className="text-sm font-bold text-white uppercase">B.Tech — CSE (AI & Data Analytics)</h4>
+                                            <p className="text-xs text-yellow-400 font-semibold">SRIHER, Chennai | Expected Graduation: May 2028</p>
+                                            <p className="text-xs text-zinc-300 mt-1">
+                                                <strong>Lab Excellence:</strong> O Grades in Data Analytics, ML, DBMS, Advanced C++, & Linux.
+                                            </p>
+                                            <p className="text-[10px] text-zinc-400 font-mono mt-0.5">
+                                                Upward CGPA trajectory (6.86 → 7.68 → 7.7/10). All Sem 2 arrears cleared in Sem 3 (No standing impact).
+                                            </p>
+                                        </div>
+                                        <div className="px-3 py-2 rounded-xl bg-yellow-400/10 border border-yellow-400/30 text-center font-mono self-stretch md:self-auto flex flex-col justify-center">
+                                            <span className="text-[9px] text-zinc-400 uppercase">CGPA</span>
+                                            <span className="text-xl font-black text-yellow-400">7.7 / 10</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Certifications */}
+                                <div>
+                                    <h3 className="text-xs font-mono font-bold text-yellow-400 uppercase tracking-widest border-b border-white/10 pb-1 mb-3 flex items-center gap-2">
+                                        <Award size={13} /> 10+ Verified Certifications & Badges
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                                        <div className="p-3 bg-white/[0.02] border border-white/10 rounded-xl">
+                                            <div className="flex justify-between items-center text-xs font-bold text-white">
+                                                <span>Stanford ML Specialization (3 Courses)</span>
+                                                <span className="text-[8px] font-mono text-yellow-300 bg-yellow-500/10 px-1.5 py-0.5 rounded">ANDREW NG</span>
+                                            </div>
+                                            <p className="text-[10px] text-zinc-400 mt-1">Supervised ML, Advanced Learning Algorithms, Unsupervised Learning (Jul 20, 2026).</p>
+                                        </div>
+                                        <div className="p-3 bg-white/[0.02] border border-white/10 rounded-xl">
+                                            <div className="flex justify-between items-center text-xs font-bold text-white">
+                                                <span>Google Prompting Essentials (4 Courses)</span>
+                                                <span className="text-[8px] font-mono text-emerald-300 bg-emerald-500/10 px-1.5 py-0.5 rounded">GOOGLE</span>
+                                            </div>
+                                            <p className="text-[10px] text-zinc-400 mt-1">Signed by Amanda Brophy, Google (Jul 5, 2026).</p>
+                                        </div>
+                                        <div className="p-3 bg-white/[0.02] border border-white/10 rounded-xl">
+                                            <div className="flex justify-between items-center text-xs font-bold text-white">
+                                                <span>HackerRank Python & SQL Gold Badges</span>
+                                                <span className="text-[8px] font-mono text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded">5 STARS</span>
+                                            </div>
+                                            <p className="text-[10px] text-zinc-400 mt-1">Python Gold (Jul 8), SQL Gold (Jul 18), SQL Intermediate Cert (Jul 22).</p>
+                                        </div>
+                                        <div className="p-3 bg-white/[0.02] border border-white/10 rounded-xl">
+                                            <div className="flex justify-between items-center text-xs font-bold text-white">
+                                                <span>Google Data Analytics Professional</span>
+                                                <span className="text-[8px] font-mono text-sky-300 bg-sky-500/10 px-1.5 py-0.5 rounded">IN PROGRESS</span>
+                                            </div>
+                                            <p className="text-[10px] text-zinc-400 mt-1">Target Completion: Oct 2026. IBM Python 101, Microsoft ML Models, IBM Z Day AI.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Skills */}
+                                <div>
+                                    <h3 className="text-xs font-mono font-bold text-yellow-400 uppercase tracking-widest border-b border-white/10 pb-1 mb-3 flex items-center gap-2">
+                                        <Cpu size={13} /> Technical Skills Matrix
+                                    </h3>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 font-mono text-[10px]">
+                                        <div className="p-2.5 bg-white/[0.02] border border-white/10 rounded-xl">
+                                            <span className="text-yellow-400 font-bold uppercase text-[9px] block mb-1">Languages</span>
+                                            <p className="text-zinc-300">Python (Int+), SQL (Int), JavaScript/React, C/C++, Java</p>
+                                        </div>
+                                        <div className="p-2.5 bg-white/[0.02] border border-white/10 rounded-xl">
+                                            <span className="text-yellow-400 font-bold uppercase text-[9px] block mb-1">ML & AI</span>
+                                            <p className="text-zinc-300">scikit-learn, XGBoost, YOLOv8, FAISS, BM25, SHAP, NLP</p>
+                                        </div>
+                                        <div className="p-2.5 bg-white/[0.02] border border-white/10 rounded-xl">
+                                            <span className="text-yellow-400 font-bold uppercase text-[9px] block mb-1">Data Tools</span>
+                                            <p className="text-zinc-300">pandas, NumPy, PyMuPDF, Tesseract OCR, Stats</p>
+                                        </div>
+                                        <div className="p-2.5 bg-white/[0.02] border border-white/10 rounded-xl">
+                                            <span className="text-yellow-400 font-bold uppercase text-[9px] block mb-1">Web Full-Stack</span>
+                                            <p className="text-zinc-300">React, Vite, Tailwind CSS, Node.js, Express, MongoDB, MySQL</p>
+                                        </div>
+                                        <div className="p-2.5 bg-white/[0.02] border border-white/10 rounded-xl">
+                                            <span className="text-yellow-400 font-bold uppercase text-[9px] block mb-1">Developer Tools</span>
+                                            <p className="text-zinc-300">Git/GitHub, Linux Shell, VS Code, Jupyter, Vercel</p>
+                                        </div>
+                                        <div className="p-2.5 bg-white/[0.02] border border-white/10 rounded-xl">
+                                            <span className="text-yellow-400 font-bold uppercase text-[9px] block mb-1">Research & Competitions</span>
+                                            <p className="text-zinc-300">SRIHER Research Day 2026, HackerRank Orchestrate, Kaggle</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Resume Footer Controls */}
+                            <div className="border-t border-white/15 pt-4 flex items-center justify-between font-mono text-xs">
+                                <span className="text-[10px] text-zinc-500">S. Varun Vaibhav — Complete Executive CV</span>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => {
+                                            AudioEngine.playUISelect();
+                                            window.print();
+                                        }}
+                                        className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold flex items-center gap-1.5 transition-colors cursor-pointer text-xs"
+                                    >
+                                        <Download size={13} />
+                                        <span>Print / PDF</span>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            AudioEngine.playUISelect();
+                                            navigator.clipboard.writeText(`S. VARUN VAIBHAV
+Status: 2nd-year B.Tech (AI & Data Analytics) | SRIHER Chennai
+Contact: Umasubramanian81@gmail.com | +91 9384000748 | Chennai, India
+Target: MS in Data Science at Arizona State University (2029)
+
+EXPERIENCE:
+- Data Analyst Intern at L&T Construction (May-Jul 2026): Hybrid RAG (FAISS+BM25+RRF) Spec Extractor, 1200+ pgs, $22->$2 cost opt, OCR SLD Extractor. LOR: Naveen Raj (NAVEEN-RAJ-B@LNTECC.COM).
+- Web Developer at Neoshaan Technologies (May-Jul 2025): React + Tailwind, Node.js/Nodemailer backend.
+
+EDUCATION: B.Tech CSE (AI & Data Analytics) SRIHER Chennai (2028), CGPA 7.7/10.
+
+CERTIFICATIONS: Stanford Machine Learning Specialization (Andrew Ng), Google Prompting Essentials, HackerRank Python & SQL 5-Star Gold Badges.
+
+PROJECTS: Road-AI (YOLOv8 + Depth), L&T Hybrid RAG, OCR SLD Extractor, AgriYield AI, LumiSphere (Vercel), HomeFinder, Titanic ML, ROGII Wellbore, Invisibility Cloak, Smart File Organiser.
+
+GITHUB: github.com/theflighttechofficial`);
+                                            triggerToast("Full plain-text resume copied to clipboard!");
+                                        }}
+                                        className="px-4 py-2 rounded-xl bg-yellow-400 text-zinc-950 font-bold flex items-center gap-1.5 hover:bg-yellow-300 transition-colors cursor-pointer text-xs"
+                                    >
+                                        <Copy size={13} />
+                                        <span>Copy Full Text</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Interactive Code Inspector Modal */}
+            <AnimatePresence>
+                {selectedSnippet && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setSelectedSnippet(null)}
+                        className="absolute inset-0 z-[160] bg-black/85 backdrop-blur-xl flex items-center justify-center p-6 pointer-events-auto"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: 20 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full max-w-2xl bg-zinc-950 border border-yellow-400/40 rounded-3xl p-6 shadow-[0_20px_70px_rgba(251,191,36,0.15)] relative space-y-4 font-mono"
+                        >
+                            <button
+                                onClick={() => setSelectedSnippet(null)}
+                                className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/10 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors"
+                            >
+                                <X size={14} />
+                            </button>
+
+                            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                                <div className="flex items-center gap-2">
+                                    <Code2 className="text-yellow-400" size={18} />
+                                    <h3 className="text-sm font-bold text-white">{selectedSnippet.title}</h3>
+                                </div>
+                                <span className="text-[8px] font-bold text-yellow-300 bg-yellow-500/10 border border-yellow-500/20 px-2 py-0.5 rounded-full uppercase">
+                                    {selectedSnippet.lang}
+                                </span>
+                            </div>
+
+                            <div className="p-4 bg-black/80 border border-white/10 rounded-2xl overflow-x-auto text-[10px] text-zinc-300 leading-relaxed max-h-[360px] scrollbar-thin select-text">
+                                <pre><code>{selectedSnippet.code}</code></pre>
+                            </div>
+
+                            <div className="flex items-center justify-between pt-2">
+                                <span className="text-[8.5px] text-zinc-500">Live production code algorithm snippet</span>
+                                <button
+                                    onClick={() => handleCopySnippet(selectedSnippet.code)}
+                                    className="px-4 py-2 rounded-xl bg-yellow-400 text-zinc-950 font-bold text-xs flex items-center gap-2 hover:bg-yellow-300 transition-colors cursor-pointer"
+                                >
+                                    <Copy size={13} />
+                                    <span>Copy Snippet</span>
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Interactive Project Details Modal */}
+            <AnimatePresence>
+                {selectedProject && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setSelectedProject(null)}
+                        className="absolute inset-0 z-[150] bg-black/85 backdrop-blur-xl flex items-center justify-center p-6 pointer-events-auto"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: 20 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full max-w-xl bg-gradient-to-b from-zinc-900 to-zinc-950 border border-yellow-400/40 rounded-3xl p-6 shadow-[0_20px_70px_rgba(251,191,36,0.15)] relative space-y-4"
+                        >
+                            <button
+                                onClick={() => setSelectedProject(null)}
+                                className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/10 border border-white/10 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer transition-colors"
+                            >
+                                <X size={14} />
+                            </button>
+
+                            <div className="flex items-center gap-2">
+                                <span className="px-2.5 py-0.5 rounded-full border border-yellow-500/40 bg-yellow-500/10 text-yellow-300 font-mono text-[8px] font-bold uppercase tracking-wider">
+                                    {selectedProject.category}
+                                </span>
+                                <h3 className="text-xl font-black text-white">{selectedProject.title}</h3>
+                            </div>
+
+                            <p className="text-xs text-zinc-300 leading-relaxed font-medium">
+                                {selectedProject.fullDesc || selectedProject.desc}
+                            </p>
+
+                            <div className="p-3 bg-yellow-500/5 border border-yellow-500/20 rounded-xl font-mono text-[9px] text-yellow-300 space-y-1">
+                                <div className="text-[7.5px] uppercase tracking-widest text-yellow-400/80 font-bold">Key Performance Specs & Impact</div>
+                                <div>{selectedProject.metrics}</div>
+                            </div>
+
+                            <div className="flex flex-wrap gap-1.5 pt-1">
+                                {selectedProject.tags.map((tag, tIdx) => (
+                                    <span key={tIdx} className="text-[8px] font-bold text-zinc-300 bg-white/5 border border-white/10 rounded-md px-2 py-0.5 uppercase tracking-wider font-mono">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+
+                            <div className="flex items-center justify-between pt-3 border-t border-white/10">
+                                {selectedProject.snippetKey && codeSnippets[selectedProject.snippetKey] ? (
+                                    <button
+                                        onClick={() => {
+                                            const snip = codeSnippets[selectedProject.snippetKey];
+                                            setSelectedProject(null);
+                                            setSelectedSnippet(snip);
+                                        }}
+                                        className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-mono text-[10px] font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                                    >
+                                        <Code2 size={12} className="text-yellow-400" />
+                                        <span>Inspect Code</span>
+                                    </button>
+                                ) : <div />}
+
+                                <a
+                                    href={selectedProject.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={() => AudioEngine.playUISelect()}
+                                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-400 text-zinc-950 text-xs font-bold flex items-center gap-2 hover:brightness-110 transition-all cursor-pointer shadow-lg shadow-yellow-400/20"
+                                >
+                                    <GithubIcon size={14} />
+                                    <span>GitHub Repository</span>
+                                    <ExternalLink size={12} />
+                                </a>
+                            </div>
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -642,66 +1267,90 @@ export default function AboutPage() {
                 exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="
-                    w-[38%]
-                    h-full
-                    mr-3
-                    rounded-[30px]
+                    w-full
+                    lg:w-[38%]
+                    min-h-fit
+                    lg:h-full
+                    mr-0
+                    lg:mr-3
+                    mb-4
+                    lg:mb-0
+                    rounded-[24px]
+                    lg:rounded-[30px]
                     border
-                    border-white/10
-                    bg-zinc-950/45
+                    border-white/15
+                    bg-gradient-to-b
+                    from-zinc-950/80
+                    via-zinc-900/60
+                    to-zinc-950/90
                     backdrop-blur-2xl
-                    p-8
-                    pb-10
+                    p-4
+                    sm:p-7
+                    pb-6
+                    sm:pb-9
                     flex
                     flex-col
                     justify-between
                     pointer-events-auto
                     select-none
                     relative
-                    shadow-[0_20px_50px_rgba(0,0,0,0.6)]
+                    shadow-2xl
                 "
             >
                 <NoiseLayer />
 
-                {/* Brand Logo Header */}
-                <div className="flex items-center justify-between relative z-10 mb-2">
+                {/* Brand Logo & Ambiance Theme Switcher Header */}
+                <div className="flex items-center justify-between relative z-10 mb-1">
                     <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-black tracking-[0.4em] text-zinc-500 uppercase">LUMISPHERE OS</span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(251,191,36,0.8)] animate-pulse" />
+                        <span className="text-[10px] font-black tracking-[0.4em] text-yellow-400 uppercase">LUMISPHERE OS</span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 shadow-[0_0_10px_#facc15] animate-pulse" />
                     </div>
-                    <div className="flex items-center gap-1 bg-white/5 border border-white/5 rounded-md px-2 py-0.5 font-mono text-[7px] text-zinc-400">
-                        <Activity size={9} className="text-yellow-400 animate-pulse" />
-                        <span>HALOGEN RIG</span>
+
+                    {/* Interactive Palette Picker */}
+                    <div className="flex items-center gap-1 bg-black/60 border border-white/10 p-1 rounded-lg backdrop-blur-md">
+                        <Palette size={10} className="text-zinc-400 ml-1" />
+                        {Object.keys(themePalettes).map(tKey => (
+                            <button
+                                key={tKey}
+                                onClick={() => {
+                                    AudioEngine.playUISelect();
+                                    setCurrentTheme(tKey);
+                                    triggerToast(`Theme palette switched to ${tKey.toUpperCase()}`);
+                                }}
+                                className={`w-3.5 h-3.5 rounded-full cursor-pointer transition-transform ${currentTheme === tKey ? 'scale-125 ring-2 ring-white' : 'opacity-70 hover:opacity-100'}`}
+                                style={{ backgroundColor: themePalettes[tKey].points }}
+                                title={`Switch to ${tKey} theme`}
+                            />
+                        ))}
                     </div>
                 </div>
 
                 {/* 3D Hologram Visualizer Display */}
                 <div className="relative z-10">
-                    <HologramCanvas activeTab={activeTab} speed={hologramSpeed} />
+                    <HologramCanvas 
+                        activeTab={activeTab} 
+                        speed={hologramSpeed} 
+                        shapeOverride={shapeOverride}
+                        onSelectShape={(shape) => setShapeOverride(shape)}
+                        theme={currentTheme}
+                    />
                 </div>
 
                 {/* Emitter Settings Panel */}
-                <div className="space-y-4 relative z-10 border border-white/5 bg-black/20 p-4 rounded-2xl">
-                    
-                    {/* Dimmer Slider */}
+                <div className="space-y-3.5 relative z-10 border border-white/10 bg-black/40 p-4 rounded-2xl backdrop-blur-md shadow-inner">
                     <div className="space-y-2">
                         <div className="flex justify-between items-center">
-                            <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-1.5">
+                            <span className="text-[9px] font-bold text-zinc-300 uppercase tracking-widest flex items-center gap-1.5">
                                 <Zap size={11} className="text-yellow-400" />
                                 HALOGEN CALIBRATION
                             </span>
                             <span className="font-mono text-xs font-black text-yellow-300">{lampIntensity}%</span>
                         </div>
                         <input 
-                            type="range"
-                            min="0"
-                            max="100"
-                            value={lampIntensity}
+                            type="range" min="0" max="100" value={lampIntensity}
                             onChange={(e) => {
                                 setLampIntensity(Number(e.target.value));
-                                if (Number(e.target.value) % 5 === 0) {
-                                    AudioEngine.playUIHover();
-                                }
+                                if (Number(e.target.value) % 5 === 0) AudioEngine.playUIHover();
                             }}
                             className="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-yellow-400"
                         />
@@ -713,25 +1362,17 @@ export default function AboutPage() {
                         </div>
                     </div>
 
-                    {/* Hologram Speed Controls */}
                     <div className="flex items-center justify-between pt-2 border-t border-white/5">
-                        <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1">
-                            <RefreshCw size={10} className="animate-[spin_8s_linear_infinite]" />
+                        <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1">
+                            <RefreshCw size={10} className="animate-[spin_8s_linear_infinite] text-yellow-400" />
                             ROTOR FREQ:
                         </span>
                         <div className="flex gap-1.5">
-                            {[
-                                { label: "SLOW", val: 0.05 },
-                                { label: "NORM", val: 0.25 },
-                                { label: "HYPER", val: 0.75 }
-                            ].map(opt => (
+                            {[ { label: "SLOW", val: 0.05 }, { label: "NORM", val: 0.25 }, { label: "HYPER", val: 0.75 } ].map(opt => (
                                 <button
                                     key={opt.label}
-                                    onClick={() => {
-                                        AudioEngine.playUISelect();
-                                        setHologramSpeed(opt.val);
-                                    }}
-                                    className={`px-2 py-0.5 rounded text-[8px] font-mono font-bold cursor-pointer transition-colors ${hologramSpeed === opt.val ? 'bg-yellow-400 text-zinc-950 shadow-md shadow-yellow-400/20' : 'bg-white/5 hover:bg-white/10 text-zinc-400'}`}
+                                    onClick={() => { AudioEngine.playUISelect(); setHologramSpeed(opt.val); }}
+                                    className={`px-2 py-0.5 rounded text-[8px] font-mono font-bold cursor-pointer transition-colors ${hologramSpeed === opt.val ? 'bg-yellow-400 text-zinc-950' : 'bg-white/5 text-zinc-400'}`}
                                 >
                                     {opt.label}
                                 </button>
@@ -740,68 +1381,71 @@ export default function AboutPage() {
                     </div>
                 </div>
 
-                {/* System Diagnostics Terminal Readout */}
-                <div className="relative z-10 border border-white/5 bg-zinc-950/40 rounded-2xl p-4 backdrop-blur-md mt-3">
+                {/* System Diagnostics */}
+                <div className="relative z-10 border border-white/10 bg-zinc-950/60 rounded-2xl p-4 backdrop-blur-md mt-2">
                     <div className="text-zinc-400 font-bold font-mono text-[9px] tracking-widest flex items-center justify-between mb-2">
                         <span className="flex items-center gap-1.5">
-                            <span className={`w-1.5 h-1.5 rounded-full ${lampIntensity > 0 ? "bg-emerald-400 animate-ping" : "bg-red-400 animate-pulse"}`} />
+                            <span className={`w-1.5 h-1.5 rounded-full ${lampIntensity > 0 ? "bg-emerald-400 animate-ping shadow-[0_0_8px_#34d399]" : "bg-red-400 animate-pulse"}`} />
                             RIG DIAGNOSTICS:
                         </span>
-                        <span className={`text-[8px] px-1.5 py-0.5 rounded border border-white/5 bg-white/5 ${lampIntensity === 0 ? "text-red-400" : lampIntensity <= 20 ? "text-yellow-400 animate-pulse" : "text-emerald-400"}`}>
+                        <span className={`text-[8px] px-1.5 py-0.5 rounded border border-white/10 bg-white/5 font-bold ${lampIntensity === 0 ? "text-red-400" : lampIntensity <= 20 ? "text-yellow-400 animate-pulse" : "text-emerald-400"}`}>
                             {getBulbStatusText()}
                         </span>
                     </div>
                     <LiveSystemDiagnosticLog intensity={lampIntensity} />
                 </div>
             </motion.div>
- 
-            {/* Right Command Center Panel - Floating Glass Card */}
+
+            {/* Right Command Center Panel */}
             <motion.div
                 initial={{ x: "100%", opacity: 0.95 }}
-                animate={{
-                    x: 0,
-                    opacity: isLightOn ? 1 : 0.08,
-                    pointerEvents: isLightOn ? "auto" : "none",
-                }}
+                animate={{ x: 0, opacity: isLightOn ? 1 : 0.08, pointerEvents: isLightOn ? "auto" : "none" }}
                 exit={{ x: "100%", opacity: 0.95 }}
                 transition={{ type: "spring", stiffness: 85, damping: 17 }}
                 className="
-                    w-[62%]
-                    h-full
-                    ml-3
-                    rounded-[30px]
+                    w-full
+                    lg:w-[60%]
+                    min-h-fit
+                    lg:h-full
+                    ml-0
+                    lg:ml-3
+                    rounded-[24px]
+                    lg:rounded-[30px]
                     border
-                    border-white/10
-                    bg-zinc-950/45
+                    border-white/15
+                    bg-gradient-to-b
+                    from-zinc-950/85
+                    via-zinc-900/70
+                    to-zinc-950/90
                     backdrop-blur-3xl
-                    p-8
-                    pb-9
+                    p-4
+                    sm:p-6
+                    lg:p-8
+                    pb-6
+                    lg:pb-9
                     flex
                     flex-col
                     justify-between
                     overflow-hidden
                     pointer-events-auto
-                    shadow-[-30px_0_80px_rgba(0,0,0,0.8)]
+                    shadow-2xl
                     relative
                 "
             >
                 <NoiseLayer />
-                <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-500/5 blur-[130px] pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-500/5 blur-[130px] pointer-events-none" />
 
                 {/* Navigation Header */}
-                <div className="relative z-10 flex items-center justify-between mb-5">
+                <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-5 gap-3">
                     <button
                         onClick={handleSignOut}
                         onMouseEnter={() => AudioEngine.playUIHover()}
-                        className="flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-zinc-400 hover:text-white uppercase transition-colors"
+                        className="flex items-center gap-2 text-xs font-bold tracking-[0.15em] sm:tracking-[0.2em] text-zinc-400 hover:text-white uppercase transition-colors cursor-pointer"
                     >
                         <ArrowLeft size={14} className="text-yellow-400" />
                         Disconnect RIG
                     </button>
                     
-                    {/* Glowing Tab Bar */}
-                    <div className="relative flex gap-1 bg-white/[0.02] border border-white/5 rounded-xl p-1 backdrop-blur-md">
+                    <div className="w-full sm:w-auto flex gap-1 bg-black/40 border border-white/10 rounded-2xl p-1 backdrop-blur-md shadow-lg overflow-x-auto scrollbar-none max-w-full">
                         {[
                             { id: "dashboard", label: "Console", icon: Terminal },
                             { id: "experience", label: "Experience", icon: Briefcase },
@@ -812,17 +1456,14 @@ export default function AboutPage() {
                             <button
                                 key={tab.id}
                                 onClick={() => handleTabChange(tab.id)}
-                                className={`
-                                    relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-wider transition-colors duration-300 relative z-10
-                                    ${activeTab === tab.id ? "text-zinc-950" : "text-zinc-400 hover:text-white"}
-                                `}
+                                className={`relative flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-xl text-[8px] sm:text-[9px] font-bold uppercase tracking-wider transition-colors duration-300 relative z-10 cursor-pointer whitespace-nowrap ${activeTab === tab.id ? "text-zinc-950" : "text-zinc-400 hover:text-white"}`}
                             >
                                 <tab.icon size={11} />
                                 <span>{tab.label}</span>
                                 {activeTab === tab.id && (
                                     <motion.div
                                         layoutId="activeTabPill"
-                                        className="absolute inset-0 bg-yellow-400 rounded-lg -z-10 shadow-lg shadow-yellow-400/25"
+                                        className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-amber-400 rounded-xl -z-10 shadow-lg shadow-yellow-400/30"
                                         transition={{ type: "spring", stiffness: 380, damping: 30 }}
                                     />
                                 )}
@@ -833,15 +1474,14 @@ export default function AboutPage() {
 
                 {/* Main Profile Info Section */}
                 <div className="relative z-10 flex-1 flex flex-col justify-start">
-                    
-                    {/* Header Banner */}
-                    <div className="flex items-center gap-5 mb-5 border-b border-white/5 pb-4">
-                        {/* Interactive Tech Avatar */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-5 mb-4 sm:mb-5 border-b border-white/10 pb-4">
                         <motion.div
                             whileHover={{ scale: 1.05, rotate: 3 }}
-                            className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-950 flex items-center justify-center border border-yellow-500/20 shadow-[0_0_20px_rgba(251,191,36,0.12)] flex-shrink-0 cursor-pointer"
+                            className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-zinc-800 via-zinc-900 to-black flex items-center justify-center border border-yellow-400/40 shadow-[0_0_25px_rgba(251,191,36,0.25)] flex-shrink-0 cursor-pointer"
+                            onClick={() => setIsResumeOpen(true)}
+                            title="Click to open Executive CV"
                         >
-                            <svg width="34" height="34" viewBox="0 0 40 40" fill="none" className="text-yellow-400 drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]">
+                            <svg width="34" height="34" viewBox="0 0 40 40" fill="none" className="text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]">
                                 <circle cx="20" cy="20" r="16" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 3" className="animate-[spin_40s_linear_infinite]" />
                                 <circle cx="20" cy="20" r="10" stroke="currentColor" strokeWidth="1" />
                                 <path d="M20 4V36M4 20H36" stroke="currentColor" strokeWidth="0.8" opacity="0.4" />
@@ -850,161 +1490,149 @@ export default function AboutPage() {
                                 <circle cx="10" cy="20" r="2.5" fill="#a1a1aa" />
                                 <circle cx="30" cy="20" r="2.5" fill="#fbbf24" />
                             </svg>
-                            <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-4 border-zinc-950 flex items-center justify-center shadow-lg animate-pulse" />
+                            <span className="absolute -bottom-1 -right-1 w-4.5 h-4.5 rounded-full bg-emerald-400 border-4 border-zinc-950 flex items-center justify-center shadow-lg animate-pulse" />
                         </motion.div>
 
                         <div>
-                            <div className="flex items-center gap-2">
-                                <h2 className="text-xl font-black tracking-tight text-white">
-                                    S. Varun Vaibhav
-                                </h2>
-                                <span className="px-2 py-0.5 border border-yellow-500/20 bg-yellow-500/5 text-[7px] font-bold text-yellow-300 rounded-full font-mono uppercase tracking-widest flex items-center gap-1">
-                                    <Shield size={8} />
-                                    ROOT_DEV
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <h2 className="text-xl font-black tracking-tight text-white">S. Varun Vaibhav</h2>
+                                <span className="px-2 py-0.5 border border-yellow-400/30 bg-yellow-400/10 text-[7px] font-bold text-yellow-300 rounded-full font-mono uppercase tracking-widest flex items-center gap-1 shadow-sm">
+                                    <Shield size={8} /> AI & DATA SYSTEMS ENGINEER
                                 </span>
                                 {viewerName && (
-                                    <span className="px-2 py-0.5 border border-zinc-700 bg-zinc-800/40 text-[7px] font-bold text-zinc-300 rounded-full font-mono uppercase tracking-widest">
+                                    <span className="px-2 py-0.5 border border-zinc-700 bg-zinc-800/60 text-[7px] font-bold text-zinc-300 rounded-full font-mono uppercase tracking-widest">
                                         Viewer: {viewerName} ({college})
                                     </span>
                                 )}
                             </div>
-                            <p className="text-[9px] text-yellow-300 font-bold uppercase tracking-[0.25em] mt-0.5">
-                                AI & Data Analytics Engineer
+                            <p className="text-[9.5px] text-yellow-300 font-bold uppercase tracking-[0.2em] mt-0.5 flex items-center gap-1.5">
+                                <GraduationCap size={12} className="text-yellow-400" />
+                                2nd-Year B.Tech CSE (AI & Data Analytics) · SRIHER Chennai
                             </p>
-                            <p className="text-[11px] text-zinc-400 font-medium mt-1 leading-relaxed max-w-xl">
-                                AI & Data Analytics engineer who builds things that work — from hybrid RAG pipelines at L&T to computer vision systems and interactive web UIs. Fluent across the full stack: Python, ML, React, and SQL. Driven by turning complex, messy problems into clean, scalable solutions.
+                            <p className="text-[11px] text-zinc-300 font-medium mt-1 leading-relaxed max-w-xl">
+                                Building production-grade data systems & AI tools. Currently learning ML, Data Engineering, and Full Stack Development while shipping actual products. Targeting MS in Data Science at Arizona State University (2029).
                             </p>
                         </div>
                     </div>
 
-                    {/* Tab Panels with AnimatePresence */}
-                    <div className="flex-1 min-h-[460px]">
+                    {/* Tab Panels */}
+                    <div className="flex-1 min-h-fit lg:min-h-[460px]">
                         <AnimatePresence mode="wait">
                             
-                            {/* Panel 1: Dashboard (CLI Terminal & Gauge Controls) */}
+                            {/* Panel 1: Dashboard (CLI Terminal & Pillars) */}
                             {activeTab === "dashboard" && (
-                                <motion.div
-                                    key="dashboard-tab"
-                                    initial={{ opacity: 0, y: 12 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -12 }}
-                                    transition={{ duration: 0.22 }}
-                                    className="grid grid-cols-12 gap-4 h-full"
-                                >
-                                    {/* Left: CLI Interactive Console */}
-                                    <div className="col-span-7 flex flex-col h-[450px] border border-white/5 bg-zinc-950/60 rounded-2xl overflow-hidden backdrop-blur-md shadow-inner">
-                                        {/* Terminal Header Bar */}
-                                        <div className="flex items-center justify-between px-4 py-2 bg-white/[0.02] border-b border-white/5 font-mono text-[8px] text-zinc-500 uppercase tracking-widest">
+                                <motion.div key="dashboard-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-auto lg:h-full">
+                                    <div className="col-span-1 lg:col-span-7 flex flex-col h-[340px] sm:h-[450px] border border-white/10 bg-zinc-950/70 rounded-2xl overflow-hidden backdrop-blur-md shadow-2xl">
+                                        <div className="flex items-center justify-between px-4 py-2 bg-white/[0.03] border-b border-white/5 font-mono text-[8px] text-zinc-400 uppercase tracking-widest">
                                             <div className="flex items-center gap-1.5">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-red-500/80" />
                                                 <span className="w-1.5 h-1.5 rounded-full bg-yellow-500/80" />
                                                 <span className="w-1.5 h-1.5 rounded-full bg-green-500/80" />
-                                                <span className="ml-1 text-zinc-400 font-bold">Interactive CLI Shell</span>
+                                                <span className="ml-1 text-zinc-300 font-bold">Interactive CLI Shell</span>
                                             </div>
-                                            <span>SH-4.1</span>
+                                            <span>SH-5.0</span>
                                         </div>
-                                        {/* History Display */}
                                         <div className="flex-1 p-3.5 overflow-y-auto font-mono text-[9.5px] space-y-1.5 scrollbar-thin select-text">
                                             {history.map((line, idx) => (
-                                                <div key={idx} className={
-                                                    line.type === "system" ? "text-yellow-400 font-bold" :
-                                                    line.type === "input" ? "text-white" :
-                                                    line.type === "error" ? "text-red-400" : "text-zinc-400"
-                                                } style={{ whiteSpace: "pre-wrap" }}>
+                                                <div key={idx} className={line.type === "system" ? "text-yellow-400 font-bold" : line.type === "input" ? "text-white" : line.type === "error" ? "text-red-400" : "text-zinc-400"} style={{ whiteSpace: "pre-wrap" }}>
                                                     {line.text}
                                                 </div>
                                             ))}
                                             <div ref={terminalEndRef} />
                                         </div>
-                                        {/* Form Input */}
-                                        <form onSubmit={handleCommandSubmit} className="flex border-t border-white/5 bg-black/40">
+
+                                        {/* Interactive Quick Command Chips */}
+                                        <div className="px-3 py-1.5 bg-black/40 border-t border-white/5 flex flex-wrap gap-1 items-center font-mono text-[7.5px]">
+                                            <span className="text-zinc-500 font-bold uppercase mr-1">CHIPS:</span>
+                                            {["/help", "/profile", "/exp", "/certs", "/goals", "/code", "/quiz", "/clear"].map(chip => (
+                                                <button
+                                                    key={chip} type="button" onClick={() => executeCommand(chip)}
+                                                    className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 hover:bg-yellow-400 hover:text-zinc-950 text-zinc-400 transition-colors cursor-pointer font-bold"
+                                                >
+                                                    {chip}
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        <form onSubmit={handleCommandSubmit} className="flex border-t border-white/5 bg-black/60">
                                             <span className="pl-3.5 py-2 font-mono text-[10px] text-zinc-400 flex items-center">&gt;</span>
                                             <input 
-                                                type="text"
-                                                value={cmdInput}
-                                                onChange={(e) => setCmdInput(e.target.value)}
-                                                placeholder="Type command (e.g. /help, /skills)..."
+                                                type="text" value={cmdInput} onChange={(e) => setCmdInput(e.target.value)}
+                                                placeholder="Type command (e.g. /profile, /exp, /code, /certs)..."
                                                 className="flex-1 bg-transparent border-none outline-none font-mono text-[9.5px] text-white px-2 py-2 placeholder-zinc-700 caret-yellow-400"
                                             />
                                         </form>
                                     </div>
 
-                                    {/* Right: CGPA and Task Summaries */}
-                                    <div className="col-span-5 flex flex-col justify-between h-[450px] space-y-3">
-                                        
-                                        {/* Academics CGPA Progress Widget */}
-                                        <div className="border border-white/5 bg-white/[0.01] rounded-2xl p-4 flex flex-col justify-between flex-1">
-                                            <h3 className="text-[8.5px] font-black tracking-[0.2em] text-zinc-400 uppercase flex items-center gap-1.5">
-                                                <LineChart size={11} className="text-yellow-400" />
-                                                CGPA PROJECTION
-                                            </h3>
-                                            <div className="space-y-3 my-2">
-                                                <div className="relative">
-                                                    <div className="flex justify-between items-center text-[9.5px] mb-1 font-mono">
-                                                        <span className="text-zinc-500 font-medium">CURRENT CGPA</span>
-                                                        <span className="text-yellow-400 font-bold"><CountUp to={7.7} /> / 10</span>
+                                    {/* Right: Academic Widget & Targets */}
+                                    <div className="col-span-1 lg:col-span-5 flex flex-col justify-between h-auto lg:h-[450px] space-y-3">
+                                        <div className="border border-yellow-500/20 bg-gradient-to-b from-yellow-500/5 via-zinc-950/40 to-black/60 rounded-2xl p-4 flex flex-col justify-between flex-1 relative overflow-hidden">
+                                            <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                                                <h3 className="text-[8.5px] font-black tracking-[0.2em] text-yellow-400 uppercase flex items-center gap-1.5">
+                                                    <GraduationCap size={13} className="text-yellow-400" />
+                                                    ACADEMIC & TARGET MATRIX
+                                                </h3>
+                                                <span className="text-[7.5px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">
+                                                    SRIHER CSE (AI & Data)
+                                                </span>
+                                            </div>
+
+                                            <div className="my-2 flex items-center justify-between">
+                                                <div>
+                                                    <div className="text-[8px] font-mono uppercase tracking-widest text-zinc-400 font-bold">CURRENT CGPA</div>
+                                                    <div className="text-2xl font-black text-white font-mono flex items-baseline gap-1 mt-0.5">
+                                                        <span className="text-yellow-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]">
+                                                            <CountUp to={7.7} />
+                                                        </span>
+                                                        <span className="text-xs text-zinc-500 font-normal">/ 10</span>
                                                     </div>
-                                                    <div className="overflow-hidden h-1.5 flex rounded bg-white/5 shadow-inner">
-                                                        <motion.div 
-                                                            initial={{ width: 0 }}
-                                                            animate={{ width: "77%" }}
-                                                            transition={{ duration: 1.2, ease: "easeOut" }}
-                                                            className="h-full bg-gradient-to-r from-yellow-400 to-amber-500 shadow-md"
-                                                        />
-                                                    </div>
+                                                    <div className="text-[8px] text-emerald-400 font-medium font-mono mt-0.5">Upward: 6.86 → 7.68 → 7.7</div>
                                                 </div>
-                                                <div className="relative">
-                                                    <div className="flex justify-between items-center text-[9.5px] mb-1 font-mono">
-                                                        <span className="text-zinc-500 font-medium">TARGET GRADS</span>
-                                                        <span className="text-zinc-300 font-bold"><CountUp to={8.5} /> / 10</span>
-                                                    </div>
-                                                    <div className="overflow-hidden h-1.5 flex rounded bg-white/5 shadow-inner">
-                                                        <motion.div 
-                                                            initial={{ width: 0 }}
-                                                            animate={{ width: "85%" }}
-                                                            transition={{ duration: 1.5, ease: "easeOut" }}
-                                                            className="h-full bg-gradient-to-r from-zinc-700 to-zinc-500 opacity-60"
-                                                        />
-                                                    </div>
+                                                <div className="relative w-11 h-11 flex items-center justify-center bg-zinc-900 border border-yellow-400/30 rounded-2xl shadow-inner">
+                                                    <Award size={20} className="text-yellow-400 animate-pulse" />
                                                 </div>
                                             </div>
-                                            <div className="border-t border-white/5 pt-2 flex items-center justify-between text-[8px] text-zinc-500 font-mono">
-                                                <span>SEM 3: 7.4</span>
-                                                <span className="text-emerald-400">ARREARS CLEARED</span>
+
+                                            {/* Target Destination Box */}
+                                            <div className="p-2 bg-yellow-500/10 border border-yellow-500/30 rounded-xl space-y-1 my-1">
+                                                <div className="flex items-center justify-between text-[7.5px] font-mono font-bold text-yellow-300">
+                                                    <span className="flex items-center gap-1"><Target size={10} /> TARGET DEGREE (2029)</span>
+                                                    <span className="bg-yellow-400 text-zinc-950 px-1 rounded">MS DATA SCIENCE</span>
+                                                </div>
+                                                <p className="text-[8.5px] font-bold text-white leading-tight">
+                                                    Arizona State University (ASU)
+                                                </p>
+                                                <div className="text-[7.5px] text-zinc-400 font-mono">
+                                                    Placement Target: ₹8 – 12 LPA (2028)
+                                                </div>
+                                            </div>
+
+                                            {/* Technical Focus Pillars */}
+                                            <div className="border-t border-white/5 pt-2 space-y-1">
+                                                <div className="text-[7.5px] font-mono uppercase tracking-widest text-zinc-400 font-bold">LAB EXCELLENCE (O GRADES)</div>
+                                                <div className="grid grid-cols-2 gap-1 text-[7.5px]">
+                                                    {["Data Analytics", "Machine Learning", "DBMS", "Advanced C++ & Linux"].map((lab, lI) => (
+                                                        <div key={lI} className="p-1 rounded bg-white/5 border border-white/5 flex items-center gap-1">
+                                                            <CheckCircle2 size={9} className="text-emerald-400 flex-shrink-0" />
+                                                            <span className="font-bold text-zinc-200 line-clamp-1">{lab}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
 
-                                        {/* Mini Checklist Ring */}
-                                        <div className="border border-white/5 bg-white/[0.01] rounded-2xl p-4 flex items-center justify-between">
+                                        {/* Portfolio Objectives Ring */}
+                                        <div className="border border-white/10 bg-black/40 rounded-2xl p-4 flex items-center justify-between">
                                             <div className="space-y-1">
-                                                <h4 className="text-[8.5px] font-black tracking-[0.2em] text-zinc-400 uppercase">MISSION OBJECTIVES</h4>
-                                                <p className="text-[10px] text-zinc-500 font-medium font-mono uppercase">{completedTasks} of {totalTasks} Completed</p>
+                                                <h4 className="text-[8.5px] font-black tracking-[0.2em] text-zinc-300 uppercase">MILESTONE CHECKLIST</h4>
+                                                <p className="text-[10px] text-zinc-400 font-medium font-mono uppercase">{completedTasks} of {totalTasks} Completed</p>
                                             </div>
                                             <div className="relative flex items-center justify-center w-11 h-11 flex-shrink-0">
                                                 <svg className="w-full h-full transform -rotate-90">
-                                                    <circle
-                                                        cx="22"
-                                                        cy="22"
-                                                        r={18}
-                                                        className="stroke-zinc-800"
-                                                        strokeWidth="2.5"
-                                                        fill="transparent"
-                                                    />
-                                                    <motion.circle
-                                                        cx="22"
-                                                        cy="22"
-                                                        r={18}
-                                                        className="stroke-yellow-400"
-                                                        strokeWidth="2.5"
-                                                        fill="transparent"
-                                                        strokeDasharray={2 * Math.PI * 18}
-                                                        animate={{ strokeDashoffset: (2 * Math.PI * 18) - (taskPercent / 100) * (2 * Math.PI * 18) }}
-                                                        transition={{ type: "spring", stiffness: 70, damping: 13 }}
-                                                    />
+                                                    <circle cx="22" cy="22" r={18} className="stroke-zinc-800" strokeWidth="2.5" fill="transparent" />
+                                                    <motion.circle cx="22" cy="22" r={18} className="stroke-yellow-400" strokeWidth="2.5" fill="transparent" strokeDasharray={2 * Math.PI * 18} animate={{ strokeDashoffset: (2 * Math.PI * 18) - (taskPercent / 100) * (2 * Math.PI * 18) }} transition={{ type: "spring", stiffness: 70, damping: 13 }} />
                                                 </svg>
-                                                <span className="absolute text-[8px] font-mono font-bold text-yellow-300">
-                                                    {taskPercent.toFixed(0)}%
-                                                </span>
+                                                <span className="absolute text-[8px] font-mono font-bold text-yellow-300">{taskPercent.toFixed(0)}%</span>
                                             </div>
                                         </div>
                                     </div>
@@ -1013,48 +1641,42 @@ export default function AboutPage() {
 
                             {/* Panel: Experience */}
                             {activeTab === "experience" && (
-                                <motion.div
-                                    key="experience-tab"
-                                    initial={{ opacity: 0, y: 12 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -12 }}
-                                    transition={{ duration: 0.22 }}
-                                    className="space-y-4 max-h-[380px] overflow-y-auto pr-1"
-                                >
+                                <motion.div key="experience-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="space-y-4 max-h-[440px] overflow-y-auto pr-1">
                                     {[
                                         {
-                                            role: "Data Analyst Intern",
-                                            company: "Larsen & Toubro (L&T)",
-                                            period: "Jun 2026 – Aug 2026",
+                                            role: "Data Analyst Intern", company: "Larsen & Toubro (L&T Construction)", period: "May 2026 – Jul 2026", location: "Chennai, India",
                                             points: [
-                                                "Built a PDF-to-Excel Spec Extractor using a hybrid RAG pipeline (FAISS + BM25 + Reciprocal Rank Fusion) with GPT-4o extraction and GPT-4o-mini verification, auto-populating structured checklists.",
-                                                "Developed an OCR-based SLD data extraction tool for electrical single-line diagrams using iterative Tesseract OCR and custom parsing logic.",
-                                                "Optimised end-to-end token cost from ~$22 to ~$2 per run using rule-based verification skipping, model downgrading, and SentenceTransformer offline embeddings.",
-                                                "Engineered concurrent extraction with ThreadPoolExecutor across sheet types, cutting multi-page processing time significantly."
+                                                "PDF-to-Excel Spec Extractor (Production Tool): Developed a Hybrid RAG system (FAISS dense search + BM25 keyword matching + Reciprocal Rank Fusion) with GPT-4o extractions.",
+                                                "Automated 1,200+ pages per run, slashing turnaround time from 3-4 days to minutes at 65-70% extraction accuracy. First-of-its-kind tool in L&T Analytics Division.",
+                                                "Token Optimization: Reduced API token costs from $22 to $2 per document run (90%+ cost savings) via rule-based skipping and sentence embeddings.",
+                                                "OCR-Based SLD Data Extractor (Production Tool): Engineered a custom Tesseract OCR pipeline for electrical single-line diagrams (SLDs) and AutoCAD PDFs with zero embedded text layer.",
+                                                "Production Status: Deployed, validated, and actively used across L&T Construction Analytics Division.",
+                                                "Official Credentials: Signed LOR from Naveen Raj (Sr. Data Scientist, NAVEEN-RAJ-B@LNTECC.COM) and official Experience Letter."
                                             ]
                                         },
                                         {
-                                            role: "Web Design & Development Intern",
-                                            company: "Neoshaan Technologies (OPC) Pvt. Ltd.",
-                                            period: "May 2025 – Jul 2025",
+                                            role: "Web Developer Intern", company: "Neoshaan Technologies (OPC) Pvt. Ltd.", period: "May 2025 – Jul 2025", location: "Chennai, India",
                                             points: [
-                                                "Rebuilt company website in React.js + Tailwind CSS, improving Lighthouse performance score and eliminating mobile responsiveness failures across 3 client sites.",
-                                                "Audited UX across 3 live client properties, cataloguing 20+ navigation and layout defects, reducing user drop-off.",
-                                                "Engineered a Node.js/Nodemailer backend for lead-capture forms, replacing manual processes and enabling trackable conversion data."
+                                                "Built 3 client production websites using React.js and Tailwind CSS with responsive layout architecture.",
+                                                "Engineered a Node.js/Nodemailer backend for lead-capture form tracking, replacing manual processes.",
+                                                "Audited UX/UI across live client properties, resolving 20+ navigation and layout defects to reduce user drop-off."
                                             ]
                                         }
                                     ].map((job, idx) => (
-                                        <div key={idx} className="border border-white/5 bg-white/[0.005] hover:bg-white/[0.015] rounded-xl p-4 transition-colors">
-                                            <div className="flex items-center justify-between mb-2">
+                                        <div key={idx} className="border border-white/10 bg-gradient-to-r from-white/[0.01] to-white/[0.03] hover:border-yellow-400/30 rounded-xl p-4 transition-all duration-300 space-y-2">
+                                            <div className="flex items-center justify-between flex-wrap gap-2">
                                                 <div>
                                                     <h4 className="text-[11px] font-bold text-white uppercase tracking-wider">{job.role}</h4>
                                                     <p className="text-[9.5px] text-yellow-400 font-semibold mt-0.5">{job.company}</p>
                                                 </div>
-                                                <span className="text-[8.5px] font-mono text-zinc-500 bg-white/5 border border-white/5 rounded-md px-2 py-0.5">{job.period}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-[8px] font-mono text-zinc-400 bg-white/5 border border-white/10 rounded-md px-2 py-0.5">{job.location}</span>
+                                                    <span className="text-[8.5px] font-mono text-yellow-300 bg-yellow-500/10 border border-yellow-500/30 rounded-md px-2 py-0.5 font-bold">{job.period}</span>
+                                                </div>
                                             </div>
                                             <ul className="space-y-1.5">
                                                 {job.points.map((pt, pIdx) => (
-                                                    <li key={pIdx} className="flex gap-2 text-[9.5px] text-zinc-400 font-medium leading-relaxed">
+                                                    <li key={pIdx} className="flex gap-2 text-[9.5px] text-zinc-300 font-medium leading-relaxed">
                                                         <ChevronRight size={10} className="text-yellow-400 flex-shrink-0 mt-0.5" />
                                                         <span>{pt}</span>
                                                     </li>
@@ -1065,92 +1687,35 @@ export default function AboutPage() {
                                 </motion.div>
                             )}
 
-                            {/* Panel 2: Skills & Focus Area */}
+                            {/* Panel 2: Skills */}
                             {activeTab === "skills" && (
-                                <motion.div
-                                    key="skills-tab"
-                                    initial={{ opacity: 0, y: 12 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -12 }}
-                                    transition={{ duration: 0.22 }}
-                                    className="space-y-4"
-                                >
-                                    {/* Sub Category Filter Selector */}
-                                    <div className="flex gap-2">
-                                        {[
-                                            { id: "all", label: "All Technologies" },
-                                            { id: "aiml", label: "AI & Machine Learning" },
-                                            { id: "languages", label: "Core Languages" },
-                                            { id: "webdev", label: "Web Development" },
-                                            { id: "tools", label: "Tools & Analytics" }
-                                        ].map(category => (
-                                            <button
-                                                key={category.id}
-                                                onClick={() => {
-                                                    AudioEngine.playUISelect();
-                                                    setSkillsFilter(category.id);
-                                                }}
-                                                className={`
-                                                    px-3 py-1 rounded-full text-[8.5px] font-bold tracking-wider uppercase border transition-all duration-300 cursor-pointer
-                                                    ${skillsFilter === category.id 
-                                                        ? "bg-yellow-400 text-zinc-950 border-yellow-400 shadow-md shadow-yellow-400/10" 
-                                                        : "border-white/5 bg-white/[0.01] text-zinc-400 hover:text-white hover:border-white/15"}
-                                                `}
-                                            >
-                                                {category.label}
-                                            </button>
-                                        ))}
+                                <motion.div key="skills-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="space-y-4">
+                                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                                        <div className="flex gap-1.5 flex-wrap">
+                                            {[ { id: "all", label: "All" }, { id: "aiml", label: "AI & ML" }, { id: "data", label: "Data" }, { id: "languages", label: "Languages" }, { id: "webdev", label: "Web Dev" }, { id: "tools", label: "Tools" } ].map(category => (
+                                                <button
+                                                    key={category.id} onClick={() => { AudioEngine.playUISelect(); setSkillsFilter(category.id); }}
+                                                    className={`px-2.5 py-1 rounded-full text-[8px] font-bold tracking-wider uppercase border transition-all cursor-pointer ${skillsFilter === category.id ? "bg-yellow-400 text-zinc-950 border-yellow-400 shadow-md" : "border-white/10 bg-white/[0.02] text-zinc-400 hover:text-white"}`}
+                                                >
+                                                    {category.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <div className="relative flex items-center">
+                                            <Search size={12} className="absolute left-2.5 text-zinc-500" />
+                                            <input type="text" placeholder="Search skill..." value={skillsSearch} onChange={(e) => setSkillsSearch(e.target.value)} className="w-full sm:w-36 pl-7 pr-2 py-1 rounded-lg bg-black/50 border border-white/10 text-[9px] font-mono text-white outline-none focus:border-yellow-400/50" />
+                                        </div>
                                     </div>
 
-                                    {/* Skills Grid */}
-                                    <motion.div 
-                                        variants={{
-                                            hidden: {},
-                                            visible: { transition: { staggerChildren: 0.03 } }
-                                        }}
-                                        initial="hidden"
-                                        animate="visible"
-                                        className="grid grid-cols-3 gap-2.5 max-h-[380px] overflow-y-auto pr-1"
-                                    >
+                                    <motion.div variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }} initial="hidden" animate="visible" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 max-h-[380px] overflow-y-auto pr-1">
                                         {filteredSkills.map((skill) => (
-                                            <motion.div
-                                                key={skill.name}
-                                                variants={{
-                                                    hidden: { opacity: 0, scale: 0.95, y: 8 },
-                                                    visible: { opacity: 1, scale: 1, y: 0 }
-                                                }}
-                                                whileHover={{ scale: 1.02, y: -1 }}
-                                                className="
-                                                    p-3
-                                                    rounded-xl
-                                                    border
-                                                    border-white/5
-                                                    bg-white/[0.01]
-                                                    backdrop-blur-md
-                                                    flex
-                                                    flex-col
-                                                    justify-between
-                                                    gap-1.5
-                                                    shadow-sm
-                                                "
-                                            >
+                                            <motion.div key={skill.name} variants={{ hidden: { opacity: 0, scale: 0.95, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }} whileHover={{ scale: 1.02, y: -1 }} className="p-3 rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.02] to-white/[0.005] backdrop-blur-md flex flex-col justify-between gap-1.5 shadow-sm">
                                                 <div className="flex items-center justify-between">
-                                                    <span className={`text-[10px] font-black text-white`}>
-                                                        {skill.name}
-                                                    </span>
-                                                    <span className="text-[6.5px] font-bold px-1.5 py-0.5 rounded border border-white/5 bg-white/5 text-zinc-400 uppercase tracking-wider">
-                                                        {skill.level}
-                                                    </span>
+                                                    <span className="text-[10px] font-black text-white">{skill.name}</span>
+                                                    <span className="text-[6.5px] font-bold px-1.5 py-0.5 rounded border border-yellow-500/20 bg-yellow-500/10 text-yellow-300 uppercase tracking-wider font-mono">{skill.level}</span>
                                                 </div>
                                                 <div className="w-full h-[3px] bg-white/5 rounded-full overflow-hidden mt-0.5">
-                                                    <motion.div 
-                                                        initial={{ width: 0 }}
-                                                        animate={{ 
-                                                            width: skill.level === "Expert" ? "95%" : skill.level === "Specialist" ? "85%" : skill.level === "Advanced" ? "75%" : "55%" 
-                                                        }}
-                                                        transition={{ duration: 1.0, ease: "easeOut", delay: 0.1 }}
-                                                        className="h-full bg-yellow-400/90" 
-                                                    />
+                                                    <motion.div initial={{ width: 0 }} animate={{ width: skill.level === "Expert" ? "95%" : skill.level === "Specialist" ? "85%" : skill.level === "Advanced" ? "75%" : "60%" }} transition={{ duration: 1.0, ease: "easeOut", delay: 0.1 }} className="h-full bg-gradient-to-r from-yellow-400 to-amber-500" />
                                                 </div>
                                             </motion.div>
                                         ))}
@@ -1160,50 +1725,11 @@ export default function AboutPage() {
 
                             {/* Panel 3: Major Projects */}
                             {activeTab === "projects" && (
-                                <motion.div
-                                    key="projects-tab"
-                                    initial={{ opacity: 0, y: 12 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -12 }}
-                                    transition={{ duration: 0.22 }}
-                                    className="space-y-4"
-                                >
-                                    <motion.div 
-                                        variants={{
-                                            hidden: {},
-                                            visible: { transition: { staggerChildren: 0.04 } }
-                                        }}
-                                        initial="hidden"
-                                        animate="visible"
-                                        className="grid grid-cols-2 gap-3 max-h-[380px] overflow-y-auto pr-1"
-                                    >
+                                <motion.div key="projects-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="space-y-4">
+                                    <motion.div variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }} initial="hidden" animate="visible" className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[380px] overflow-y-auto pr-1">
                                         {projects.map((project, i) => (
-                                            <motion.a
-                                                key={i}
-                                                href={project.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                variants={{
-                                                    hidden: { opacity: 0, y: 10, scale: 0.98 },
-                                                    visible: { opacity: 1, y: 0, scale: 1 }
-                                                }}
-                                                whileHover={{ scale: 1.02, y: -2 }}
-                                                onMouseEnter={() => AudioEngine.playUIHover()}
-                                                className="
-                                                    block
-                                                    p-4
-                                                    rounded-xl
-                                                    bg-white/[0.01]
-                                                    border
-                                                    border-white/5
-                                                    transition-all
-                                                    duration-300
-                                                    relative
-                                                    group
-                                                "
-                                            >
-                                                {/* Neon Border Glow */}
-                                                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-300 opacity-0 group-hover:opacity-40 blur-[1px] -z-10 transition-opacity duration-300 pointer-events-none" style={{ margin: "-1px" }} />
+                                            <motion.div key={i} onClick={() => { AudioEngine.playUISelect(); setSelectedProject(project); }} variants={{ hidden: { opacity: 0, y: 10, scale: 0.98 }, visible: { opacity: 1, y: 0, scale: 1 } }} whileHover={{ scale: 1.02, y: -2 }} onMouseEnter={() => AudioEngine.playUIHover()} className="block p-4 rounded-xl bg-white/[0.015] border border-white/10 transition-all duration-300 relative group cursor-pointer">
+                                                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-300 opacity-0 group-hover:opacity-50 blur-[1.5px] -z-10 transition-opacity duration-300 pointer-events-none" style={{ margin: "-1px" }} />
                                                 <div className="absolute inset-0 rounded-xl bg-zinc-950 -z-5 pointer-events-none" />
 
                                                 <div className="flex items-center justify-between mb-1 relative z-10">
@@ -1211,106 +1737,100 @@ export default function AboutPage() {
                                                         {project.category === "aiml" && <Zap size={10} className="text-yellow-400 animate-pulse" />}
                                                         {project.title}
                                                     </span>
-                                                    <ExternalLink size={11} className="text-zinc-500 group-hover:text-zinc-300 transition-colors" />
+                                                    <span className="text-[7px] font-mono text-yellow-400/90 bg-yellow-500/10 border border-yellow-500/20 px-1.5 py-0.5 rounded flex items-center gap-1 group-hover:bg-yellow-400 group-hover:text-zinc-950 transition-colors font-bold">
+                                                        <span>VIEW</span>
+                                                        <Eye size={10} />
+                                                    </span>
                                                 </div>
-                                                <p className="text-[9.5px] text-zinc-400 font-medium leading-relaxed mb-3.5 relative z-10">
-                                                    {project.desc}
-                                                </p>
+                                                <p className="text-[9.5px] text-zinc-300 font-medium leading-relaxed mb-3.5 relative z-10 line-clamp-2">{project.desc}</p>
                                                 <div className="flex flex-wrap gap-1 relative z-10">
                                                     {project.tags.map((tag, tIndex) => (
-                                                        <span key={tIndex} className="text-[7.5px] font-bold text-zinc-400 bg-white/5 border border-white/5 rounded px-1.5 py-0.5 uppercase tracking-wider">
-                                                            {tag}
-                                                        </span>
+                                                        <span key={tIndex} className="text-[7.5px] font-bold text-zinc-300 bg-white/5 border border-white/10 rounded px-1.5 py-0.5 uppercase tracking-wider font-mono">{tag}</span>
                                                     ))}
                                                 </div>
-                                            </motion.a>
+                                            </motion.div>
                                         ))}
                                     </motion.div>
                                 </motion.div>
                             )}
 
-                            {/* Panel 4: Career & Study Roadmap */}
+                            {/* Panel 4: Certifications & Research Showcase */}
                             {activeTab === "roadmap" && (
-                                <motion.div
-                                    key="roadmap-tab"
-                                    initial={{ opacity: 0, y: 12 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -12 }}
-                                    transition={{ duration: 0.22 }}
-                                    className="relative pl-6 space-y-3 max-h-[380px] overflow-y-auto pr-1"
-                                >
-                                    {/* Timeline glowing pipeline wire */}
-                                    <div className="absolute left-2.5 top-2 bottom-2 w-[1px] bg-zinc-800 overflow-hidden">
-                                        <motion.div
-                                            animate={{ y: ["-100%", "200%"] }}
-                                            transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
-                                            className="w-full h-12 bg-gradient-to-b from-transparent via-yellow-400 to-transparent shadow-[0_0_10px_#facc15]"
-                                        />
+                                <motion.div key="roadmap-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="space-y-4 max-h-[380px] overflow-y-auto pr-1">
+                                    
+                                    {/* Research & Presentation Honors */}
+                                    <div className="space-y-2">
+                                        <h4 className="text-[9px] font-mono font-bold uppercase tracking-widest text-yellow-400 flex items-center gap-1.5">
+                                            <Trophy size={12} /> Research & Presentation Honors
+                                        </h4>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                            {researchHighlights.map((res, rIdx) => (
+                                                <div key={rIdx} className="p-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 hover:bg-yellow-500/10 transition-all space-y-1">
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-[10px] font-bold text-white">{res.title}</span>
+                                                        <span className="text-[6.5px] font-mono font-bold px-1.5 py-0.5 rounded bg-yellow-400 text-zinc-950 uppercase">{res.role}</span>
+                                                    </div>
+                                                    <p className="text-[8.5px] text-zinc-300 leading-tight mt-0.5">{res.desc}</p>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
 
-                                    {roadmapSteps.map((step, index) => (
-                                        <div key={index} className="relative group">
-                                            {/* Timeline Node dot */}
-                                            <div className={`
-                                                absolute -left-[22px] top-2.5 w-2.5 h-2.5 rounded-full border border-zinc-950 transition-all duration-300 z-10
-                                                ${step.active 
-                                                    ? "bg-yellow-400 shadow-[0_0_10px_#facc15] scale-125" 
-                                                    : "bg-zinc-800 group-hover:bg-zinc-600"}
-                                            `} />
-
-                                            {/* Radial pulse ring around active timelines */}
-                                            {step.active && (
-                                                <motion.div 
-                                                    animate={{ scale: [1, 1.45, 1], opacity: [0.7, 0, 0.7] }} 
-                                                    transition={{ repeat: Infinity, duration: 2.2 }} 
-                                                    className="absolute -left-[26px] top-[6px] w-[18px] h-[18px] border border-yellow-400/40 rounded-full blur-[2.5px] pointer-events-none" 
-                                                />
-                                            )}
-                                            
-                                            <div 
-                                                onClick={() => {
-                                                    AudioEngine.playUISelect();
-                                                    setExpandedStage(expandedStage === index ? -1 : index);
-                                                }}
-                                                className={`
-                                                    border rounded-xl p-3.5 transition-colors cursor-pointer select-none
-                                                    ${expandedStage === index 
-                                                        ? "border-yellow-500/20 bg-white/[0.015]" 
-                                                        : "border-white/5 bg-white/[0.005] hover:bg-white/[0.015]"}
-                                                `}
-                                            >
-                                                <h4 className="text-[10px] font-bold text-white flex items-center justify-between">
-                                                    <span className="flex items-center gap-1.5">
-                                                        {step.title}
-                                                        {step.active && <span className="text-[6.5px] bg-yellow-950 border border-yellow-800 text-yellow-300 font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider">ACTIVE</span>}
-                                                    </span>
-                                                    <ChevronRight size={12} className={`text-zinc-500 transition-transform ${expandedStage === index ? "rotate-90 text-yellow-400" : ""}`} />
-                                                </h4>
-                                                <p className="text-[9.5px] text-zinc-400 font-medium mt-1 leading-relaxed">
-                                                    {step.desc}
-                                                </p>
-
-                                                <AnimatePresence>
-                                                    {expandedStage === index && (
-                                                        <motion.div
-                                                            initial={{ height: 0, opacity: 0 }}
-                                                            animate={{ height: "auto", opacity: 1 }}
-                                                            exit={{ height: 0, opacity: 0 }}
-                                                            transition={{ duration: 0.25 }}
-                                                            className="mt-3 space-y-2 border-t border-white/5 pt-3"
-                                                        >
-                                                            {step.checkpoints.map((cp, cpi) => (
-                                                                <div key={cpi} className="flex items-center gap-2 text-[8.5px] text-zinc-300 font-mono">
-                                                                    <CheckCircle2 size={10} className="text-emerald-400 flex-shrink-0" />
-                                                                    <span>{cp}</span>
-                                                                </div>
-                                                            ))}
-                                                        </motion.div>
-                                                    )}
-                                                </AnimatePresence>
-                                            </div>
+                                    {/* Certifications Grid */}
+                                    <div className="space-y-2 pt-2">
+                                        <h4 className="text-[9px] font-mono font-bold uppercase tracking-widest text-yellow-400 flex items-center gap-1.5">
+                                            <Award size={12} /> Verified Certifications (10+)
+                                        </h4>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                            {certifications.map((cert, cIdx) => (
+                                                <div key={cIdx} className="p-3 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all space-y-1">
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="text-[10px] font-bold text-white">{cert.title}</span>
+                                                        <span className="text-[6.5px] font-mono font-bold px-1.5 py-0.5 rounded bg-yellow-500/10 border border-yellow-500/30 text-yellow-300 uppercase">{cert.badge}</span>
+                                                    </div>
+                                                    <p className="text-[8.5px] text-yellow-400 font-semibold">{cert.issuer}</p>
+                                                    <p className="text-[8px] text-zinc-400 leading-tight">{cert.desc}</p>
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
+                                    </div>
+
+                                    {/* Career Timeline */}
+                                    <div className="space-y-2 pt-2">
+                                        <h4 className="text-[9px] font-mono font-bold uppercase tracking-widest text-yellow-400 flex items-center gap-1.5">
+                                            <Compass size={12} /> Academic & Career Pipeline
+                                        </h4>
+                                        <div className="relative pl-6 space-y-3">
+                                            <div className="absolute left-2.5 top-2 bottom-2 w-[1px] bg-zinc-800 overflow-hidden">
+                                                <motion.div animate={{ y: ["-100%", "200%"] }} transition={{ repeat: Infinity, duration: 4, ease: "linear" }} className="w-full h-12 bg-gradient-to-b from-transparent via-yellow-400 to-transparent shadow-[0_0_10px_#facc15]" />
+                                            </div>
+
+                                            {roadmapSteps.map((step, index) => (
+                                                <div key={index} className="relative group">
+                                                    <div className={`absolute -left-[22px] top-2.5 w-2.5 h-2.5 rounded-full border border-zinc-950 transition-all z-10 ${step.active ? "bg-yellow-400 shadow-[0_0_10px_#facc15] scale-125" : "bg-zinc-800"}`} />
+                                                    <div onClick={() => { AudioEngine.playUISelect(); setExpandedStage(expandedStage === index ? -1 : index); }} className={`border rounded-xl p-3 cursor-pointer ${expandedStage === index ? "border-yellow-500/30 bg-white/[0.02]" : "border-white/5 bg-white/[0.005]"}`}>
+                                                        <h4 className="text-[10px] font-bold text-white flex items-center justify-between">
+                                                            <span className="flex items-center gap-1.5">{step.title} {step.active && <span className="text-[6.5px] bg-yellow-950 border border-yellow-800 text-yellow-300 font-bold px-1.5 py-0.5 rounded-full uppercase">ACTIVE</span>}</span>
+                                                            <ChevronRight size={12} className={`text-zinc-500 transition-transform ${expandedStage === index ? "rotate-90 text-yellow-400" : ""}`} />
+                                                        </h4>
+                                                        <p className="text-[9.5px] text-zinc-400 font-medium mt-1">{step.desc}</p>
+                                                        <AnimatePresence>
+                                                            {expandedStage === index && (
+                                                                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }} className="mt-3 space-y-2 border-t border-white/5 pt-3">
+                                                                    {step.checkpoints.map((cp, cpi) => (
+                                                                        <div key={cpi} className="flex items-center gap-2 text-[8.5px] text-zinc-300 font-mono">
+                                                                            <CheckCircle2 size={10} className="text-emerald-400 flex-shrink-0" />
+                                                                            <span>{cp}</span>
+                                                                        </div>
+                                                                    ))}
+                                                                </motion.div>
+                                                            )}
+                                                        </AnimatePresence>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </motion.div>
                             )}
 
@@ -1318,81 +1838,84 @@ export default function AboutPage() {
                     </div>
                 </div>
 
-                {/* Footer Docks */}
-                <div className="relative z-10 border-t border-white/5 pt-4.5 mt-4 flex items-center justify-between">
-                    
-                    {/* Social icons */}
-                    <div className="flex gap-2">
-                        {[
-                            { icon: GitBranch, link: "https://github.com/theflighttechofficial" },
-                            { icon: Briefcase, link: "https://linkedin.com/in/varun-vaibhav-s-11b69a2ba" },
-                            { icon: Mail, link: "mailto:Umasubramanian81@gmail.com" },
-                            { icon: FileText, link: "#resume" }
-                        ].map((item, i) => (
-                            <motion.a
-                                key={i}
-                                href={item.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                whileHover={{ scale: 1.08, y: -2 }}
-                                onMouseEnter={() => AudioEngine.playUIHover()}
-                                className="
-                                    w-8.5
-                                    h-8.5
-                                    rounded-xl
-                                    border
-                                    border-white/5
-                                    bg-white/[0.02]
-                                    text-zinc-400
-                                    hover:text-white
-                                    hover:border-yellow-500/20
-                                    flex
-                                    items-center
-                                    justify-center
-                                    transition-all
-                                    duration-300
-                                    shadow-[inset_0_1px_rgba(255,255,255,0.03)]
-                                    cursor-pointer
-                                "
-                            >
-                                <item.icon size={14} />
-                            </motion.a>
-                        ))}
+                {/* Footer Link Docks with Rich Icons */}
+                <div className="relative z-10 border-t border-white/10 pt-3 sm:pt-4 mt-3 sm:mt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div className="flex gap-1.5 items-center flex-wrap justify-center sm:justify-start w-full sm:w-auto">
+                        <motion.a
+                            href="https://github.com/theflighttechofficial" target="_blank" rel="noopener noreferrer"
+                            whileHover={{ scale: 1.06, y: -2 }} onMouseEnter={() => AudioEngine.playUIHover()} onClick={() => AudioEngine.playUISelect()}
+                            title="GitHub Profile & Repositories"
+                            className="px-2.5 h-8.5 rounded-xl border border-yellow-500/20 bg-white/[0.03] text-zinc-300 hover:text-white hover:border-yellow-400 hover:bg-yellow-400/10 flex items-center gap-1.5 transition-all cursor-pointer font-mono text-[9px] font-bold shadow-sm"
+                        >
+                            <GithubIcon size={13} className="text-yellow-400" /> <span>GitHub</span>
+                        </motion.a>
+
+                        <motion.a
+                            href="https://linkedin.com/in/varun-vaibhav-s-11b69a2ba" target="_blank" rel="noopener noreferrer"
+                            whileHover={{ scale: 1.06, y: -2 }} onMouseEnter={() => AudioEngine.playUIHover()} onClick={() => AudioEngine.playUISelect()}
+                            title="LinkedIn Professional Profile (119+ Followers)"
+                            className="px-2.5 h-8.5 rounded-xl border border-blue-500/20 bg-white/[0.03] text-zinc-300 hover:text-white hover:border-blue-400 hover:bg-blue-500/10 flex items-center gap-1.5 transition-all cursor-pointer font-mono text-[9px] font-bold shadow-sm"
+                        >
+                            <LinkedinIcon size={13} className="text-blue-400" /> <span>LinkedIn</span>
+                        </motion.a>
+
+                        <motion.a
+                            href="https://kaggle.com/theflighttechofficial" target="_blank" rel="noopener noreferrer"
+                            whileHover={{ scale: 1.06, y: -2 }} onMouseEnter={() => AudioEngine.playUIHover()} onClick={() => AudioEngine.playUISelect()}
+                            title="Kaggle Profile (3 Notebooks)"
+                            className="px-2.5 h-8.5 rounded-xl border border-sky-500/20 bg-white/[0.03] text-zinc-300 hover:text-white hover:border-sky-400 hover:bg-sky-500/10 flex items-center gap-1.5 transition-all cursor-pointer font-mono text-[9px] font-bold shadow-sm"
+                        >
+                            <KaggleIcon size={13} className="text-sky-400" /> <span>Kaggle</span>
+                        </motion.a>
+
+                        <motion.a
+                            href="https://theflighttechlabs.hashnode.dev" target="_blank" rel="noopener noreferrer"
+                            whileHover={{ scale: 1.06, y: -2 }} onMouseEnter={() => AudioEngine.playUIHover()} onClick={() => AudioEngine.playUISelect()}
+                            title="Hashnode Blog: How I Automated 3-4 Days at L&T"
+                            className="px-2.5 h-8.5 rounded-xl border border-purple-500/20 bg-white/[0.03] text-zinc-300 hover:text-white hover:border-purple-400 hover:bg-purple-500/10 flex items-center gap-1.5 transition-all cursor-pointer font-mono text-[9px] font-bold shadow-sm"
+                        >
+                            <HashnodeIcon size={13} className="text-purple-400" /> <span>Blog</span>
+                        </motion.a>
+
+                        <motion.a
+                            href="https://www.instagram.com/varunwashere__/" target="_blank" rel="noopener noreferrer"
+                            whileHover={{ scale: 1.06, y: -2 }} onMouseEnter={() => AudioEngine.playUIHover()} onClick={() => AudioEngine.playUISelect()}
+                            title="Instagram Profile (@varunwashere__)"
+                            className="px-2.5 h-8.5 rounded-xl border border-pink-500/20 bg-white/[0.03] text-zinc-300 hover:text-white hover:border-pink-400 hover:bg-pink-500/10 flex items-center gap-1.5 transition-all cursor-pointer font-mono text-[9px] font-bold shadow-sm"
+                        >
+                            <InstagramIcon size={13} className="text-pink-400" /> <span>Instagram</span>
+                        </motion.a>
+
+                        <motion.button
+                            onClick={handleCopyEmail} whileHover={{ scale: 1.06, y: -2 }} onMouseEnter={() => AudioEngine.playUIHover()}
+                            title="Click to copy email address: Umasubramanian81@gmail.com"
+                            className="px-2.5 h-8.5 rounded-xl border border-emerald-500/20 bg-white/[0.03] text-zinc-300 hover:text-white hover:border-emerald-400 hover:bg-emerald-500/10 flex items-center gap-1.5 transition-all cursor-pointer font-mono text-[9px] font-bold shadow-sm"
+                        >
+                            <Mail size={13} className="text-emerald-400" /> <span>Email</span>
+                        </motion.button>
+
+                        <motion.button
+                            onClick={handleCopyPhone} whileHover={{ scale: 1.06, y: -2 }} onMouseEnter={() => AudioEngine.playUIHover()}
+                            title="Click to copy phone number: +91 9384000748"
+                            className="px-2.5 h-8.5 rounded-xl border border-yellow-500/20 bg-white/[0.03] text-zinc-300 hover:text-white hover:border-yellow-400 hover:bg-yellow-500/10 flex items-center gap-1.5 transition-all cursor-pointer font-mono text-[9px] font-bold shadow-sm"
+                        >
+                            <Phone size={13} className="text-yellow-400" /> <span>Phone</span>
+                        </motion.button>
+
+                        <motion.button
+                            onClick={() => { AudioEngine.playUISelect(); setIsResumeOpen(true); }} whileHover={{ scale: 1.06, y: -2 }} onMouseEnter={() => AudioEngine.playUIHover()}
+                            title="Open Interactive Executive CV / Resume"
+                            className="px-2.5 h-8.5 rounded-xl border border-amber-500/20 bg-yellow-400/10 text-yellow-300 hover:text-white hover:border-amber-400 hover:bg-amber-500/20 flex items-center gap-1.5 transition-all cursor-pointer font-mono text-[9px] font-bold shadow-sm"
+                        >
+                            <FileText size={13} className="text-amber-400" /> <span>Resume</span>
+                        </motion.button>
                     </div>
 
-                    {/* Disconnect Button */}
                     <motion.button
-                        onClick={handleSignOut}
-                        onMouseEnter={() => AudioEngine.playUIHover()}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="
-                            px-4.5
-                            py-2
-                            rounded-xl
-                            bg-gradient-to-r
-                            from-zinc-800/80
-                            to-zinc-900/80
-                            hover:from-yellow-400
-                            hover:to-amber-400
-                            hover:text-zinc-950
-                            border
-                            border-white/5
-                            text-[8.5px]
-                            font-bold
-                            tracking-widest
-                            text-white
-                            cursor-pointer
-                            shadow-md
-                            flex
-                            items-center
-                            gap-1.5
-                            transition-all
-                            duration-300
-                            uppercase
-                        "
+                        onClick={handleSignOut} onMouseEnter={() => AudioEngine.playUIHover()} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                        className="px-4 py-2 rounded-xl bg-gradient-to-r from-zinc-800 to-zinc-900 hover:from-yellow-400 hover:to-amber-400 hover:text-zinc-950 border border-white/10 text-[8.5px] font-bold tracking-widest text-white cursor-pointer shadow-lg flex items-center gap-1.5 transition-all uppercase w-full sm:w-auto justify-center"
                     >
-                        Disconnect Rig
+                        <LogOut size={12} /> <span>Disconnect Rig</span>
                     </motion.button>
                 </div>
             </motion.div>

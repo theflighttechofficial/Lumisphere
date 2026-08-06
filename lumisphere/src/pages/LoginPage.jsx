@@ -6,7 +6,9 @@ import Lamp from "../components/Lamp/Lamp";
 import LoginCard from "../components/Login/LoginCard";
 import Drone from "../components/UI/Drone";
 import AudioToggle from "../components/UI/AudioToggle";
+import EnvironmentControlPanel from "../components/UI/EnvironmentControlPanel";
 import AboutPage from "../components/About/AboutPage";
+import InteractiveDesk from "../components/InteractiveDesk/InteractiveDesk";
 
 import useSceneStartup from "../hooks/useSceneStartup";
 import { useLight } from "../context/LightContext";
@@ -54,7 +56,7 @@ export default function LoginPage() {
                 duration: 1.2,
                 ease: "easeOut",
             }}
-            className="relative w-full min-h-screen min-h-[100dvh] overflow-x-hidden bg-black flex flex-col items-center justify-center p-3 sm:p-6"
+            className="relative w-full min-h-screen min-h-[100dvh] overflow-x-hidden bg-black flex flex-col items-center justify-between p-3 sm:p-6"
             onScroll={(e) => {
                 e.currentTarget.scrollTop = 0;
                 e.currentTarget.scrollLeft = 0;
@@ -70,8 +72,9 @@ export default function LoginPage() {
             {/* Helper Floating Hover Drone (Tells user to pull the chain) */}
             <Drone />
 
-            {/* Audio Toggle Control */}
+            {/* Audio Toggle & Desktop Environment Controls */}
             <AudioToggle />
+            <EnvironmentControlPanel />
 
             {/* About Page (Portfolio Screen) */}
             <AnimatePresence>
@@ -80,7 +83,7 @@ export default function LoginPage() {
                 )}
             </AnimatePresence>
 
-            {/* Login Card */}
+            {/* Login Card (Secure Portal Box kept down under light beam) */}
             <motion.div
                 initial={{
                     opacity: 0,
@@ -114,6 +117,20 @@ export default function LoginPage() {
                 </div>
             </motion.div>
 
+            {/* Playable Interactive Desk Environment Docked vertically along the left edge */}
+            <AnimatePresence>
+                {sceneReady && isLightOn && (
+                    <motion.div
+                        initial={{ opacity: 0, x: -50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -50 }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <InteractiveDesk />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
         </motion.div>
     );
-}
+}

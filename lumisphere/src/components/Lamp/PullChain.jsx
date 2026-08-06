@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform, animate } from "framer-motion";
 import { AudioEngine } from "../../utils/AudioEngine";
+import { SecretsManager } from "../../utils/SecretsManager";
 
 export default function PullChain({
     isLightOn,
@@ -84,6 +85,7 @@ export default function PullChain({
                 onDragStart={() => {
                     setIsPulling(true);
                     AudioEngine.playChainPull();
+                    SecretsManager.recordLampPull();
                 }}
                 onDragEnd={(e, info) => {
                     setIsPulling(false);

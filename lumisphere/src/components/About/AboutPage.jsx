@@ -15,6 +15,8 @@ import * as THREE from "three";
 import { useLight } from "../../context/LightContext";
 import { AudioEngine } from "../../utils/AudioEngine";
 import NoiseLayer from "../UI/NoiseLayer";
+import HolographicSkillsNetwork from "./HolographicSkillsNetwork";
+import ResumeRoom from "./ResumeRoom";
 
 // Custom SVG Icons for GitHub, LinkedIn, Kaggle, Hashnode
 function GithubIcon({ size = 14, className = "" }) {
@@ -504,6 +506,7 @@ export default function AboutPage() {
     ]);
 
     const [expandedStage, setExpandedStage] = useState(0);
+    const [showVirtualRoom, setShowVirtualRoom] = useState(true);
 
     const completedTasks = checklist.filter(t => t.completed).length;
     const totalTasks = checklist.length;
@@ -547,6 +550,11 @@ export default function AboutPage() {
             case "/help":
             case "help":
                 output = "System Commands:\n  /profile    Show Executive Profile Brief\n  /contact    View Phone, Email, & Location\n  /exp        View Internship Experience (L&T, Neoshaan)\n  /projects   Switch to Projects Matrix\n  /skills     Switch to Technical Skills\n  /certs      List 10+ Verified Certifications\n  /goals      View 2027-2029 Career Roadmap\n  /code       Inspect Production RAG / OCR / YOLO Code\n  /quiz       Launch Interactive Technical Quiz\n  /dim <val>  Calibrate Spotlight Output (0-100)\n  /theme <n>  Switch Palette (amber, green, cyan, purple, red)\n  /clear      Clear Console History";
+                break;
+            case "/resumeroom":
+            case "resumeroom":
+                setShowVirtualRoom(true);
+                output = "🏛️ RESUME ROOM INITIALIZED: Launched Virtual Resume Exhibition Chamber.";
                 break;
             case "/profile":
             case "profile":
@@ -912,10 +920,41 @@ export default function AboutPage() {
                                     <a href="https://www.instagram.com/varunwashere__/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 hover:border-pink-400 text-zinc-300 hover:text-white">
                                         <InstagramIcon size={12} className="text-pink-400" /> Instagram (@varunwashere__)
                                     </a>
+                                    <button
+                                        onClick={() => {
+                                            AudioEngine.playHoloProject();
+                                            window.dispatchEvent(new CustomEvent("lumisphere_open_lumi_ai"));
+                                        }}
+                                        className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-cyan-500/20 border border-cyan-400/50 hover:bg-cyan-500/30 text-cyan-300 font-bold transition shadow-[0_0_15px_rgba(34,211,238,0.3)] cursor-pointer"
+                                    >
+                                        <Brain size={13} className="text-cyan-400 animate-pulse" />
+                                        <span>🤖 Ask Lumi AI Assistant</span>
+                                    </button>
                                 </div>
                             </div>
 
+                            {/* Resume View Mode Toggle */}
+                            <div className="my-4 flex items-center justify-between p-3 rounded-2xl bg-neutral-900 border border-amber-500/30">
+                                <div className="flex items-center gap-2 font-mono text-xs text-amber-300 font-bold">
+                                    <Sparkles className="w-4 h-4 text-amber-400" />
+                                    <span>EXHIBITION MODE: {showVirtualRoom ? "VIRTUAL RESUME ROOM" : "CLASSIC DOCUMENT VIEW"}</span>
+                                </div>
+
+                                <button
+                                    onClick={() => {
+                                        AudioEngine.playUISelect();
+                                        setShowVirtualRoom(!showVirtualRoom);
+                                    }}
+                                    className="px-4 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-neutral-950 font-mono font-bold text-xs shadow-md transition"
+                                >
+                                    Switch to {showVirtualRoom ? "Classic Document View" : "🏛️ Virtual Resume Room"}
+                                </button>
+                            </div>
+
                             {/* Resume Content Body */}
+                            {showVirtualRoom ? (
+                                <ResumeRoom />
+                            ) : (
                             <div className="space-y-6 py-6">
                                 {/* Summary */}
                                 <div>
@@ -1043,39 +1082,10 @@ export default function AboutPage() {
                                     </div>
                                 </div>
 
-                                {/* Skills */}
-                                <div>
-                                    <h3 className="text-xs font-mono font-bold text-yellow-400 uppercase tracking-widest border-b border-white/10 pb-1 mb-3 flex items-center gap-2">
-                                        <Cpu size={13} /> Technical Skills Matrix
-                                    </h3>
-                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 font-mono text-[10px]">
-                                        <div className="p-2.5 bg-white/[0.02] border border-white/10 rounded-xl">
-                                            <span className="text-yellow-400 font-bold uppercase text-[9px] block mb-1">Languages</span>
-                                            <p className="text-zinc-300">Python (Int+), SQL (Int), JavaScript/React, C/C++, Java</p>
-                                        </div>
-                                        <div className="p-2.5 bg-white/[0.02] border border-white/10 rounded-xl">
-                                            <span className="text-yellow-400 font-bold uppercase text-[9px] block mb-1">ML & AI</span>
-                                            <p className="text-zinc-300">scikit-learn, XGBoost, YOLOv8, FAISS, BM25, SHAP, NLP</p>
-                                        </div>
-                                        <div className="p-2.5 bg-white/[0.02] border border-white/10 rounded-xl">
-                                            <span className="text-yellow-400 font-bold uppercase text-[9px] block mb-1">Data Tools</span>
-                                            <p className="text-zinc-300">pandas, NumPy, PyMuPDF, Tesseract OCR, Stats</p>
-                                        </div>
-                                        <div className="p-2.5 bg-white/[0.02] border border-white/10 rounded-xl">
-                                            <span className="text-yellow-400 font-bold uppercase text-[9px] block mb-1">Web Full-Stack</span>
-                                            <p className="text-zinc-300">React, Vite, Tailwind CSS, Node.js, Express, MongoDB, MySQL</p>
-                                        </div>
-                                        <div className="p-2.5 bg-white/[0.02] border border-white/10 rounded-xl">
-                                            <span className="text-yellow-400 font-bold uppercase text-[9px] block mb-1">Developer Tools</span>
-                                            <p className="text-zinc-300">Git/GitHub, Linux Shell, VS Code, Jupyter, Vercel</p>
-                                        </div>
-                                        <div className="p-2.5 bg-white/[0.02] border border-white/10 rounded-xl">
-                                            <span className="text-yellow-400 font-bold uppercase text-[9px] block mb-1">Research & Competitions</span>
-                                            <p className="text-zinc-300">SRIHER Research Day 2026, HackerRank Orchestrate, Kaggle</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                {/* Holographic Skills Neural Network */}
+                                <HolographicSkillsNetwork />
                             </div>
+                            )}
 
                             {/* Resume Footer Controls */}
                             <div className="border-t border-white/15 pt-4 flex items-center justify-between font-mono text-xs">

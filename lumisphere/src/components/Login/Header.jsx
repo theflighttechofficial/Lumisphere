@@ -1,6 +1,11 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
+import { Bot } from "lucide-react";
+import { AudioEngine } from "../../utils/AudioEngine";
+import LumiAIModal from "../UI/LumiAIModal";
 
 export default function Header() {
+    const [lumiAIOpen, setLumiAIOpen] = useState(false);
     return (
         <div className="text-center mb-6 sm:mb-12">
 
@@ -101,6 +106,25 @@ export default function Header() {
                 Continue your journey.
 
             </motion.p>
+
+            {/* Lumi AI Floating Assistant Trigger */}
+            <div className="mt-4 flex justify-center">
+                <button
+                    onClick={() => {
+                        AudioEngine.playUISelect();
+                        setLumiAIOpen(true);
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-mono font-bold shadow-[0_0_20px_rgba(34,211,238,0.3)] transition transform hover:scale-105"
+                >
+                    <Bot className="w-4 h-4 text-cyan-400 animate-pulse" />
+                    <span>🤖 Ask Lumi AI Assistant</span>
+                </button>
+            </div>
+
+            <LumiAIModal
+                isOpen={lumiAIOpen}
+                onClose={() => setLumiAIOpen(false)}
+            />
 
         </div>
     );

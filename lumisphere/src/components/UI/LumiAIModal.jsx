@@ -162,6 +162,7 @@ export default function LumiAIModal({ isOpen: externalIsOpen, onClose: externalO
 
             recognition.onstart = () => setIsRecording(true);
             recognition.onend = () => setIsRecording(false);
+            recognition.onerror = () => setIsRecording(false);
 
             recognition.onresult = (event) => {
                 const transcript = event.results[0][0].transcript;

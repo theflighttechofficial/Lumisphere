@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import { AudioEngine } from "../../utils/AudioEngine";
 
-// Wall Certificates Dataset
+// Wall Certificates Dataset (8 Verified + 1 In Progress)
 const WALL_CERTIFICATES = [
     {
         id: "stanford",
@@ -46,6 +46,15 @@ const WALL_CERTIFICATES = [
         details: "4-course specialization on prompt engineering frameworks, chain-of-thought prompting, LLM system instruction design, and AI workflow automation."
     },
     {
+        id: "cisco",
+        title: "Cisco Networking Academy: Packet Tracer",
+        issuer: "Cisco Networking Academy",
+        signatory: "Cisco Verified",
+        date: "Aug 26, 2026",
+        badgeColor: "from-sky-500/20 to-blue-600/20 border-sky-400 text-sky-300",
+        details: "Foundational network topology configuration, packet routing, and network simulation using Cisco Packet Tracer."
+    },
+    {
         id: "python_gold",
         title: "HackerRank Python Gold Badge (5 Stars)",
         issuer: "HackerRank",
@@ -62,6 +71,15 @@ const WALL_CERTIFICATES = [
         date: "Jul 18, 2026",
         badgeColor: "from-cyan-500/20 to-blue-600/20 border-cyan-400 text-cyan-300",
         details: "Mastered complex relational joins, window functions (ROW_NUMBER, DENSE_RANK), CTEs, subqueries, and database performance tuning."
+    },
+    {
+        id: "google_da",
+        title: "Google Data Analytics Professional Certificate",
+        issuer: "Google / Coursera",
+        signatory: "In Progress (6/9 Courses)",
+        date: "Target Oct 2026",
+        badgeColor: "from-purple-500/20 to-indigo-600/20 border-purple-400 text-purple-300",
+        details: "7-week active streak across 6/9 courses covering data cleaning, SQL query optimization, R programming, and Tableau data visualization."
     },
     {
         id: "ibm_python",
@@ -92,6 +110,18 @@ const AWARDS = [
         desc: "Engineered Hybrid RAG Spec Extractor reducing token costs from $22 to $2 and processing 1,200+ page PDFs in minutes. LOR awarded by Sr. Data Scientist Naveen Raj."
     },
     {
+        title: "HackerRank Orchestrate August 2026",
+        org: "HackerRank Global Competition",
+        date: "Aug 2026",
+        desc: "Ranked #1006 out of 1,983 globally. Built WhatsApp Notification Router using Groq API (llama-3.1-8b-instant NLU) achieving 75% action accuracy on 110+ real messages."
+    },
+    {
+        title: "SIH 2026 DocFlow Systems Project Lead",
+        org: "Smart India Hackathon 2026 (Ministry of Consumer Affairs)",
+        date: "2026",
+        desc: "Leading automated Legal Metrology compliance verification engine for 50M+ e-commerce product listings (Problem SIH25057)."
+    },
+    {
         title: "SRIHER Research Day 2026 Presentation",
         org: "Sri Ramachandra Institute of Higher Education",
         date: "Feb 2026",
@@ -101,7 +131,7 @@ const AWARDS = [
         title: "Upward CGPA Trajectory Award",
         org: "SRIHER Dept of CSE (AI & DA)",
         date: "2024 - 2026",
-        desc: "Demonstrated academic excellence climbing from 6.86 to 7.68 CGPA (cleared all 2 arrears in 1st attempt)."
+        desc: "Demonstrated academic resilience climbing from 6.86 to 7.70 CGPA (cleared all 2 arrears in 1st attempt)."
     }
 ];
 

@@ -395,7 +395,7 @@ function HologramCanvas({ activeTab, speed, shapeOverride, onSelectShape, theme 
 const roadmapSteps = [
     {
         title: "B.Tech CSE (AI & Data Analytics) — SRIHER",
-        desc: "2024 – May 2028 | CGPA: 7.7/10 (6.86 → 7.68 upward trajectory). O grades in Data Analytics, ML, DBMS, Advanced C++, Linux. All Sem 2 arrears cleared in Sem 3.",
+        desc: "2024 – May 2028 | 3rd-Year B.Tech CSE (AI & DA) @ Sri Ramachandra Faculty of Eng & Tech, Chennai. CGPA: 7.7/10 (6.86 → 7.00 → 7.39 → 7.68 → 7.7). Cleared 2 arrears in Sem 3. O grades in DBMS, Data Analytics, ML, Advanced C++, Linux Labs.",
         active: true,
         checkpoints: [
             "Current CGPA maintained at 7.7 / 10 with strong upward momentum",
@@ -406,18 +406,18 @@ const roadmapSteps = [
     },
     {
         title: "Data Analyst Intern — Larsen & Toubro (L&T Construction)",
-        desc: "May 2026 – Jul 2026 | First-of-its-kind PDF-to-Excel Spec Extractor & SLD Diagram OCR in L&T Analytics Division.",
+        desc: "May 2026 – Jul 2026 | Built 2 active production systems processing 1,200+ pages daily, manual work cut from 3-4 days to minutes, token cost $22 -> $2 (91% reduction).",
         active: false,
         checkpoints: [
             "Hybrid RAG (FAISS + BM25 + Reciprocal Rank Fusion) processing 1,200+ pages in minutes (down from 3-4 days)",
-            "Token cost optimized from $22 to $2 per run (90%+ savings) with 65-70% accuracy",
+            "Token cost optimized from $22 to $2 per run (91% reduction) with 65-70% accuracy",
             "OCR-based SLD extractor for AutoCAD PDFs with zero embedded text using Tesseract OCR",
-            "Signed LOR from Sr. Data Scientist Naveen Raj (NAVEEN-RAJ-B@LNTECC.COM) & Official Experience Letter"
+            "Signed LOR from Sr. Data Scientist Naveen Raj B & Official HR Internship Completion Letter"
         ]
     },
     {
         title: "Web Developer Intern — Neoshaan Technologies",
-        desc: "May 2025 – Jul 2025 | Production Web Applications & Lead Generation Backends.",
+        desc: "Jun 2025 – Aug 2025 | Production Web Applications & Lead Generation Backends.",
         active: false,
         checkpoints: [
             "Built 3 client websites using React.js + Tailwind CSS with mobile responsiveness",
@@ -426,23 +426,23 @@ const roadmapSteps = [
         ]
     },
     {
-        title: "Certification & Hackathon Sprint (Jul 2026 - Jun 2027)",
-        desc: "Targeting Google Data Analytics (Oct 2026), Orchestrate Hackathon (Aug 2026), 120+ StrataScratch SQL problems, & 2nd Internship (Jan-May 2027).",
+        title: "SIH 2026, Anchora SaaS, & Hackathon Sprint (Aug 2026 - Jun 2027)",
+        desc: "Building Anchora SaaS, DocFlow Systems (SIH 2026 Problem SIH25057), Google Data Analytics (Oct 2026), 120+ StrataScratch SQL problems, & 2nd Internship (Jan-May 2027).",
         active: false,
         checkpoints: [
-            "Completed Stanford Machine Learning Specialization (Andrew Ng signed, 3 courses)",
-            "Completed Google Prompting Essentials (Amanda Brophy signed, 4 courses)",
-            "Earned HackerRank Python & SQL Gold Badges + SQL Intermediate Certificate",
+            "Ranked #1006/1983 globally in HackerRank Orchestrate August 2026 (WhatsApp Router)",
+            "Completed Stanford Machine Learning (Andrew Ng signed) & Google Prompting Essentials",
+            "Earned HackerRank Python & SQL Gold Badges + Cisco Packet Tracer Certification",
             "Preparing for GRE & IELTS (Feb-Mar 2027) & Mock Technical Interviews (Apr-Jun 2027)"
         ]
     },
     {
-        title: "Placement Season & MS in Data Science @ ASU Target",
-        desc: "Oct 2027 – 2029+ | Securing ₹8-12 LPA Data Analyst role in 2028, leading to MS in Data Science at Arizona State University (2029).",
+        title: "1-Year Work Placement & MS in CS/DS @ ASU Target (Fall 2029)",
+        desc: "May 2028 – 2029+ | 1-year work placement (May 2028 - May 2029) at a top analytics firm (target ₹8-12 LPA), leading to MS in Computer Science / Data Science at Arizona State University (Fall 2029).",
         active: false,
         checkpoints: [
-            "Placement Target (2028): Data Analyst / ML Engineer (₹8 - 12 LPA)",
-            "MS Enrollment (2029): Arizona State University (MS in Data Science)",
+            "1-Year Industry Work Placement (May 2028 - May 2029): Target ₹8 - 12 LPA",
+            "MS Enrollment (Fall 2029): Arizona State University (MS in CS / Data Science)",
             "Post-MS Target: US-based Data Science / ML Engineering role ($95K - $130K+)"
         ]
     }
@@ -703,33 +703,69 @@ export default function AboutPage() {
 
     const projects = [
         {
-            title: "Road-AI",
+            title: "Anchora (Anchorpoint) SaaS Platform",
+            category: "webdev",
+            desc: "Production-ready dual-layer SaaS (freelancer workspace + startup ecosystem). React + TS + Zustand + Supabase, 60+ routes, ~30 migrations, 27 tables, 5 user roles, GPT-4o-mini AI matching.",
+            fullDesc: "Anchora is a comprehensive dual-layer SaaS platform combining a freelancer project workspace with a startup ecosystem layer for cofounder matching, investor recommendations, AI proposal generation, and contract summarization. Features custom warm design system (#F7F4EF canvas, #B86F22 accent, #4A7250 sage).",
+            metrics: "60+ Routes • ~30 Migrations • 27 Normalized Tables • 5 User Roles • GPT-4o-mini AI Engine",
+            tags: ["React", "TypeScript", "Zustand", "Supabase", "PostgreSQL", "GPT-4o-mini", "Tailwind CSS"],
+            link: "https://github.com/theflighttechofficial"
+        },
+        {
+            title: "DocFlow Systems (SIH 2026)",
+            category: "aiml",
+            desc: "Legal Metrology Compliance Checker (Problem SIH25057) for 50M+ e-commerce product listings. 360x faster verification (3-5 days → 15 mins).",
+            fullDesc: "Automated compliance verification platform enforcing Legal Metrology Rules 2011 + 2026 amendments across Amazon, Flipkart, Meesho, and CSV uploads. Combines EfficientDet packaging photo extraction, Tesseract OCR, spaCy NER, 25+ regulatory validation rules, and real-time seller/regulator dashboards.",
+            metrics: "50M+ Product Coverage • 360x Speedup (3-5 Days → 15 Mins) • 25+ Metrology Rules • ₹49 Cr Est. Platform Savings",
+            tags: ["Python", "FastAPI", "React", "PostgreSQL", "FAISS", "EfficientDet", "Tesseract OCR", "spaCy NER"],
+            link: "https://github.com/theflighttechofficial"
+        },
+        {
+            title: "Road-AI (VidMarg)",
             category: "aiml",
             desc: "YOLOv8 + depth estimation + NHAI cost analysis. mAP50: 0.648 on RDD2022, 38% false positive reduction. Physics-based depth & blockchain tracking.",
-            fullDesc: "Road-AI is an ensemble YOLOv8 computer vision system integrated with MiDaS physics-based depth estimation, an automated NHAI repair cost estimation engine, text-to-speech alerts, and an immutable blockchain inspection audit log. Presented at SRIHER Research Day 2026.",
-            metrics: "mAP50: 0.648 • 38% FP Reduction • 30 FPS OpenCV • Blockchain Audit Logs",
+            fullDesc: "Road-AI is an ensemble YOLOv8 computer vision system integrated with MiDaS physics-based depth estimation, an automated NHAI repair cost estimation engine, text-to-speech alerts, and an immutable SHA256 blockchain inspection audit log. Presented at SRIHER Research Day 2026 & submitted to IIT Madras Hackathon 2026.",
+            metrics: "mAP50: 0.648 • 38% FP Reduction • 30 FPS OpenCV • SHA256 Blockchain Audit Logs",
             tags: ["YOLOv8", "Computer Vision", "Depth Estimation", "Blockchain", "Python"],
             snippetKey: "roadai",
+            link: "https://github.com/theflighttechofficial/RoadAi-Building-better-roads-for-India"
+        },
+        {
+            title: "Paws & Care Clinic Web App",
+            category: "webdev",
+            desc: "Professional veterinary clinic platform with online appointment booking, doctor profiles, service directory, and pet health blog.",
+            fullDesc: "Full-stack web platform built for Paws & Care Veterinary Clinic. Features online appointment scheduling with Google Calendar API integration, pet health articles, interactive service directory, and an admin management dashboard.",
+            metrics: "Full-Stack Node/React • Google Calendar API • Admin Booking Suite • PostgreSQL DB",
+            tags: ["React", "Tailwind CSS", "Node.js", "Express", "PostgreSQL", "Google Calendar API"],
             link: "https://github.com/theflighttechofficial"
         },
         {
             title: "L&T Hybrid RAG Spec Extractor",
             category: "aiml",
-            desc: "Hybrid RAG pipeline (FAISS + BM25 + RRF) processing 1,200+ pages in minutes (down from 3-4 days). Optimized token costs from $22 to $2 per run.",
-            fullDesc: "Production-grade document intelligence tool deployed in L&T Construction Analytics. Combines FAISS dense vector search, BM25 sparse keyword search, and Reciprocal Rank Fusion with GPT-4o to extract technical specifications into structured Excel sheets at 65-70% accuracy.",
-            metrics: "1,200+ Pages/Run • 3-4 Days → Minutes • Token Cost: $22 → $2 • 65-70% Accuracy",
-            tags: ["Python", "FAISS", "BM25", "Reciprocal Rank Fusion", "RAG"],
+            desc: "Hybrid RAG pipeline (FAISS + BM25 + RRF) processing 1,200+ pages daily in minutes (down from 3-4 days). Optimized token costs from $22 to $2 per run (91% reduction).",
+            fullDesc: "Production-grade document intelligence tool deployed in L&T Construction Analytics. Combines FAISS dense vector search, BM25 sparse keyword search, and Reciprocal Rank Fusion with GPT-4o to extract technical specifications into structured Excel sheets at 65-70% accuracy with 3-layer pickle caching.",
+            metrics: "1,200+ Pages Daily • 3-4 Days → Minutes • Token Cost: $22 → $2 (91% Reduction) • 65-70% Accuracy",
+            tags: ["Python", "FAISS", "BM25", "Reciprocal Rank Fusion", "RAG", "SentenceTransformers"],
             snippetKey: "rag",
-            link: "https://github.com/theflighttechofficial"
+            link: "https://theflighttechlabs.hashnode.dev"
         },
         {
             title: "L&T OCR SLD Extractor",
             category: "aiml",
             desc: "First-of-its-kind Tesseract OCR tool extracting electrical data from AutoCAD PDF single line diagrams with zero embedded text.",
-            fullDesc: "Production OCR pipeline built for L&T Construction Analytics. Preprocesses rasterized electrical single-line diagrams (SLDs) with adaptive thresholding and iterative Tesseract parsing to extract circuit breaker ratings and node topology.",
-            metrics: "Zero-Text Layer PDF OCR • Deployed in L&T Analytics • Automated SLD Parsing",
+            fullDesc: "Production OCR pipeline built for L&T Construction Analytics. Preprocesses rasterized electrical single-line diagrams (SLDs) with adaptive thresholding and iterative Tesseract parsing to extract circuit breaker ratings and BUS node topology at 70%+ accuracy.",
+            metrics: "Zero-Text Layer PDF OCR • 70%+ Accuracy • Deployed in L&T Analytics",
             tags: ["Python", "Tesseract OCR", "OpenCV", "AutoCAD PDF"],
             snippetKey: "ocr_sld",
+            link: "https://github.com/theflighttechofficial"
+        },
+        {
+            title: "HackerRank Orchestrate WhatsApp Router",
+            category: "aiml",
+            desc: "NLU WhatsApp Notification Router using Groq API (llama-3.1-8b-instant). Ranked #1006 out of 1,983 globally.",
+            fullDesc: "Intelligent messaging router built for HackerRank Orchestrate August 2026 competition. Classifies real WhatsApp messages by action type, urgency, and category using Groq Llama-3.1-8b NLU with 75% action accuracy and 83% type accuracy on 110+ test messages.",
+            metrics: "Rank #1006 / 1,983 Globally • 75% Action Accuracy • 83% Type Accuracy • Groq API Llama-3.1",
+            tags: ["Python", "Groq API", "Llama-3.1", "NLU", "HackerRank"],
             link: "https://github.com/theflighttechofficial"
         },
         {
@@ -745,11 +781,20 @@ export default function AboutPage() {
             title: "LumiSphere Portfolio",
             category: "webdev",
             desc: "Cinematic interactive WebGL portfolio hosted live on Vercel. React + Vite, Three.js shaders, halogen dimmer controls, & glassmorphism.",
-            fullDesc: "State-of-the-art developer portfolio platform featuring real-time WebGL particle shaders, Three.js 3D hologram morphing, custom audio feedback synthesis, dynamic halogen dimmer controls, and responsive UI.",
+            fullDesc: "State-of-the-art developer portfolio platform featuring real-time WebGL particle shaders, Three.js 3D hologram morphing, custom Web Audio API synthesis, dynamic halogen dimmer controls, and responsive UI.",
             metrics: "Live on Vercel • 60 FPS WebGL Shaders • Custom AudioEngine FX",
             tags: ["React", "Vite", "Three.js", "WebGL", "Framer Motion"],
             snippetKey: "hologram",
-            link: "https://github.com/theflighttechofficial/lumisphere"
+            link: "https://lumisphere-nine.vercel.app"
+        },
+        {
+            title: "ROGII Wellbore Competition",
+            category: "aiml",
+            desc: "Active Kaggle competitive data science track predicting wellbore geological parameters (LightGBM regression, ranked 1006/1983 globally).",
+            fullDesc: "Ongoing Kaggle competition notebook developing spatial regression algorithms for oil & gas wellbore spatial orientation with LightGBM.",
+            metrics: "Rank #1006 / 1,983 Globally • LightGBM Model • Spatial Data Science",
+            tags: ["Kaggle", "LightGBM", "Python", "Data Science"],
+            link: "https://kaggle.com/theflighttechofficial"
         },
         {
             title: "HomeFinder Rental Platform",
@@ -768,15 +813,6 @@ export default function AboutPage() {
             fullDesc: "Machine learning submission notebook incorporating family size grouping, title extraction, and Random Forest / XGBoost ensembling. Published on Kaggle.",
             metrics: "78.71% Accuracy • Published Kaggle Notebook • Feature Engineering",
             tags: ["Machine Learning", "Kaggle", "scikit-learn", "Python"],
-            link: "https://kaggle.com/theflighttechofficial"
-        },
-        {
-            title: "ROGII Wellbore Competition",
-            category: "aiml",
-            desc: "Active Kaggle competitive data science track focused on geological wellbore trajectory modeling.",
-            fullDesc: "Ongoing Kaggle competition notebook developing spatial regression algorithms for oil & gas wellbore spatial orientation.",
-            metrics: "Active Kaggle Track • Targeting Medal • Spatial Data Science",
-            tags: ["Kaggle", "Geospatial ML", "Python", "Data Science"],
             link: "https://kaggle.com/theflighttechofficial"
         },
         {
@@ -802,19 +838,20 @@ export default function AboutPage() {
     const certifications = [
         { title: "Stanford Machine Learning Specialization", issuer: "Stanford Online / Coursera (Jul 20, 2026)", desc: "Supervised ML, Advanced Learning Algorithms, Unsupervised Learning. Signed by Andrew Ng.", badge: "STANFORD / ANDREW NG" },
         { title: "Google Prompting Essentials", issuer: "Google / Coursera (Jul 5, 2026)", desc: "4-course specialization in prompt engineering, context framing, & LLM workflows. Signed by Amanda Brophy, Google.", badge: "GOOGLE VERIFIED" },
-        { title: "HackerRank Python Gold Badge", issuer: "HackerRank (Jul 8, 2026)", desc: "5-Star Gold Badge in Python algorithmic problem solving.", badge: "GOLD BADGE (5★)" },
-        { title: "HackerRank SQL Gold Badge & Intermediate", issuer: "HackerRank (Jul 18 & 22, 2026)", desc: "5-Star Gold Badge in SQL + Verified SQL Intermediate Certification.", badge: "GOLD BADGE (5★)" },
-        { title: "Google Data Analytics Professional", issuer: "Google / Coursera (In Progress - Target Oct 2026)", desc: "Comprehensive data processing, SQL query optimization, R & Tableau visualization.", badge: "IN PROGRESS" },
-        { title: "IBM Python 101 for Data Science", issuer: "IBM / Cognitive Class", desc: "Data structures, pandas, NumPy, and REST API integration.", badge: "IBM VERIFIED" },
-        { title: "Creation of ML Models 2026", issuer: "Microsoft Learn (Build 2026)", desc: "Scikit-Learn, Automated ML, and Azure ML model creation.", badge: "MICROSOFT" },
-        { title: "IBM Z Day AI & Data", issuer: "IBM Z Systems", desc: "Enterprise AI, Mainframe Data Security & Modernization.", badge: "ENTERPRISE AI" }
+        { title: "Cisco Networking Academy: Packet Tracer", issuer: "Cisco Networking Academy (Aug 26, 2026)", desc: "Foundational network topology configuration, packet routing, and network simulation.", badge: "CISCO VERIFIED" },
+        { title: "HackerRank Python Gold Badge", issuer: "HackerRank (Jul 8, 2026)", desc: "5-Star Gold Badge in Python algorithmic problem solving + Basic Certificate.", badge: "GOLD BADGE (5★)" },
+        { title: "HackerRank SQL Gold Badge & Intermediate", issuer: "HackerRank (Jul 18-22, 2026)", desc: "5-Star Gold Badge in SQL + Verified SQL Intermediate Certification.", badge: "GOLD BADGE (5★)" },
+        { title: "Google Data Analytics Professional", issuer: "Google / Coursera (In Progress - Target Oct 2026)", desc: "6/9 courses completed (7-week active streak) in data cleaning, SQL, R, & Tableau.", badge: "IN PROGRESS (6/9)" },
+        { title: "IBM Python 101 for Data Science", issuer: "IBM / Cognitive Class (May 2026)", desc: "Data structures, pandas, NumPy, and REST API data scraping.", badge: "IBM VERIFIED" },
+        { title: "Creation of ML Models 2026", issuer: "Microsoft Learn (Build 2026 - Jun 2026)", desc: "Scikit-Learn, Automated ML, and Azure ML model creation.", badge: "MICROSOFT" },
+        { title: "IBM Z Day AI & Data", issuer: "IBM Z Systems (2026)", desc: "Enterprise AI, Mainframe Data Security & Modernization.", badge: "ENTERPRISE AI" }
     ];
 
     const researchHighlights = [
-        { title: "SRIHER Research Day 2026", role: "Key Demonstrator", desc: "Presented Road-AI YOLOv8 ensemble vision model with physics depth calculation and NHAI cost engine." },
-        { title: "Innovation Day Showcase", role: "Innovator", desc: "Presented real-time cybercrime monitoring and active threat prevention software." },
-        { title: "L&T Analytics First-of-Kind", role: "Lead Analyst Intern", desc: "Pioneered PDF RAG Spec Extractor & SLD Diagram OCR, cutting token costs by 90%+ ($22 → $2)." },
-        { title: "Tech Expo 2025", role: "Presenter", desc: "Demonstrated full-stack lead generation systems and high-performance Web applications." }
+        { title: "Hashnode Technical Publication", role: "Author (1,300+ Impressions)", desc: "Published 'How I Automated 3-4 Days of Manual Work at L&T Using Python' on Hashnode (theflighttechlabs.hashnode.dev)." },
+        { title: "SRIHER Research Day 2026", role: "Key Demonstrator", desc: "Presented Road-AI YOLOv8 ensemble vision model with physics depth calculation, NHAI cost engine, & SHA256 blockchain tracking." },
+        { title: "SIH 2026 Legal Metrology Lead", role: "Project Lead (Problem SIH25057)", desc: "Leading DocFlow Systems automated compliance checker for 50M+ e-commerce product listings." },
+        { title: "L&T Analytics Production First", role: "Lead Analyst Intern", desc: "Pioneered Hybrid RAG PDF Spec Extractor & SLD Diagram OCR, cutting token costs by 91% ($22 → $2)." }
     ];
 
     const filteredSkills = skills.filter(s => {
@@ -882,10 +919,10 @@ export default function AboutPage() {
                                     <div>
                                         <h1 className="text-3xl font-black text-white tracking-tight">S. VARUN VAIBHAV</h1>
                                         <p className="text-xs font-bold font-mono text-yellow-400 uppercase tracking-widest mt-1">
-                                            2nd-Year B.Tech (AI & Data Analytics) · SRIHER Chennai · Building AI & Data Systems
+                                            3rd-Year B.Tech CSE (AI & Data Analytics) · SRIHER Chennai · The Flight Tech Labs
                                         </p>
                                         <p className="text-xs text-zinc-400 mt-1 font-medium">
-                                            Targeting MS in Data Science @ Arizona State University (2029)
+                                            Targeting MS in Computer Science / Data Science @ Arizona State University (Fall 2029)
                                         </p>
                                     </div>
                                     <div className="flex flex-col gap-1 text-[11px] font-mono text-zinc-300">

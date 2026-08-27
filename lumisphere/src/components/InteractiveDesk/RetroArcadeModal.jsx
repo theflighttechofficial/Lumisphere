@@ -60,15 +60,32 @@ export default function RetroArcadeModal({ isOpen, onClose }) {
 
         let currentScore = 0;
 
-        const handleMouseMove = (e) => {
+        const handleMove = (clientX) => {
             const rect = canvas.getBoundingClientRect();
-            const relativeX = e.clientX - rect.left;
+            const relativeX = clientX - rect.left;
             if (relativeX > 0 && relativeX < width) {
                 paddleX = relativeX - paddleWidth / 2;
             }
         };
 
+        const handleMouseMove = (e) => handleMove(e.clientX);
+        const handleTouchMove = (e) => {
+            if (e.touches && e.touches.length > 0) {
+                handleMove(e.touches[0].clientX);
+            }
+        };
+
+        const handleKeyDown = (e) => {
+            if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+                paddleX = Math.max(0, paddleX - 25);
+            } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+                paddleX = Math.min(width - paddleWidth, paddleX + 25);
+            }
+        };
+
         window.addEventListener("mousemove", handleMouseMove);
+        window.addEventListener("touchmove", handleTouchMove, { passive: true });
+        window.addEventListener("keydown", handleKeyDown);
 
         const collisionDetection = () => {
             for (let c = 0; c < brickColumnCount; c++) {
@@ -185,6 +202,8 @@ export default function RetroArcadeModal({ isOpen, onClose }) {
 
         return () => {
             window.removeEventListener("mousemove", handleMouseMove);
+            window.removeEventListener("touchmove", handleTouchMove);
+            window.removeEventListener("keydown", handleKeyDown);
             cancelAnimationFrame(animationFrameId);
         };
     }, [isOpen, gameStarted, gameOver, highScore]);

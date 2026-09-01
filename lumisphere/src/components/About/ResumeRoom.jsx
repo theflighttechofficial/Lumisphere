@@ -76,10 +76,10 @@ const WALL_CERTIFICATES = [
         id: "google_da",
         title: "Google Data Analytics Professional Certificate",
         issuer: "Google / Coursera",
-        signatory: "In Progress (6/9 Courses)",
-        date: "Target Oct 2026",
-        badgeColor: "from-purple-500/20 to-indigo-600/20 border-purple-400 text-purple-300",
-        details: "7-week active streak across 6/9 courses covering data cleaning, SQL query optimization, R programming, and Tableau data visualization."
+        signatory: "Google Career Certificates Verified",
+        date: "Sep 2026",
+        badgeColor: "from-green-500/20 to-emerald-600/20 border-green-400 text-green-300",
+        details: "Completed all 9 courses covering data cleaning, SQL query optimization, R programming, and Tableau data visualization. Awarded by Google / Coursera."
     },
     {
         id: "ibm_python",
@@ -177,7 +177,7 @@ export default function ResumeRoom() {
     const handleCopyResume = () => {
         AudioEngine.playUISelect();
         navigator.clipboard.writeText(`S. VARUN VAIBHAV — EXECUTIVE CV
-Status: 2nd-year B.Tech (AI & Data Analytics) | SRIHER Chennai
+Status: 3rd-year B.Tech (AI & Data Analytics) | SRIHER Chennai
 Contact: Umasubramanian81@gmail.com | +91 9384000748 | Chennai, India
 Target: MS in Data Science at Arizona State University (2029)
 

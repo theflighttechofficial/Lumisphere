@@ -427,7 +427,7 @@ const roadmapSteps = [
     },
     {
         title: "SIH 2026, Anchora SaaS, & Hackathon Sprint (Aug 2026 - Jun 2027)",
-        desc: "Building Anchora SaaS, DocFlow Systems (SIH 2026 Problem SIH25057), Google Data Analytics (Oct 2026), 120+ StrataScratch SQL problems, & 2nd Internship (Jan-May 2027).",
+        desc: "Building Anchora SaaS, DocFlow Systems (SIH 2026 Problem SIH25057), Google Data Analytics Professional Certificate (Completed Sep 2026), 120+ StrataScratch SQL problems, & 2nd Internship (Jan-May 2027).",
         active: false,
         checkpoints: [
             "Ranked #1006/1983 globally in HackerRank Orchestrate August 2026 (WhatsApp Router)",
@@ -500,7 +500,7 @@ export default function AboutPage() {
         { id: 3, text: "Google Prompting Essentials Specialization", completed: true },
         { id: 4, text: "HackerRank Python & SQL 5-Star Gold Badges", completed: true },
         { id: 5, text: "Publish Hashnode Blog on L&T Automation & Host LumiSphere on Vercel", completed: true },
-        { id: 6, text: "Google Data Analytics Professional Certificate (Target Oct 2026)", completed: false },
+        { id: 6, text: "Google Data Analytics Professional Certificate (Completed Sep 2026)", completed: true },
         { id: 7, text: "HackerRank Orchestrate Hackathon 2026 (Aug 1)", completed: false },
         { id: 8, text: "Complete 120+ StrataScratch SQL problems & Secure 2nd Internship", completed: false }
     ]);
@@ -558,7 +558,7 @@ export default function AboutPage() {
                 break;
             case "/profile":
             case "profile":
-                output = "S. VARUN VAIBHAV — PROFILE\n• Status: 2nd-year B.Tech (AI & Data Analytics) @ SRIHER Chennai\n• CGPA: 7.7/10 (Upward Trajectory: 6.86 -> 7.68, 2 arrears cleared)\n• Focus: Production Data Systems, Hybrid RAG, CV, & Full-Stack AI\n• Target: MS in Data Science @ Arizona State University (2029)";
+                output = "S. VARUN VAIBHAV — PROFILE\n• Status: 3rd-year B.Tech (AI & Data Analytics) @ SRIHER Chennai\n• CGPA: 7.7/10 (Upward Trajectory: 6.86 -> 7.68, 2 arrears cleared)\n• Focus: Production Data Systems, Hybrid RAG, CV, & Full-Stack AI\n• Target: MS in Data Science @ Arizona State University (2029)";
                 break;
             case "/contact":
             case "contact":
@@ -570,7 +570,7 @@ export default function AboutPage() {
                 break;
             case "/certs":
             case "certs":
-                output = "10+ VERIFIED CERTIFICATIONS:\n• Stanford Machine Learning Specialization (3 courses, Andrew Ng signed)\n• Google Prompting Essentials (4 courses, Amanda Brophy signed)\n• HackerRank Python Gold Badge (5 Stars) & SQL Gold Badge (5 Stars)\n• HackerRank SQL Intermediate Certificate\n• IBM Python 101 for Data Science & IBM Z Day AI & Data\n• Microsoft ML Models (Build 2026)\n• In Progress: Google Data Analytics Professional (Target Oct 2026)";
+                output = "10+ VERIFIED CERTIFICATIONS:\n• Stanford Machine Learning Specialization (3 courses, Andrew Ng signed)\n• Google Prompting Essentials (4 courses, Amanda Brophy signed)\n• Google Data Analytics Professional Certificate (9 courses, Sep 2026, Google / Coursera Verified)\n• HackerRank Python Gold Badge (5 Stars) & SQL Gold Badge (5 Stars)\n• HackerRank SQL Intermediate Certificate\n• IBM Python 101 for Data Science & IBM Z Day AI & Data\n• Microsoft ML Models (Build 2026)";
                 break;
             case "/goals":
             case "goals":
@@ -841,7 +841,7 @@ export default function AboutPage() {
         { title: "Cisco Networking Academy: Packet Tracer", issuer: "Cisco Networking Academy (Aug 26, 2026)", desc: "Foundational network topology configuration, packet routing, and network simulation.", badge: "CISCO VERIFIED" },
         { title: "HackerRank Python Gold Badge", issuer: "HackerRank (Jul 8, 2026)", desc: "5-Star Gold Badge in Python algorithmic problem solving + Basic Certificate.", badge: "GOLD BADGE (5★)" },
         { title: "HackerRank SQL Gold Badge & Intermediate", issuer: "HackerRank (Jul 18-22, 2026)", desc: "5-Star Gold Badge in SQL + Verified SQL Intermediate Certification.", badge: "GOLD BADGE (5★)" },
-        { title: "Google Data Analytics Professional", issuer: "Google / Coursera (In Progress - Target Oct 2026)", desc: "6/9 courses completed (7-week active streak) in data cleaning, SQL, R, & Tableau.", badge: "IN PROGRESS (6/9)" },
+        { title: "Google Data Analytics Professional", issuer: "Google / Coursera", desc: "Completed all 9 courses: data cleaning, SQL query optimization, R programming, & Tableau data visualization.", badge: "VERIFIED" },
         { title: "IBM Python 101 for Data Science", issuer: "IBM / Cognitive Class (May 2026)", desc: "Data structures, pandas, NumPy, and REST API data scraping.", badge: "IBM VERIFIED" },
         { title: "Creation of ML Models 2026", issuer: "Microsoft Learn (Build 2026 - Jun 2026)", desc: "Scikit-Learn, Automated ML, and Azure ML model creation.", badge: "MICROSOFT" },
         { title: "IBM Z Day AI & Data", issuer: "IBM Z Systems (2026)", desc: "Enterprise AI, Mainframe Data Security & Modernization.", badge: "ENTERPRISE AI" }
@@ -1142,7 +1142,7 @@ export default function AboutPage() {
                                         onClick={() => {
                                             AudioEngine.playUISelect();
                                             navigator.clipboard.writeText(`S. VARUN VAIBHAV
-Status: 2nd-year B.Tech (AI & Data Analytics) | SRIHER Chennai
+Status: 3rd-year B.Tech (AI & Data Analytics) | SRIHER Chennai
 Contact: Umasubramanian81@gmail.com | +91 9384000748 | Chennai, India
 Target: MS in Data Science at Arizona State University (2029)
 
@@ -1451,7 +1451,7 @@ GITHUB: github.com/theflighttechofficial`);
                 transition={{ type: "spring", stiffness: 85, damping: 17 }}
                 className="
                     w-full
-                    lg:w-[60%]
+                    lg:flex-1
                     min-h-fit
                     lg:h-full
                     ml-0
@@ -1472,7 +1472,6 @@ GITHUB: github.com/theflighttechofficial`);
                     lg:pb-9
                     flex
                     flex-col
-                    justify-between
                     overflow-hidden
                     pointer-events-auto
                     shadow-2xl
@@ -1520,7 +1519,7 @@ GITHUB: github.com/theflighttechofficial`);
                 </div>
 
                 {/* Main Profile Info Section */}
-                <div className="relative z-10 flex-1 flex flex-col justify-start">
+                <div className="relative z-10 flex-1 flex flex-col min-h-0">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-5 mb-4 sm:mb-5 border-b border-white/10 pb-4">
                         <motion.div
                             whileHover={{ scale: 1.05, rotate: 3 }}
@@ -1554,7 +1553,7 @@ GITHUB: github.com/theflighttechofficial`);
                             </div>
                             <p className="text-[9.5px] text-yellow-300 font-bold uppercase tracking-[0.2em] mt-0.5 flex items-center gap-1.5">
                                 <GraduationCap size={12} className="text-yellow-400" />
-                                2nd-Year B.Tech CSE (AI & Data Analytics) · SRIHER Chennai
+                                3rd-Year B.Tech CSE (AI & Data Analytics) · SRIHER Chennai
                             </p>
                             <p className="text-[11px] text-zinc-300 font-medium mt-1 leading-relaxed max-w-xl">
                                 Building production-grade data systems & AI tools. Currently learning ML, Data Engineering, and Full Stack Development while shipping actual products. Targeting MS in Data Science at Arizona State University (2029).
@@ -1563,7 +1562,8 @@ GITHUB: github.com/theflighttechofficial`);
                     </div>
 
                     {/* Tab Panels */}
-                    <div className="flex-1 min-h-fit lg:min-h-[460px]">
+                    <div className="flex-1 min-h-0 flex flex-col">
+                        <div className="flex-1 min-h-0 flex flex-col">
                         <AnimatePresence mode="wait">
                             
                             {/* Panel 1: Dashboard (CLI Terminal & Pillars) */}
@@ -1688,7 +1688,7 @@ GITHUB: github.com/theflighttechofficial`);
 
                             {/* Panel: Experience */}
                             {activeTab === "experience" && (
-                                <motion.div key="experience-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="space-y-4 max-h-[440px] overflow-y-auto pr-1">
+                                <motion.div key="experience-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="space-y-4 h-full overflow-y-auto pr-1 scrollbar-thin">
                                     {[
                                         {
                                             role: "Data Analyst Intern", company: "Larsen & Toubro (L&T Construction)", period: "May 2026 – Jul 2026", location: "Chennai, India",
@@ -1736,7 +1736,7 @@ GITHUB: github.com/theflighttechofficial`);
 
                             {/* Panel 2: Skills */}
                             {activeTab === "skills" && (
-                                <motion.div key="skills-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="space-y-4">
+                                <motion.div key="skills-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="flex-1 min-h-0 flex flex-col space-y-4">
                                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                                         <div className="flex gap-1.5 flex-wrap">
                                             {[ { id: "all", label: "All" }, { id: "aiml", label: "AI & ML" }, { id: "data", label: "Data" }, { id: "languages", label: "Languages" }, { id: "webdev", label: "Web Dev" }, { id: "tools", label: "Tools" } ].map(category => (
@@ -1754,7 +1754,7 @@ GITHUB: github.com/theflighttechofficial`);
                                         </div>
                                     </div>
 
-                                    <motion.div variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }} initial="hidden" animate="visible" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 max-h-[380px] overflow-y-auto pr-1">
+                                    <motion.div variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }} initial="hidden" animate="visible" className="flex-1 min-h-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 overflow-y-auto pr-1 scrollbar-thin content-start">
                                         {filteredSkills.map((skill) => (
                                             <motion.div key={skill.name} variants={{ hidden: { opacity: 0, scale: 0.95, y: 8 }, visible: { opacity: 1, scale: 1, y: 0 } }} whileHover={{ scale: 1.02, y: -1 }} className="p-3 rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.02] to-white/[0.005] backdrop-blur-md flex flex-col justify-between gap-1.5 shadow-sm">
                                                 <div className="flex items-center justify-between">
@@ -1772,8 +1772,8 @@ GITHUB: github.com/theflighttechofficial`);
 
                             {/* Panel 3: Major Projects */}
                             {activeTab === "projects" && (
-                                <motion.div key="projects-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="space-y-4">
-                                    <motion.div variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }} initial="hidden" animate="visible" className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[380px] overflow-y-auto pr-1">
+                                <motion.div key="projects-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="flex-1 min-h-0 flex flex-col space-y-4">
+                                    <motion.div variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }} initial="hidden" animate="visible" className="grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto pr-1 scrollbar-thin">
                                         {projects.map((project, i) => (
                                             <motion.div key={i} onClick={() => { AudioEngine.playUISelect(); setSelectedProject(project); }} variants={{ hidden: { opacity: 0, y: 10, scale: 0.98 }, visible: { opacity: 1, y: 0, scale: 1 } }} whileHover={{ scale: 1.02, y: -2 }} onMouseEnter={() => AudioEngine.playUIHover()} className="block p-4 rounded-xl bg-white/[0.015] border border-white/10 transition-all duration-300 relative group cursor-pointer">
                                                 <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-yellow-500 via-amber-400 to-yellow-300 opacity-0 group-hover:opacity-50 blur-[1.5px] -z-10 transition-opacity duration-300 pointer-events-none" style={{ margin: "-1px" }} />
@@ -1803,7 +1803,7 @@ GITHUB: github.com/theflighttechofficial`);
 
                             {/* Panel 4: Certifications & Research Showcase */}
                             {activeTab === "roadmap" && (
-                                <motion.div key="roadmap-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="space-y-4 max-h-[380px] overflow-y-auto pr-1">
+                                <motion.div key="roadmap-tab" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.22 }} className="space-y-4 h-full overflow-y-auto pr-1 scrollbar-thin">
                                     
                                     {/* Research & Presentation Honors */}
                                     <div className="space-y-2">
@@ -1882,11 +1882,12 @@ GITHUB: github.com/theflighttechofficial`);
                             )}
 
                         </AnimatePresence>
+                        </div>
                     </div>
                 </div>
 
                 {/* Footer Link Docks with Rich Icons */}
-                <div className="relative z-10 border-t border-white/10 pt-3 sm:pt-4 mt-3 sm:mt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="relative z-10 border-t border-white/10 pt-3 sm:pt-4 mt-auto flex flex-col sm:flex-row items-center justify-between gap-3">
                     <div className="flex gap-1.5 items-center flex-wrap justify-center sm:justify-start w-full sm:w-auto">
                         <motion.a
                             href="https://github.com/theflighttechofficial" target="_blank" rel="noopener noreferrer"

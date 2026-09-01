@@ -167,12 +167,18 @@ Make sure you have **Node.js** (v18.0.0 or higher) and **npm** installed on your
 
 ## 👨‍💻 Developer Profile
 
-**Varun Vaibhav**  
-*B.Tech in Computer Science Engineering (AI & Data Analytics)*  
-*Sri Ramachandra Institute of Higher Education and Research (SRIHER), Chennai*
+**S. Varun Vaibhav**  
+*The Flight Tech Labs | Data Engineer • AI/ML Builder • Full-Stack Developer*  
+*3rd-year B.Tech in Computer Science Engineering (AI & Data Analytics)*  
+*Sri Ramachandra Faculty of Engineering and Technology (SRIHER), Chennai*
 
+* **Philosophy**: *"Ship working code, not prototypes. Solve real problems, not hypothetical ones."*
 * **GitHub**: [@theflighttechofficial](https://github.com/theflighttechofficial)
-* **Specializations**: Machine Learning, Computer Vision (YOLOv8, OpenCV), RAG & LLM Architectures, WebGL & Interactive Web Engineering.
+* **LinkedIn**: [varun-vaibhav-s-11b69a2ba](https://linkedin.com/in/varun-vaibhav-s-11b69a2ba)
+* **Hashnode**: [theflighttechlabs.hashnode.dev](https://theflighttechlabs.hashnode.dev)
+* **Experience**: Former Data Analyst Intern at **Larsen & Toubro Construction Analytics** (Pioneered PDF RAG Spec Extractor & SLD Diagram OCR, 91% token cost reduction, 1,200+ pgs daily).
+* **Certifications**: 8 Verified Certifications including Stanford Machine Learning (Andrew Ng), Google Prompting Essentials, HackerRank Python & SQL Gold Badges (5★), Cisco Packet Tracer, IBM & Microsoft ML.
+* **Target**: 1-Year Placement (May 2028 - May 2029) -> MS in CS/Data Science @ Arizona State University (Fall 2029).
 
 ---
 

@@ -91,8 +91,12 @@ export default function AboutPage() {
     );
 
     // Keep the active tab visible in the horizontally scrolling nav on small screens.
+    // Scroll only the nav strip; scrollIntoView would also shift every scrollable ancestor sideways.
     useEffect(() => {
-        navRef.current?.querySelector(`[data-section="${section}"]`)?.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+        const nav = navRef.current;
+        const btn = nav?.querySelector(`[data-section="${section}"]`);
+        if (!nav || !btn || nav.scrollWidth <= nav.clientWidth) return;
+        nav.scrollTo({ left: btn.offsetLeft - nav.clientWidth / 2 + btn.offsetWidth / 2, behavior: "smooth" });
     }, [section]);
 
     const openProject = useCallback((p) => {
@@ -126,10 +130,12 @@ export default function AboutPage() {
             animate={{ opacity: leaving ? 0 : 1, filter: leaving ? "blur(6px)" : "blur(0px)" }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6 }}
-            className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden lg:overflow-hidden bg-black/75 lg:bg-black/45 backdrop-blur-md"
+            className="fixed inset-0 z-50 overflow-y-auto overflow-x-clip lg:overflow-y-hidden bg-black/75 lg:bg-black/45 backdrop-blur-md"
         >
-            <div aria-hidden className="pointer-events-none fixed -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-amber-500/10 blur-[160px]" />
-            <div aria-hidden className="pointer-events-none fixed -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-violet-500/10 blur-[180px]" />
+            <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden">
+                <div className="absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-amber-500/10 blur-[160px]" />
+                <div className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-violet-500/10 blur-[180px]" />
+            </div>
 
             <div
                 className="relative min-h-full lg:h-full flex flex-col lg:flex-row gap-3 lg:gap-5 p-3 sm:p-5 lg:p-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] transition-opacity duration-700"

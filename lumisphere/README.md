@@ -1,6 +1,6 @@
 # 💡 LumiSphere
 
-> **An immersive, interactive 3D WebGL developer experience, Interactive Desk Workspace, and Portfolio powered by React 19, Three.js / React Three Fiber, Custom GLSL Shaders, Procedural Web Audio API Synthesis, Floating AI Companion Drone, and Glassmorphic UI.**
+> **An immersive, interactive 3D WebGL developer experience, Interactive Desk Workspace, and Portfolio powered by React 19, Three.js / React Three Fiber, Custom GLSL Shaders, Procedural Web Audio API Synthesis, and Glassmorphic UI.**
 
 ---
 
@@ -8,7 +8,7 @@
 
 **LumiSphere** is a high-performance, interactive 3D web application and developer portfolio built by **Varun Vaibhav**. Designed as a fusion between digital art, WebGL physics, procedural sound synthesis, and software engineering, LumiSphere centers around an interactive retro-futuristic halogen desk lamp and a fully functional 3D developer desk environment.
 
-Toggling the lamp ignites a dynamic WebGL volumetric lighting engine featuring atmospheric dust particles, custom GLSL shaders, procedural Web Audio synthesis, an autonomous flying AI companion drone ("Lumi Drone"), interactive desk items (mechanical keyboard, retro arcade cabinet, scribble canvas, bookshelf, sticky notes, monitor display terminal), and unlocks an interactive portfolio dashboard detailing Varun's AI/ML engineering projects, industry experience, machine learning background, holographic skills network, interactive resume room, and embedded CLI terminal.
+Toggling the lamp ignites a dynamic WebGL volumetric lighting engine featuring atmospheric dust particles, custom GLSL shaders, procedural Web Audio synthesis, an "Ask me anything" chat that answers in my own words, interactive desk items (mechanical keyboard, retro arcade cabinet, scribble canvas, bookshelf, sticky notes, monitor display terminal), and unlocks an interactive portfolio dashboard detailing Varun's AI/ML engineering projects, industry experience, machine learning background, interactive resume room, and embedded CLI terminal.
 
 ---
 
@@ -38,9 +38,8 @@ Toggling the lamp ignites a dynamic WebGL volumetric lighting engine featuring a
 * **🔮 Hidden Dev Room (`HiddenDevRoomModal`)**: Secret developer room easter egg featuring Matrix terminal rain, debug metrics, secret codes, and hidden lore.
 * **☕ Animated Coffee Mug Steam (`CoffeeMugSteam`)**: Atmospheric steam particle animation rising from the desk coffee mug.
 
-### 4. 🤖 Autonomous Flying AI Companion Drone ("Lumi Drone")
-* **Interactive Flying Companion (`Drone.jsx`, `DroneHologram.jsx`, `DroneSparks.jsx`)**: Autonomous drone floating around the workspace with smooth spring hover physics, spark effects, holographic projections, mouse tracking, status updates, and quick interaction triggers.
-* **LumiAI Intelligence Integration (`LumiAIModal.jsx`, `LumiAI.js`)**: Context-aware AI assistant capable of answering user questions about Varun's profile, career experience, machine learning background, and project portfolio.
+### 4. 💬 Ask Me Anything
+* First-person chat in the sidebar (`AskMe.jsx` + `src/utils/askMe.js`): hand-written answers built from `src/data/profile.js`, typed out live, with tappable project cards, section jumps, follow-up questions and optional read-aloud. Fully offline.
 
 ### 5. 🔊 Pure Procedural Web Audio Engine (Zero External Audio Files)
 * **100% Code-Synthesized Audio**: Built completely using the native **Web Audio API** (`AudioEngine.js`) without any external MP3/WAV audio assets:
@@ -124,9 +123,6 @@ lumisphere/
 │   │   │   └── LoginCard.jsx       # Interactive authentication / welcome card
 │   │   └── UI/
 │   │       ├── AudioToggle.jsx     # Ambient audio toggle control button
-│   │       ├── Drone.jsx           # Autonomous floating helper drone companion
-│   │       ├── DroneHologram.jsx   # Holographic projection canvas for drone
-│   │       ├── DroneSparks.jsx     # Dynamic spark particle emitter for drone
 │   │       ├── EnvironmentControlPanel.jsx # Real-time visual & audio customizer panel
 │   │       ├── FloorReflection.jsx # Lighting reflection on floor surface
 │   │       ├── GlassBorder.jsx     # Glassmorphic border container

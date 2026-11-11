@@ -120,14 +120,13 @@ export default function MonitorDisplayModal({ isOpen, onClose }) {
             case "recruiter":
             case "pitch":
             case "summarize":
-                window.dispatchEvent(new CustomEvent("lumisphere_open_lumi_ai"));
                 reply = [
-                    "🤖 LUMI AI ENGINE RESPONDING:",
+                    "VARUN, IN FOUR LINES:",
                     "• Varun Vaibhav — Data Analyst Intern (L&T Construction) & B.Tech AI Student.",
                     "• Production RAG Spec Extractor: FAISS + BM25, 1,200+ pgs, 3-4 days -> ~15 min, $22->$2 per run.",
                     "• Academic Standing: CGPA 7.8/10, climbing every semester.",
                     "• Future Plans: MS in Data Science @ Arizona State University (ASU) 2029.",
-                    "💡 Opening Lumi AI Voice Assistant..."
+                    "💡 Light the lamp and use 'Ask me anything' under my name for more."
                 ];
                 break;
             case "diary":

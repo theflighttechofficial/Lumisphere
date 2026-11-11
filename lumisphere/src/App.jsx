@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { Analytics } from '@vercel/analytics/react';
 import LoginPage from "./pages/LoginPage";
 import MagneticCustomCursor from "./components/UI/MagneticCustomCursor";
-import LumiAIModal from "./components/UI/LumiAIModal";
+import SecretModalsHost from "./components/UI/SecretModalsHost";
 import IntroVideo from "./components/UI/IntroVideo";
 
 const INTRO_KEY = "lumisphere_intro_seen";
@@ -33,7 +33,7 @@ export default function App() {
   return (
     <>
       <MagneticCustomCursor />
-      <LumiAIModal />
+      <SecretModalsHost />
       <LoginPage />
       <Analytics />
     </>

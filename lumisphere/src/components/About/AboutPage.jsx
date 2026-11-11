@@ -1,7 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-    Award, Bot, Briefcase, CheckCircle2, Compass, Cpu, FileText, LayoutGrid, LogOut, Mail, MapPin, Palette,
+    Award, Briefcase, CheckCircle2, Compass, Cpu, FileText, LayoutGrid, LogOut, Mail, MapPin, Palette,
     Send, Sparkles, Sun, Volume2, VolumeX,
 } from "lucide-react";
 import { useLight } from "../../context/LightContext";
@@ -10,6 +10,7 @@ import useMobile from "../../hooks/useMobile";
 import { profile, socials, education, experience, projects, certifications } from "../../data/profile";
 import NoiseLayer from "../UI/NoiseLayer";
 import { SocialIcon } from "./BrandIcons";
+import AskMe from "./AskMe";
 import { themePalettes } from "./themes";
 import { ProjectModal, CodeModal } from "./ProjectModal";
 import ResumeModal from "./ResumeModal";
@@ -193,6 +194,17 @@ export default function AboutPage() {
                             </div>
                         </div>
 
+                        <AskMe onOpenProject={openProject} onNavigate={navigate} />
+
+                        <div className="grid grid-cols-2 gap-2">
+                            <button onClick={() => setResumeOpen(true)} className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-amber-400 to-amber-500 text-zinc-950 py-2.5 text-[13px] font-semibold hover:brightness-110">
+                                <FileText size={16} /> Résumé
+                            </button>
+                            <a href={`mailto:${profile.email}`} className="flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 text-white py-2.5 text-[13px] font-semibold hover:bg-white/10">
+                                <Mail size={16} /> Email me
+                            </a>
+                        </div>
+
                         <div className="flex gap-2 items-start rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] px-3.5 py-2.5">
                             <CheckCircle2 size={15} className="text-emerald-400 mt-0.5 shrink-0" />
                             <p className="text-[13px] text-emerald-100/90 leading-snug">{profile.availability}</p>
@@ -258,22 +270,6 @@ export default function AboutPage() {
                                 className="mt-2 w-full accent-amber-400 cursor-pointer"
                             />
                         </label>
-
-                        {/* Primary actions */}
-                        <div className="grid grid-cols-3 gap-2">
-                            <button onClick={() => setResumeOpen(true)} className="flex flex-col items-center gap-1 rounded-xl bg-gradient-to-b from-amber-400 to-amber-500 text-zinc-950 py-2.5 text-[12px] font-semibold hover:brightness-110">
-                                <FileText size={17} /> Résumé
-                            </button>
-                            <a href={`mailto:${profile.email}`} className="flex flex-col items-center gap-1 rounded-xl border border-white/15 bg-white/5 text-white py-2.5 text-[12px] font-semibold hover:bg-white/10">
-                                <Mail size={17} /> Email
-                            </a>
-                            <button
-                                onClick={() => window.dispatchEvent(new CustomEvent("lumisphere_open_lumi_ai"))}
-                                className="flex flex-col items-center gap-1 rounded-xl border border-cyan-400/30 bg-cyan-400/10 text-cyan-200 py-2.5 text-[12px] font-semibold hover:bg-cyan-400/20"
-                            >
-                                <Bot size={17} /> Ask Lumi
-                            </button>
-                        </div>
 
                         <div className="flex flex-wrap gap-1.5 lg:mt-auto">
                             {socials.map((s) => (

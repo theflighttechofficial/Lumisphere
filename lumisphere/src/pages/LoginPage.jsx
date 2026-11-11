@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import SimulationCanvas from "../components/Effects/SimulationCanvas";
 import Lamp from "../components/Lamp/Lamp";
 import LoginCard from "../components/Login/LoginCard";
-import Drone from "../components/UI/Drone";
 import AudioToggle from "../components/UI/AudioToggle";
 import EnvironmentControlPanel from "../components/UI/EnvironmentControlPanel";
 import InteractiveDesk from "../components/InteractiveDesk/InteractiveDesk";
@@ -17,7 +16,7 @@ const loadAboutPage = () => import("../components/About/AboutPage");
 const AboutPage = lazy(loadAboutPage);
 
 export default function LoginPage() {
-    const { isLightOn, isLoggedIn } = useLight();
+    const { isLightOn, isLoggedIn, toggleLight } = useLight();
     const sceneReady = useSceneStartup();
     const containerRef = useRef(null);
 
@@ -77,8 +76,29 @@ export default function LoginPage() {
             {/* Lamp */}
             <Lamp />
 
+            {/* First-visit cue: pull the chain, or tap this to switch the lamp on */}
+            <AnimatePresence>
+                {sceneReady && !isLightOn && !isLoggedIn && (
+                    <motion.button
+                        key="lamp-hint"
+                        type="button"
+                        onClick={toggleLight}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ delay: 0.8, duration: 0.6 }}
+                        className="absolute inset-x-0 mx-auto w-fit max-w-[calc(100vw-2rem)] bottom-[max(6rem,env(safe-area-inset-bottom))] sm:bottom-24 z-[80] flex items-center gap-2.5 px-5 py-3 rounded-full border border-amber-300/30 bg-black/60 backdrop-blur-md text-sm font-semibold text-amber-100 shadow-[0_0_30px_rgba(251,191,36,0.15)] hover:border-amber-300/60 text-center"
+                    >
+                        <span className="relative flex w-2 h-2">
+                            <span className="absolute inline-flex w-full h-full rounded-full bg-amber-300 opacity-70 animate-ping" />
+                            <span className="relative inline-flex w-2 h-2 rounded-full bg-amber-300" />
+                        </span>
+                        Pull the chain to switch on the lamp — or tap here
+                    </motion.button>
+                )}
+            </AnimatePresence>
+
             {/* Scene helpers step aside once the portfolio is open so nothing covers the content */}
-            {!isLoggedIn && <Drone />}
             {!isLoggedIn && <AudioToggle />}
             {!isLoggedIn && <EnvironmentControlPanel />}
 

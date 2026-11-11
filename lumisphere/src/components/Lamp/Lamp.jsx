@@ -125,7 +125,7 @@ export default function Lamp() {
                 willChange: "transform",
             }}
             animate={{
-                y: isLoggedIn ? (isMobile ? -60 : -80) : 0,
+                y: isLoggedIn ? (isMobile ? -420 : -80) : 0,
                 x: isLoggedIn ? (isMobile ? 0 : "-42vw") : 0,
                 scale: isLoggedIn ? (isMobile ? 0.72 : 0.84) : (isMobile ? 0.85 : 1),
             }}

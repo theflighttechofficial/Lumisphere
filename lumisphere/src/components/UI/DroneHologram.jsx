@@ -3,30 +3,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Cpu, Sparkles, ExternalLink, Brain, Layers, Code, CheckCircle2, Zap, X } from "lucide-react";
 import { AudioEngine } from "../../utils/AudioEngine";
 import HolographicSkillsNetwork from "../About/HolographicSkillsNetwork";
+import { featuredProjects, projectCategories } from "../../data/profile";
 
-const RECOMMENDED_PROJECTS = [
-    {
-        id: "rag",
-        title: "Industrial Hybrid RAG Spec Extractor",
-        desc: "FAISS vector retrieval + BM25 sparse keyword ranking with Reciprocal Rank Fusion. -88% token cost reduction.",
-        badge: "AI & GenAI",
-        link: "https://github.com"
-    },
-    {
-        id: "webgl",
-        title: "Lumisphere Atmospheric 3D Engine",
-        desc: "Real-time raymarched GLSL volumetric atmosphere, procedural Web Audio synthesis, and interactive desk physics.",
-        badge: "3D Graphics",
-        link: "https://github.com"
-    },
-    {
-        id: "ocr",
-        title: "AutoCAD SLD Diagram OCR Parser",
-        desc: "Deep learning OCR pipeline parsing zero-text layer electrical single-line diagrams from AutoCAD PDFs.",
-        badge: "Computer Vision",
-        link: "https://github.com"
-    }
-];
+const RECOMMENDED_PROJECTS = featuredProjects.slice(0, 3).map((p) => ({
+    id: p.id,
+    title: p.title,
+    desc: `${p.tagline} ${p.metrics.join(" · ")}.`,
+    badge: projectCategories.find((c) => c.id === p.category)?.label ?? "Project",
+    link: p.links.live || p.links.repo || "https://github.com/theflighttechofficial",
+}));
 
 const SKILL_NODES = [
     { name: "Fullstack Engineering", level: "Expert", desc: "React 19, Vite, Framer Motion, TailwindCSS, Node.js", icon: Code },

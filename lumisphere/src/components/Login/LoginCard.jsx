@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { User, GraduationCap, ShieldCheck, Cpu, HardDrive } from "lucide-react";
+import { motion } from "framer-motion";
+import { User, GraduationCap } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,10 +16,10 @@ import { AudioEngine } from "../../utils/AudioEngine";
 const loginSchema = z.object({
     viewerName: z
         .string()
-        .min(1, { message: "Viewer name is required" }),
+        .min(1, { message: "Add your name, or continue as guest below" }),
     college: z
         .string()
-        .min(1, { message: "College is required" }),
+        .min(1, { message: "Add your company or college" }),
 });
 
 const childVariants = {
@@ -37,7 +37,7 @@ const childVariants = {
 };
 
 export default function LoginCard() {
-    const { isLightOn, isLoggedIn, setIsLoggedIn, setLoginTriggerTime, setViewerName, setCollege } = useLight();
+    const { isLightOn, setIsLoggedIn, setLoginTriggerTime, setViewerName, setCollege } = useLight();
     const { x, y } = useMousePosition();
 
     const [isLoading, setIsLoading] = useState(false);
@@ -64,26 +64,19 @@ export default function LoginCard() {
         setTimeout(() => setShake(false), 500);
     };
 
-    const onSubmit = (data) => {
+    const enterPortfolio = (data) => {
         if (isLoading) return;
         setIsLoading(true);
         AudioEngine.playUISelect();
-        
+
         // Blur active element to prevent auto-scrolling during animations
         if (document.activeElement && typeof document.activeElement.blur === "function") {
             document.activeElement.blur();
         }
 
-        if (setLoginTriggerTime) {
-            setLoginTriggerTime(Date.now());
-        }
-
-        if (setViewerName) {
-            setViewerName(data.viewerName);
-        }
-        if (setCollege) {
-            setCollege(data.college);
-        }
+        setLoginTriggerTime?.(Date.now());
+        setViewerName?.(data.viewerName.trim());
+        setCollege?.(data.college.trim());
 
         setTimeout(() => {
             setIsLoading(false);
@@ -91,8 +84,10 @@ export default function LoginCard() {
             setTimeout(() => {
                 AudioEngine.playDroneScan();
             }, 150);
-        }, 1600);
+        }, data.viewerName ? 1600 : 700);
     };
+
+    const onSubmit = (data) => enterPortfolio(data);
 
     const onInvalidSubmit = () => {
         triggerShake();
@@ -183,7 +178,7 @@ export default function LoginCard() {
                     }}
                     className="mt-2 mb-6 sm:mb-9 text-xs sm:text-sm text-red-400 font-bold tracking-wide pl-1 sm:pl-2"
                 >
-                    Enter your details to view the portfolio.
+                    Tell me who's visiting — or skip straight in.
                 </motion.p>
 
                 <form onSubmit={handleSubmit(onSubmit, onInvalidSubmit)} className="space-y-6">
@@ -200,7 +195,7 @@ export default function LoginCard() {
                     <motion.div variants={childVariants}>
                         <PremiumInput
                             icon={GraduationCap}
-                            label="College / Institution"
+                            label="Company / College"
                             type="text"
                             error={errors.college}
                             {...register("college")}
@@ -210,10 +205,21 @@ export default function LoginCard() {
                     <motion.div variants={childVariants}>
                         <PremiumButton
                             isLoading={isLoading}
-                            text="Connect Rig"
+                            text="Enter Portfolio"
                         />
                     </motion.div>
                 </form>
+
+                <motion.div variants={childVariants} className="mt-5 text-center">
+                    <button
+                        type="button"
+                        onClick={() => enterPortfolio({ viewerName: "", college: "" })}
+                        disabled={isLoading}
+                        className="text-[13px] font-semibold text-zinc-400 hover:text-red-300 underline-offset-4 hover:underline disabled:opacity-50"
+                    >
+                        Just browsing? Continue as guest →
+                    </button>
+                </motion.div>
             </div>
         </motion.div>
     );

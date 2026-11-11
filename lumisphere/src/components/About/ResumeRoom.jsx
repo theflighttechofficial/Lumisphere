@@ -24,116 +24,32 @@ import {
     Star
 } from "lucide-react";
 import { AudioEngine } from "../../utils/AudioEngine";
+import { certifications, achievements, journey, plainTextResume } from "../../data/profile";
 
-// Wall Certificates Dataset (8 Verified + 1 In Progress)
-const WALL_CERTIFICATES = [
-    {
-        id: "stanford",
-        title: "Stanford Machine Learning Specialization",
-        issuer: "Coursera & DeepLearning.AI",
-        signatory: "Andrew Ng Signed",
-        date: "Jul 20, 2026",
-        badgeColor: "from-amber-500/20 to-yellow-600/20 border-amber-400 text-amber-300",
-        details: "3-course series covering Supervised Machine Learning (Regression & Classification), Advanced Learning Algorithms (Neural Networks, Decision Trees), and Unsupervised Learning (Clustering, Anomaly Detection, Recommender Systems)."
-    },
-    {
-        id: "google",
-        title: "Google Prompting Essentials",
-        issuer: "Google",
-        signatory: "Amanda Brophy, VP Google",
-        date: "Jul 5, 2026",
-        badgeColor: "from-emerald-500/20 to-teal-600/20 border-emerald-400 text-emerald-300",
-        details: "4-course specialization on prompt engineering frameworks, chain-of-thought prompting, LLM system instruction design, and AI workflow automation."
-    },
-    {
-        id: "cisco",
-        title: "Cisco Networking Academy: Packet Tracer",
-        issuer: "Cisco Networking Academy",
-        signatory: "Cisco Verified",
-        date: "Aug 26, 2026",
-        badgeColor: "from-sky-500/20 to-blue-600/20 border-sky-400 text-sky-300",
-        details: "Foundational network topology configuration, packet routing, and network simulation using Cisco Packet Tracer."
-    },
-    {
-        id: "python_gold",
-        title: "HackerRank Python Gold Badge (5 Stars)",
-        issuer: "HackerRank",
-        signatory: "Verified Gold Skill Badge",
-        date: "Jul 8, 2026",
-        badgeColor: "from-yellow-500/20 to-amber-600/20 border-yellow-400 text-yellow-300",
-        details: "Top percentile score in Python algorithms, data structures, list comprehensions, decorators, generators, and object-oriented programming."
-    },
-    {
-        id: "sql_gold",
-        title: "HackerRank SQL Gold Badge (5 Stars)",
-        issuer: "HackerRank",
-        signatory: "Verified Gold Skill Badge",
-        date: "Jul 18, 2026",
-        badgeColor: "from-cyan-500/20 to-blue-600/20 border-cyan-400 text-cyan-300",
-        details: "Mastered complex relational joins, window functions (ROW_NUMBER, DENSE_RANK), CTEs, subqueries, and database performance tuning."
-    },
-    {
-        id: "google_da",
-        title: "Google Data Analytics Professional Certificate",
-        issuer: "Google / Coursera",
-        signatory: "Google Career Certificates Verified",
-        date: "Sep 2026",
-        badgeColor: "from-green-500/20 to-emerald-600/20 border-green-400 text-green-300",
-        details: "Completed all 9 courses covering data cleaning, SQL query optimization, R programming, and Tableau data visualization. Awarded by Google / Coursera."
-    },
-    {
-        id: "ibm_python",
-        title: "IBM Python 101 for Data Science",
-        issuer: "IBM & Cognitive Class",
-        signatory: "IBM Certified",
-        date: "May 2026",
-        badgeColor: "from-blue-500/20 to-indigo-600/20 border-blue-400 text-blue-300",
-        details: "Data analysis fundamentals with Python, pandas DataFrames, NumPy arrays, and HTTP REST API data scraping."
-    },
-    {
-        id: "ms_ml",
-        title: "Microsoft ML Models Certification",
-        issuer: "Microsoft Learn",
-        signatory: "Build 2026 Verified",
-        date: "Jun 2026",
-        badgeColor: "from-purple-500/20 to-violet-600/20 border-purple-400 text-purple-300",
-        details: "Building & deploying automated machine learning models using Azure ML Studio & scikit-learn pipelines."
-    }
+// Gallery data is derived from the shared profile so it never drifts from the rest of the site.
+const BADGE_COLORS = [
+    "from-amber-500/20 to-yellow-600/20 border-amber-400 text-amber-300",
+    "from-green-500/20 to-emerald-600/20 border-green-400 text-green-300",
+    "from-emerald-500/20 to-teal-600/20 border-emerald-400 text-emerald-300",
+    "from-yellow-500/20 to-amber-600/20 border-yellow-400 text-yellow-300",
+    "from-sky-500/20 to-blue-600/20 border-sky-400 text-sky-300",
+    "from-purple-500/20 to-violet-600/20 border-purple-400 text-purple-300",
+    "from-blue-500/20 to-indigo-600/20 border-blue-400 text-blue-300",
+    "from-cyan-500/20 to-blue-600/20 border-cyan-400 text-cyan-300",
 ];
+
+const WALL_CERTIFICATES = certifications.map((c, i) => ({
+    id: `cert-${i}`,
+    title: c.title,
+    issuer: c.issuer,
+    signatory: `${c.platform} verified`,
+    date: c.date,
+    badgeColor: BADGE_COLORS[i % BADGE_COLORS.length],
+    details: `${c.title}, issued by ${c.issuer} via ${c.platform} (${c.date}).`,
+}));
 
 // Trophy Cabinet Awards
-const AWARDS = [
-    {
-        title: "L&T Intern Excellence Recognition",
-        org: "L&T Construction (Buildings & Factories IC)",
-        date: "Jul 2026",
-        desc: "Engineered Hybrid RAG Spec Extractor reducing token costs from $22 to $2 and processing 1,200+ page PDFs in minutes. LOR awarded by Sr. Data Scientist Naveen Raj."
-    },
-    {
-        title: "HackerRank Orchestrate August 2026",
-        org: "HackerRank Global Competition",
-        date: "Aug 2026",
-        desc: "Ranked #1006 out of 1,983 globally. Built WhatsApp Notification Router using Groq API (llama-3.1-8b-instant NLU) achieving 75% action accuracy on 110+ real messages."
-    },
-    {
-        title: "SIH 2026 DocFlow Systems Project Lead",
-        org: "Smart India Hackathon 2026 (Ministry of Consumer Affairs)",
-        date: "2026",
-        desc: "Leading automated Legal Metrology compliance verification engine for 50M+ e-commerce product listings (Problem SIH25057)."
-    },
-    {
-        title: "SRIHER Research Day 2026 Presentation",
-        org: "Sri Ramachandra Institute of Higher Education",
-        date: "Feb 2026",
-        desc: "Presented research paper on YOLOv8 Computer Vision & MiDaS Monocular Depth Estimation for automated road hazard detection."
-    },
-    {
-        title: "Upward CGPA Trajectory Award",
-        org: "SRIHER Dept of CSE (AI & DA)",
-        date: "2024 - 2026",
-        desc: "Demonstrated academic resilience climbing from 6.86 to 7.70 CGPA (cleared all 2 arrears in 1st attempt)."
-    }
-];
+const AWARDS = achievements.map((a) => ({ title: a.title, org: a.org, date: a.date, desc: a.detail }));
 
 // Interactive Bookshelf Books
 const BOOKS = [
@@ -160,13 +76,9 @@ const BOOKS = [
 ];
 
 // Career & Education Timeline
-const TIMELINE = [
-    { year: "2024", title: "B.Tech CSE (AI & Data Analytics)", subtitle: "SRIHER Chennai", desc: "Started B.Tech journey. Built foundation in Python, C++, Data Structures, and Discrete Math." },
-    { year: "2025", title: "Web Developer Intern", subtitle: "Neoshaan Technologies", desc: "Built 3 client production sites using React, TailwindCSS, and Node.js backend." },
-    { year: "2026", title: "Data Analyst Intern", subtitle: "L&T Construction", desc: "Built PDF Spec Extractor (FAISS + BM25 RAG) & AutoCAD OCR Parser. Earned LOR from Sr. Data Scientist Naveen Raj." },
-    { year: "2028", title: "B.Tech Graduation Target", subtitle: "Target CGPA 8.0+", desc: "Complete B.Tech thesis in AI/ML & secure 2nd Data Science internship." },
-    { year: "2029", title: "MS in Data Science Target", subtitle: "Arizona State University (ASU)", desc: "Enroll in MS in Data Science @ ASU to pursue US Data Science / ML Engineering career." }
-];
+const TIMELINE = journey
+    .filter((j) => j.status !== "now")
+    .map((j) => ({ year: j.date, title: j.title, subtitle: j.status === "next" ? "Planned" : "Done", desc: j.detail }));
 
 export default function ResumeRoom() {
     const [selectedCert, setSelectedCert] = useState(null);
@@ -176,26 +88,13 @@ export default function ResumeRoom() {
 
     const handleCopyResume = () => {
         AudioEngine.playUISelect();
-        navigator.clipboard.writeText(`S. VARUN VAIBHAV — EXECUTIVE CV
-Status: 3rd-year B.Tech (AI & Data Analytics) | SRIHER Chennai
-Contact: Umasubramanian81@gmail.com | +91 9384000748 | Chennai, India
-Target: MS in Data Science at Arizona State University (2029)
-
-EXPERIENCE:
-- Data Analyst Intern at L&T Construction (May-Jul 2026): Hybrid RAG (FAISS+BM25+RRF) Spec Extractor, 1200+ pgs, $22->$2 cost opt, OCR SLD Extractor. LOR: Naveen Raj (NAVEEN-RAJ-B@LNTECC.COM).
-- Web Developer at Neoshaan Technologies (May-Jul 2025): React + Tailwind, Node.js/Nodemailer backend.
-
-EDUCATION: B.Tech CSE (AI & Data Analytics) SRIHER Chennai (2028), CGPA 7.7/10.
-
-CERTIFICATIONS: Stanford Machine Learning Specialization (Andrew Ng), Google Prompting Essentials, HackerRank Python & SQL 5-Star Gold Badges.
-
-PROJECTS: Road-AI (YOLOv8 + Depth), L&T Hybrid RAG, OCR SLD Extractor, AgriYield AI, LumiSphere (Vercel), HomeFinder, Titanic ML.`);
+        navigator.clipboard.writeText(plainTextResume());
         setCopiedText(true);
         setTimeout(() => setCopiedText(false), 2500);
     };
 
     return (
-        <div className="relative w-full rounded-2xl bg-neutral-950/95 border border-amber-500/30 p-6 shadow-[0_0_60px_rgba(251,191,36,0.15)] backdrop-blur-xl my-6 font-mono select-none">
+        <div className="relative w-full rounded-2xl bg-neutral-950/95 border border-amber-500/30 p-4 sm:p-6 shadow-[0_0_60px_rgba(251,191,36,0.15)] backdrop-blur-xl font-mono select-none">
             {/* Room Header Banner */}
             <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-6 border-b border-amber-500/20">
                 <div className="flex items-center gap-3">
@@ -317,7 +216,7 @@ PROJECTS: Road-AI (YOLOv8 + Depth), L&T Hybrid RAG, OCR SLD Extractor, AgriYield
                             <BookOpen className="w-4 h-4" />
                             <span>Interactive Technical Bookshelf (Click Spine to Read Notes)</span>
                         </h3>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                             {BOOKS.map((book, idx) => (
                                 <motion.div
                                     key={idx}
@@ -348,7 +247,7 @@ PROJECTS: Road-AI (YOLOv8 + Depth), L&T Hybrid RAG, OCR SLD Extractor, AgriYield
                             {TIMELINE.map((item, idx) => (
                                 <div key={idx} className="relative">
                                     <div className="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-amber-400 border-2 border-neutral-950 shadow-[0_0_10px_#f59e0b]" />
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                                         <span className="text-xs font-bold text-amber-400">{item.year}</span>
                                         <span className="text-xs font-bold text-white">• {item.title}</span>
                                         <span className="text-[10px] text-neutral-400">({item.subtitle})</span>

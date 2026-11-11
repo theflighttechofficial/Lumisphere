@@ -14,7 +14,7 @@ const BOOKS = [
         icon: Brain,
         chapters: [
             "Chapter 1: Dense FAISS Vector Indexing & Hybrid RRF Search",
-            "Chapter 2: Context Chunk Reranking for 88% Token Cost Reduction",
+            "Chapter 2: Caching & Rule-Based Skipping for a ~91% Cost Cut",
             "Chapter 3: Zero-Text Layer AutoCAD PDF Blueprint OCR Pipelines"
         ]
     },

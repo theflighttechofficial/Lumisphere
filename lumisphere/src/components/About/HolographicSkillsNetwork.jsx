@@ -59,7 +59,7 @@ const SKILLS_NODES = [
             { name: "L&T Spec Extractor", desc: "Ranks blueprint context chunks, reducing token costs from $22 to $2." }
         ],
         experience: [
-            { role: "Industrial RAG Architect", company: "L&T Construction", date: "May - Jul 2026", details: "Received Letter of Recommendation from Sr. Data Scientist Naveen Raj." }
+            { role: "Data Analyst Intern", company: "L&T Construction", date: "May - Jul 2026", details: "Shipped two production tools; letter of recommendation from the department." }
         ],
         timeline: [
             { year: "May 2026", text: "Explored Dense FAISS Vector Embeddings & HNSW index." },
@@ -184,10 +184,10 @@ const SKILLS_NODES = [
         connections: ["webgl", "audio_api", "python"],
         projects: [
             { name: "Lumisphere Interactive Workspace", desc: "React 19, Vite, Framer Motion, and WebGL." },
-            { name: "Neoshaan Client Sites", desc: "3 client websites with Node.js/Nodemailer backend." }
+            { name: "Neoshaan Technologies Site", desc: "Company site rebuild with a Node.js/Nodemailer form backend." }
         ],
         experience: [
-            { role: "Web Developer Intern", company: "Neoshaan Technologies", date: "May - Jul 2025", details: "Built 3 production client web applications." }
+            { role: "Web Developer Intern", company: "Neoshaan Technologies", date: "Jun - Aug 2025", details: "Rebuilt the company site and fixed mobile issues across 3 client sites." }
         ],
         timeline: [
             { year: "2024", text: "HTML5, CSS3, & Vanilla JavaScript." },

@@ -1,37 +1,18 @@
-import React from "react";
+
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Cpu, ExternalLink, GitBranch, HardDrive, Sparkles, X, Zap, CheckCircle2 } from "lucide-react";
+import { featuredProjects, projectCategories, projectStatus } from "../../data/profile";
+import { ExternalLink, HardDrive, Sparkles, X, CheckCircle2 } from "lucide-react";
 
-const usbProjects = [
-    {
-        id: "rag",
-        title: "L&T Hybrid RAG Spec Extractor",
-        category: "AI / GenAI Architecture",
-        desc: "Industrial AI agent combining FAISS dense vector retrieval and BM25 sparse search with Reciprocal Rank Fusion. Reduced query cost from $22 to $2 per document run.",
-        tech: ["Python", "FAISS", "BM25", "LangChain", "OpenAI"],
-        status: "Production Ready",
-        link: "https://github.com"
-    },
-    {
-        id: "ocr",
-        title: "AutoCAD SLD Diagram OCR Parser",
-        category: "Computer Vision / Deep Learning",
-        desc: "Custom OCR and computer vision pipeline for extracting zero-text layer electrical single-line diagrams from AutoCAD engineered PDF blueprints.",
-        tech: ["Python", "Tesseract OCR", "OpenCV", "PyTorch"],
-        status: "Deployed",
-        link: "https://github.com"
-    },
-    {
-        id: "lumisphere",
-        title: "Lumisphere Atmospheric Interactive Scene",
-        category: "3D Graphics & WebGL",
-        desc: "State-of-the-art interactive workspace environment with custom WebGL GLSL shaders, procedural audio synthesis engine, and interactive desk physics.",
-        tech: ["Three.js", "React Three Fiber", "GLSL Shaders", "Web Audio API"],
-        status: "Active Demo",
-        link: "https://github.com"
-    }
-];
+const usbProjects = featuredProjects.slice(0, 6).map((p) => ({
+    id: p.id,
+    title: p.title,
+    category: projectCategories.find((c) => c.id === p.category)?.label ?? "Project",
+    desc: p.tagline,
+    tech: p.stack.slice(0, 4),
+    status: projectStatus[p.status].label,
+    link: p.links.live || p.links.repo || "https://github.com/theflighttechofficial",
+}));
 
 export default function USBProjectsModal({ isOpen, onClose }) {
     if (!isOpen || typeof document === "undefined") return null;
@@ -76,7 +57,7 @@ export default function USBProjectsModal({ isOpen, onClose }) {
                     </div>
 
                     {/* Projects Grid */}
-                    <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 max-h-[70vh] overflow-y-auto">
+                    <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-[70vh] overflow-y-auto">
                         {usbProjects.map((proj) => (
                             <motion.div
                                 key={proj.id}

@@ -69,7 +69,7 @@ export default function EnvironmentControlPanel() {
         <motion.div
             drag
             dragMomentum={false}
-            className="fixed bottom-6 left-6 z-[220] pointer-events-auto select-none"
+            className="fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-3 sm:bottom-6 sm:left-6 z-[220] pointer-events-auto select-none max-w-[calc(100vw-1.5rem)]"
         >
             {/* Draggable Floating Widget Pill */}
             <motion.div
@@ -90,7 +90,7 @@ export default function EnvironmentControlPanel() {
                 </div>
 
                 {/* Status Indicator */}
-                <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wide border-r border-white/15 pr-2.5">
+                <div className="hidden md:flex items-center gap-1.5 font-mono text-[11px] font-semibold tracking-wide border-r border-white/15 pr-2.5">
                     {timeStatus.icon}
                     <span className={timeStatus.color}>{timeStatus.label}</span>
                     <span className="text-zinc-500">•</span>

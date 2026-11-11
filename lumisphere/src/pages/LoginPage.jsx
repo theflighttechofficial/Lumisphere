@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import SimulationCanvas from "../components/Effects/SimulationCanvas";
@@ -7,16 +7,24 @@ import LoginCard from "../components/Login/LoginCard";
 import Drone from "../components/UI/Drone";
 import AudioToggle from "../components/UI/AudioToggle";
 import EnvironmentControlPanel from "../components/UI/EnvironmentControlPanel";
-import AboutPage from "../components/About/AboutPage";
 import InteractiveDesk from "../components/InteractiveDesk/InteractiveDesk";
 
 import useSceneStartup from "../hooks/useSceneStartup";
 import { useLight } from "../context/LightContext";
 
+// The portfolio only appears after the lamp is lit, so its code loads in the background meanwhile.
+const loadAboutPage = () => import("../components/About/AboutPage");
+const AboutPage = lazy(loadAboutPage);
+
 export default function LoginPage() {
     const { isLightOn, isLoggedIn } = useLight();
     const sceneReady = useSceneStartup();
     const containerRef = useRef(null);
+
+    // Prefetch the portfolio chunk as soon as the light comes on.
+    useEffect(() => {
+        if (isLightOn) loadAboutPage();
+    }, [isLightOn]);
 
     useEffect(() => {
         if (isLoggedIn && containerRef.current) {
@@ -69,17 +77,17 @@ export default function LoginPage() {
             {/* Lamp */}
             <Lamp />
 
-            {/* Helper Floating Hover Drone (Tells user to pull the chain) */}
-            <Drone />
-
-            {/* Audio Toggle & Desktop Environment Controls */}
-            <AudioToggle />
-            <EnvironmentControlPanel />
+            {/* Scene helpers step aside once the portfolio is open so nothing covers the content */}
+            {!isLoggedIn && <Drone />}
+            {!isLoggedIn && <AudioToggle />}
+            {!isLoggedIn && <EnvironmentControlPanel />}
 
             {/* About Page (Portfolio Screen) */}
             <AnimatePresence>
                 {isLoggedIn && (
-                    <AboutPage key="about-portal-screen" />
+                    <Suspense key="about-portal-screen" fallback={null}>
+                        <AboutPage />
+                    </Suspense>
                 )}
             </AnimatePresence>
 
@@ -100,13 +108,16 @@ export default function LoginPage() {
                     ease: "easeOut",
                 }}
                 className="
-                    relative sm:absolute
+                    absolute
                     inset-0
                     z-[60]
                     flex
-                    items-center
+                    items-end
+                    sm:items-center
                     justify-center
-                    py-8 sm:py-0
+                    pt-[38vh]
+                    pb-[max(4.5rem,env(safe-area-inset-bottom))]
+                    sm:py-0
                     sm:translate-y-24
                     pointer-events-none
                     w-full
@@ -119,8 +130,9 @@ export default function LoginPage() {
 
             {/* Playable Interactive Desk Environment Docked vertically along the left edge */}
             <AnimatePresence>
-                {sceneReady && isLightOn && (
+                {sceneReady && isLightOn && !isLoggedIn && (
                     <motion.div
+                        key="desk"
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -50 }}
@@ -133,4 +145,4 @@ export default function LoginPage() {
 
         </motion.div>
     );
-}
+}

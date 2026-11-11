@@ -137,7 +137,7 @@ const PremiumInput = forwardRef(({
                     paddingRight: "56px",
                     paddingTop: "16px",
                 }}
-                className="relative z-20 w-full h-full bg-transparent text-[15px] font-bold text-red-400 outline-none caret-red-500 tracking-wide"
+                className="relative z-20 w-full h-full bg-transparent text-base font-bold text-red-400 outline-none caret-red-500 tracking-wide"
             />
 
             {/* Focused Glow Line */}

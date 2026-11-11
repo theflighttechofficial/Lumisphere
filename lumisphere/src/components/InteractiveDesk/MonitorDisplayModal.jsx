@@ -124,8 +124,8 @@ export default function MonitorDisplayModal({ isOpen, onClose }) {
                 reply = [
                     "🤖 LUMI AI ENGINE RESPONDING:",
                     "• Varun Vaibhav — Data Analyst Intern (L&T Construction) & B.Tech AI Student.",
-                    "• Production RAG Spec Extractor: FAISS + BM25, 1,200+ pgs, $22->$2 cost opt.",
-                    "• Academic Standing: CGPA 7.7/10 (Upward Trajectory: 6.86 -> 7.68).",
+                    "• Production RAG Spec Extractor: FAISS + BM25, 1,200+ pgs, 3-4 days -> ~15 min, $22->$2 per run.",
+                    "• Academic Standing: CGPA 7.8/10, climbing every semester.",
                     "• Future Plans: MS in Data Science @ Arizona State University (ASU) 2029.",
                     "💡 Opening Lumi AI Voice Assistant..."
                 ];

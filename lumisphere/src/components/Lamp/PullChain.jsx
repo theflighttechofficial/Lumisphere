@@ -103,6 +103,18 @@ export default function PullChain({
                         damping: 17,
                     });
                 }}
+                role="button"
+                tabIndex={0}
+                aria-label={isLightOn ? "Pull chain to turn the lamp off" : "Pull chain to turn the lamp on"}
+                aria-pressed={isLightOn}
+                onKeyDown={(e) => {
+                    if (e.key !== "Enter" && e.key !== " ") return;
+                    e.preventDefault();
+                    AudioEngine.playChainPull();
+                    SecretsManager.recordLampPull();
+                    animate(dragY, [0, 60, 0], { duration: 0.45 });
+                    toggleLight();
+                }}
                 onMouseEnter={() => {
                     setIsHovered(true);
                     AudioEngine.playUIHover();

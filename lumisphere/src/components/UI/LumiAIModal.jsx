@@ -45,7 +45,7 @@ export default function LumiAIModal({ isOpen: externalIsOpen, onClose: externalO
     const [messages, setMessages] = useState([
         {
             sender: "lumi",
-            text: "Hello! I am Lumi AI — Varun's AI Companion. Ask me about Varun's production RAG systems, L&T internship, CGPA trajectory, or credentials!",
+            text: "Hi! I'm Lumi, Varun's assistant. Ask me about his L&T internship, projects like TrustPulse or DocuMind, skills, or how to reach him.",
         },
     ]);
     const [input, setInput] = useState("");
@@ -257,11 +257,11 @@ export default function LumiAIModal({ isOpen: externalIsOpen, onClose: externalO
                         <span className="text-[10px] text-neutral-500 font-bold mr-1">PROMPTS:</span>
                         {[
                             "Why hire Varun?",
-                            "Explain L&T internship",
-                            "CGPA trajectory",
-                            "Explain RAG project",
-                            "Summarize resume",
-                            "Recommend skills",
+                            "Explain the L&T internship",
+                            "Top projects",
+                            "Tell me about TrustPulse",
+                            "What's next?",
+                            "How do I contact him?",
                         ].map((prompt, idx) => (
                             <button
                                 key={idx}

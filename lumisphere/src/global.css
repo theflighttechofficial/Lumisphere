@@ -1,10 +1,29 @@
 @import "tailwindcss";
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Sora', sans-serif;
+@theme {
+    --font-sans: "Sora", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Must stay inside a layer: unlayered rules beat every Tailwind utility, which used to wipe out all p-* / m-* classes. */
+@layer base {
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html,
@@ -15,6 +34,11 @@ body,
     min-height: 100dvh;
     background: #050505;
     overflow-x: hidden;
+}
+
+::selection {
+    background: rgba(251, 191, 36, 0.35);
+    color: #fff;
 }
 
 /* Custom scrollbars for high-tech aesthetic */
@@ -45,10 +69,17 @@ body,
     scrollbar-width: none;
 }
 
+/* Visible keyboard focus everywhere, invisible for mouse users */
+:focus-visible {
+    outline: 2px solid #fbbf24;
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
 /* Override Chrome autofill styling to preserve dark glassmorphism */
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 1000px rgba(10, 10, 12, 0.75) inset !important;
     -webkit-text-fill-color: #ffffff !important;
@@ -57,17 +88,66 @@ input:-webkit-autofill:active {
 
 /* Premium Physical Micro-Interactions */
 button, a, [role="button"] {
-    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 button:active, a:active, [role="button"]:active {
-    transform: scale(0.96) translateY(1px);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+    transform: scale(0.97) translateY(1px);
+}
+
+button:disabled {
+    cursor: not-allowed;
 }
 
 /* Custom cursor default hide on desktop */
 @media (min-width: 768px) {
     body {
         cursor: default;
+    }
+}
+
+/* Respect users who ask the OS for less motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* The résumé is printed from a dedicated copy rendered under <body> */
+#print-root {
+    display: none;
+}
+
+@media print {
+    @page {
+        margin: 14mm;
+    }
+
+    html,
+    body,
+    #root {
+        background: #fff !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+    }
+
+    body > *:not(#print-root) {
+        display: none !important;
+    }
+
+    #print-root {
+        display: block !important;
+        color: #000;
+        font-size: 11pt;
+    }
+
+    #print-root a {
+        color: #000;
+        text-decoration: none;
     }
 }

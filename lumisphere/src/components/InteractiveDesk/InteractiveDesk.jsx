@@ -28,7 +28,8 @@ import { AudioEngine } from "../../utils/AudioEngine";
 export default function InteractiveDesk() {
     // Modal states
     const [activeModal, setActiveModal] = useState(null);
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    // Phones start with the dock tucked away so it doesn't cover the login card.
+    const [isCollapsed, setIsCollapsed] = useState(() => typeof window !== "undefined" && window.innerWidth < 1024);
     
     // Object-specific physics toggles
     const [steamActive, setSteamActive] = useState(true);
@@ -81,7 +82,7 @@ export default function InteractiveDesk() {
                 initial={{ opacity: 0, x: -80 }}
                 animate={{
                     opacity: 1,
-                    x: isCollapsed ? "calc(-100% - 12px)" : 0,
+                    x: isCollapsed ? "calc(-100% - 8px)" : 0,
                 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
                 className="relative flex items-center"
@@ -109,7 +110,7 @@ export default function InteractiveDesk() {
                             icon={BookOpen}
                             glowColor="rgba(251, 191, 36, 0.4)"
                             onClick={handleObjectClick}
-                            className="w-16 h-16 !p-1.5"
+                            className="w-[76px] min-h-16 !p-1.5"
                         >
                             <div className="relative w-8 h-9 bg-amber-950/80 rounded-md border border-amber-600/60 shadow-sm flex items-center justify-center">
                                 <BookOpen className="w-4 h-4 text-amber-400" />
@@ -127,7 +128,7 @@ export default function InteractiveDesk() {
                             badgeText={mugSipCount > 0 ? `Sips: ${mugSipCount}` : null}
                             glowColor="rgba(245, 158, 11, 0.4)"
                             onClick={handleObjectClick}
-                            className="w-16 h-16 !p-1.5"
+                            className="w-[76px] min-h-16 !p-1.5"
                         >
                             <div className="relative flex flex-col items-center">
                                 <CoffeeMugSteam active={steamActive} density={0.6} />
@@ -147,7 +148,7 @@ export default function InteractiveDesk() {
                             icon={Keyboard}
                             glowColor="rgba(192, 132, 252, 0.4)"
                             onClick={handleObjectClick}
-                            className="w-16 h-16 !p-1.5"
+                            className="w-[76px] min-h-16 !p-1.5"
                         >
                             <div className="w-9 h-7 bg-purple-950/80 rounded-md border border-purple-500/60 shadow-sm flex items-center justify-center relative">
                                 <Keyboard className="w-4 h-4 text-purple-400" />
@@ -164,7 +165,7 @@ export default function InteractiveDesk() {
                             icon={Mouse}
                             glowColor="rgba(56, 189, 248, 0.4)"
                             onClick={handleObjectClick}
-                            className="w-16 h-16 !p-1.5"
+                            className="w-[76px] min-h-16 !p-1.5"
                         >
                             <div className={`relative w-6 h-8 rounded-t-full rounded-b-md border transition-all flex flex-col items-center justify-start pt-1 ${
                                 mouseLaserActive ? "bg-sky-950 border-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.8)]" : "bg-neutral-900 border-neutral-700"
@@ -182,7 +183,7 @@ export default function InteractiveDesk() {
                             icon={StickyNote}
                             glowColor="rgba(234, 179, 8, 0.4)"
                             onClick={handleObjectClick}
-                            className="w-16 h-16 !p-1.5"
+                            className="w-[76px] min-h-16 !p-1.5"
                         >
                             <div className="w-8 h-8 bg-yellow-400/90 rounded-md border border-yellow-300 shadow-sm flex items-center justify-center transform -rotate-3">
                                 <StickyNote className="w-4 h-4 text-neutral-950" />
@@ -198,7 +199,7 @@ export default function InteractiveDesk() {
                             icon={Edit3}
                             glowColor="rgba(52, 211, 153, 0.4)"
                             onClick={handleObjectClick}
-                            className="w-16 h-16 !p-1.5"
+                            className="w-[76px] min-h-16 !p-1.5"
                         >
                             <div className="w-3 h-9 bg-gradient-to-b from-emerald-500 to-emerald-800 rounded-full border border-emerald-300 shadow-sm flex flex-col items-center justify-between py-0.5 transform rotate-12">
                                 <div className="w-1.5 h-1.5 bg-emerald-200 rounded-full" />
@@ -214,7 +215,7 @@ export default function InteractiveDesk() {
                             icon={HardDrive}
                             glowColor="rgba(56, 189, 248, 0.4)"
                             onClick={handleObjectClick}
-                            className="w-16 h-16 !p-1.5"
+                            className="w-[76px] min-h-16 !p-1.5"
                         >
                             <div className="w-8 h-6 bg-sky-950/80 rounded border border-sky-500/80 shadow-sm flex items-center justify-between px-1 relative">
                                 <div className="w-2 h-3.5 bg-neutral-300 rounded-sm" />
@@ -231,7 +232,7 @@ export default function InteractiveDesk() {
                             icon={Bookmark}
                             glowColor="rgba(251, 191, 36, 0.4)"
                             onClick={handleObjectClick}
-                            className="w-16 h-16 !p-1.5"
+                            className="w-[76px] min-h-16 !p-1.5"
                         >
                             <div className="relative flex flex-col gap-0.5 items-center">
                                 <div className="w-8 h-2 bg-amber-700/80 rounded border border-amber-500" />
@@ -249,7 +250,7 @@ export default function InteractiveDesk() {
                             icon={Monitor}
                             glowColor="rgba(56, 189, 248, 0.4)"
                             onClick={handleObjectClick}
-                            className="w-16 h-16 !p-1.5"
+                            className="w-[76px] min-h-16 !p-1.5"
                         >
                             <div className="w-9 h-7 bg-neutral-900 rounded-md border border-sky-400/80 shadow-sm flex items-center justify-center relative">
                                 <Monitor className="w-4 h-4 text-sky-400" />
@@ -262,8 +263,9 @@ export default function InteractiveDesk() {
                 {/* Panel Collapse Toggle Handle */}
                 <button
                     onClick={() => setIsCollapsed(!isCollapsed)}
-                    className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-10 bg-neutral-900 border border-amber-500/40 text-amber-400 rounded-r-lg flex items-center justify-center hover:bg-neutral-800 shadow-lg z-50 transition cursor-pointer"
+                    className="absolute -right-7 top-1/2 -translate-y-1/2 w-7 h-12 bg-neutral-900 border border-amber-500/40 text-amber-400 rounded-r-lg flex items-center justify-center hover:bg-neutral-800 shadow-lg z-50 transition cursor-pointer"
                     title={isCollapsed ? "Expand Desk Rig" : "Collapse Desk Rig"}
+                    aria-label={isCollapsed ? "Expand desk rig" : "Collapse desk rig"}
                 >
                     {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
                 </button>

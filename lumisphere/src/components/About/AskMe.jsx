@@ -1,9 +1,10 @@
 import { Fragment, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, ArrowUp, RotateCcw, Square, Volume2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, ArrowUp, RotateCcw, Sparkles, Square, Volume2 } from "lucide-react";
 import { answer, starterQuestions } from "../../utils/askMe";
 import { profile, projects } from "../../data/profile";
 import { AudioEngine } from "../../utils/AudioEngine";
+import Modal from "./Modal";
 
 const sectionLabels = {
     experience: "Experience",
@@ -143,16 +144,16 @@ function Reply({ msg, live, onDone, onAsk, onOpenProject, onNavigate, speakingId
     );
 }
 
-export default function AskMe({ onOpenProject, onNavigate }) {
-    const [messages, setMessages] = useState([]);
+export default function AskMe({ messages, setMessages, onClose, onOpenProject, onNavigate }) {
     const [input, setInput] = useState("");
     const [typingKey, setTypingKey] = useState(null);
     const [speakingId, setSpeakingId] = useState(null);
     const [hint, setHint] = useState(0);
-    const listRef = useRef(null);
-    const nextKey = useRef(0);
+    const endRef = useRef(null);
+    const inputRef = useRef(null);
+    const nextKey = useRef(messages.length);
 
-    // Rotate example questions in the placeholder while the box is empty.
+    // Rotate example questions in the placeholder while the chat is empty.
     useEffect(() => {
         if (messages.length) return;
         const t = setInterval(() => setHint((h) => (h + 1) % starterQuestions.length), 3200);
@@ -160,11 +161,14 @@ export default function AskMe({ onOpenProject, onNavigate }) {
     }, [messages.length]);
 
     useEffect(() => {
-        const el = listRef.current;
-        if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+        endRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
     }, [messages, typingKey]);
 
-    useEffect(() => () => canSpeak && window.speechSynthesis.cancel(), []);
+    useEffect(() => {
+        // Phones skip autofocus so the keyboard doesn't cover the starter questions.
+        if (window.matchMedia("(min-width: 1024px)").matches) inputRef.current?.focus();
+        return () => canSpeak && window.speechSynthesis.cancel();
+    }, []);
 
     const ask = (q) => {
         const question = q.trim();
@@ -193,93 +197,107 @@ export default function AskMe({ onOpenProject, onNavigate }) {
         setSpeakingId(null);
         setTypingKey(null);
         setMessages([]);
+        inputRef.current?.focus();
     };
 
     return (
-        <section aria-label="Ask me anything" className="rounded-2xl border border-amber-400/25 bg-gradient-to-b from-amber-400/[0.07] to-black/30 overflow-hidden">
-            <header className="flex items-center justify-between gap-2 px-4 pt-3.5 pb-2">
-                <div>
-                    <h3 className="text-[14px] font-semibold text-white">Ask me anything</h3>
-                    <p className="text-[12px] text-zinc-400">Answers in my own words — no AI service.</p>
+        <Modal
+            onClose={onClose}
+            title="Ask Lumi AI about Varun"
+            maxWidth="max-w-2xl"
+            z="z-[290]"
+            footer={
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        ask(input);
+                    }}
+                    className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/40 focus-within:border-amber-400/60 pl-4 pr-1.5 py-1.5"
+                >
+                    <input
+                        ref={inputRef}
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        aria-label="Ask a question about Varun"
+                        placeholder={messages.length ? "Ask a follow-up…" : starterQuestions[hint]}
+                        className="flex-1 min-w-0 bg-transparent outline-none focus-visible:outline-none text-base sm:text-[14px] text-white placeholder-zinc-500"
+                        autoComplete="off"
+                    />
+                    <button
+                        type="submit"
+                        disabled={!input.trim() || typingKey !== null}
+                        aria-label="Send question"
+                        className="w-10 h-10 shrink-0 rounded-xl bg-amber-400 text-zinc-950 flex items-center justify-center hover:bg-amber-300 disabled:opacity-40"
+                    >
+                        <ArrowUp size={18} />
+                    </button>
+                </form>
+            }
+        >
+            <header className="flex items-center gap-3 pr-12 pb-4 mb-4 border-b border-white/10">
+                <span className="relative shrink-0 w-11 h-11 rounded-xl bg-gradient-to-br from-amber-300 to-orange-500 p-px">
+                    <span className="flex w-full h-full items-center justify-center rounded-[11px] bg-zinc-950 text-amber-300">
+                        <Sparkles size={18} />
+                    </span>
+                    <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2 border-zinc-900" />
+                </span>
+                <div className="min-w-0 flex-1">
+                    <h2 className="text-[16px] font-semibold text-white">Lumi AI · about {profile.shortName}</h2>
+                    <p className="text-[12.5px] text-zinc-400">Answers in Varun's own words, written by him. Runs offline.</p>
                 </div>
                 {messages.length > 0 && (
-                    <button onClick={reset} aria-label="Start over" title="Start over" className="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10">
-                        <RotateCcw size={14} />
+                    <button onClick={reset} aria-label="Start over" title="Start over" className="w-9 h-9 rounded-lg flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10">
+                        <RotateCcw size={15} />
                     </button>
                 )}
             </header>
 
-            <AnimatePresence initial={false}>
-                {messages.length > 0 && (
-                    <motion.div
-                        ref={listRef}
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        className="max-h-[340px] lg:max-h-[380px] overflow-y-auto overscroll-contain px-4 py-2 space-y-3"
-                        aria-live="polite"
-                    >
-                        {messages.map((m) =>
-                            m.role === "user" ? (
-                                <div key={m.key} className="flex justify-end">
-                                    <span className="max-w-[85%] rounded-2xl rounded-tr-md bg-amber-400 text-zinc-950 px-3.5 py-2 text-[13.5px] font-medium">{m.text}</span>
-                                </div>
-                            ) : (
-                                <Reply
-                                    key={m.key}
-                                    msg={m}
-                                    live={m.key === typingKey}
-                                    onDone={() => setTypingKey(null)}
-                                    onAsk={ask}
-                                    onOpenProject={onOpenProject}
-                                    onNavigate={onNavigate}
-                                    speakingId={speakingId}
-                                    onSpeak={speak}
-                                />
-                            )
-                        )}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {messages.length === 0 && (
-                <div className="flex flex-wrap gap-1.5 px-4 pb-2.5">
-                    {starterQuestions.slice(0, 4).map((q) => (
-                        <button
-                            key={q}
-                            onClick={() => ask(q)}
-                            className="px-2.5 py-1 rounded-full border border-white/10 bg-white/[0.04] text-[12px] text-zinc-300 hover:text-amber-200 hover:border-amber-400/40"
-                        >
-                            {q}
-                        </button>
-                    ))}
+            {messages.length === 0 ? (
+                <div className="py-2">
+                    <p className="text-[15px] text-zinc-200 leading-relaxed">
+                        Hey 👋 Ask me anything about my work, internships, projects or plans — I'll answer the way I'd explain it in person.
+                    </p>
+                    <p className="mt-5 mb-2.5 text-[12px] font-mono uppercase tracking-wider text-zinc-500">Try one of these</p>
+                    <div className="grid sm:grid-cols-2 gap-2">
+                        {starterQuestions.map((q) => (
+                            <button
+                                key={q}
+                                onClick={() => ask(q)}
+                                className="group flex items-center justify-between gap-2 text-left rounded-xl border border-white/10 bg-white/[0.03] hover:border-amber-400/40 hover:bg-amber-400/[0.06] px-3.5 py-3 text-[13.5px] text-zinc-200"
+                            >
+                                {q}
+                                <ArrowRight size={14} className="text-zinc-500 group-hover:text-amber-300 shrink-0" />
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <div className="space-y-4" aria-live="polite">
+                    {messages.map((m) =>
+                        m.role === "user" ? (
+                            <div key={m.key} className="flex justify-end">
+                                <span className="max-w-[85%] rounded-2xl rounded-tr-md bg-amber-400 text-zinc-950 px-3.5 py-2 text-[14px] font-medium">{m.text}</span>
+                            </div>
+                        ) : (
+                            <Reply
+                                key={m.key}
+                                msg={m}
+                                live={m.key === typingKey}
+                                onDone={() => setTypingKey(null)}
+                                onAsk={ask}
+                                onOpenProject={onOpenProject}
+                                onNavigate={(id) => {
+                                    onClose();
+                                    onNavigate(id);
+                                }}
+                                speakingId={speakingId}
+                                onSpeak={speak}
+                            />
+                        )
+                    )}
+                    <div ref={endRef} />
                 </div>
             )}
-
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    ask(input);
-                }}
-                className="flex items-center gap-2 m-3 mt-1 rounded-xl border border-white/10 bg-black/40 focus-within:border-amber-400/60 pl-3.5 pr-1.5 py-1.5"
-            >
-                <input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    aria-label="Ask Varun a question"
-                    placeholder={messages.length ? "Ask a follow-up…" : starterQuestions[hint]}
-                    className="flex-1 min-w-0 bg-transparent outline-none text-base lg:text-[13.5px] text-white placeholder-zinc-500"
-                    autoComplete="off"
-                />
-                <button
-                    type="submit"
-                    disabled={!input.trim() || typingKey !== null}
-                    aria-label="Send question"
-                    className="w-8 h-8 shrink-0 rounded-lg bg-amber-400 text-zinc-950 flex items-center justify-center hover:bg-amber-300 disabled:opacity-40"
-                >
-                    <ArrowUp size={16} />
-                </button>
-            </form>
-        </section>
+        </Modal>
     );
 }

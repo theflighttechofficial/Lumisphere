@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -6,7 +6,6 @@ import {
     Trophy,
     BookOpen,
     Calendar,
-    Briefcase,
     GraduationCap,
     Download,
     Copy,
@@ -14,14 +13,7 @@ import {
     X,
     ExternalLink,
     Sparkles,
-    Search,
-    ChevronRight,
-    Code2,
-    FileText,
-    Printer,
-    Layers,
-    Shield,
-    Star
+    Printer
 } from "lucide-react";
 import { AudioEngine } from "../../utils/AudioEngine";
 import { certifications, achievements, journey, plainTextResume } from "../../data/profile";

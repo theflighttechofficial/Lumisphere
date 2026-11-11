@@ -7,17 +7,27 @@ import { X } from "lucide-react";
 // Closes on Esc and backdrop click, and returns focus to whatever opened it.
 export default function Modal({ onClose, title, children, footer, maxWidth = "max-w-2xl", z = "z-[300]" }) {
     const panelRef = useRef(null);
+    const onCloseRef = useRef(onClose);
+    useEffect(() => {
+        onCloseRef.current = onClose;
+    });
 
+    // Runs once per open: parents re-render with new onClose functions, which must not steal focus.
     useEffect(() => {
         const opener = document.activeElement;
-        const onKey = (e) => e.key === "Escape" && onClose();
+        // With stacked dialogs (chat → project), Esc closes only the top-most one.
+        const onKey = (e) => {
+            if (e.key !== "Escape") return;
+            const dialogs = document.querySelectorAll('[role="dialog"]');
+            if (dialogs[dialogs.length - 1] === panelRef.current) onCloseRef.current();
+        };
         window.addEventListener("keydown", onKey);
-        panelRef.current?.focus();
+        if (!panelRef.current?.contains(document.activeElement)) panelRef.current?.focus();
         return () => {
             window.removeEventListener("keydown", onKey);
             opener?.focus?.();
         };
-    }, [onClose]);
+    }, []);
 
     return createPortal(
         <motion.div

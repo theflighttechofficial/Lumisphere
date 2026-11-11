@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion";
 import {
     Award, Briefcase, CheckCircle2, Compass, Cpu, FileText, LayoutGrid, LogOut, Mail, MapPin, Palette,
-    Send, Sparkles, Sun, Volume2, VolumeX,
+    Send, Sparkles, Sun, Volume2, VolumeX, ArrowRight,
 } from "lucide-react";
 import { useLight } from "../../context/LightContext";
 import { AudioEngine } from "../../utils/AudioEngine";
@@ -60,6 +60,8 @@ export default function AboutPage() {
     const [selectedProject, setSelectedProject] = useState(null);
     const [snippet, setSnippet] = useState(null);
     const [resumeOpen, setResumeOpen] = useState(false);
+    const [askOpen, setAskOpen] = useState(false);
+    const [askMessages, setAskMessages] = useState([]);
     const [toast, setToast] = useState(null);
     const [leaving, setLeaving] = useState(false);
 
@@ -194,7 +196,22 @@ export default function AboutPage() {
                             </div>
                         </div>
 
-                        <AskMe onOpenProject={openProject} onNavigate={navigate} />
+                        <button
+                            onClick={() => {
+                                AudioEngine.playUISelect();
+                                setAskOpen(true);
+                            }}
+                            className="group relative w-full flex items-center gap-3 rounded-2xl border border-amber-400/30 bg-gradient-to-r from-amber-400/[0.12] to-amber-400/[0.03] hover:from-amber-400/20 px-4 py-3 text-left shadow-[0_0_24px_rgba(251,191,36,0.08)]"
+                        >
+                            <span className="shrink-0 w-9 h-9 rounded-xl bg-amber-400 text-zinc-950 flex items-center justify-center">
+                                <Sparkles size={17} />
+                            </span>
+                            <span className="min-w-0 flex-1">
+                                <span className="block text-[14px] font-semibold text-white">Ask Lumi AI about me</span>
+                                <span className="block text-[12px] text-zinc-400 truncate">Projects, internships, plans — in my words</span>
+                            </span>
+                            <ArrowRight size={16} className="shrink-0 text-amber-300 group-hover:translate-x-0.5 transition-transform" />
+                        </button>
 
                         <div className="grid grid-cols-2 gap-2">
                             <button onClick={() => setResumeOpen(true)} className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-amber-400 to-amber-500 text-zinc-950 py-2.5 text-[13px] font-semibold hover:brightness-110">
@@ -351,6 +368,16 @@ export default function AboutPage() {
                     />
                 )}
                 {snippet && <CodeModal key="code" snippet={snippet} onClose={() => setSnippet(null)} onToast={showToast} />}
+                {askOpen && (
+                    <AskMe
+                        key="ask"
+                        messages={askMessages}
+                        setMessages={setAskMessages}
+                        onClose={() => setAskOpen(false)}
+                        onOpenProject={openProject}
+                        onNavigate={navigate}
+                    />
+                )}
                 {resumeOpen && <ResumeModal key="resume" onClose={() => setResumeOpen(false)} onToast={showToast} />}
             </AnimatePresence>
 

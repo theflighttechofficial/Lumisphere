@@ -39,7 +39,7 @@ Toggling the lamp ignites a dynamic WebGL volumetric lighting engine featuring a
 * **☕ Animated Coffee Mug Steam (`CoffeeMugSteam`)**: Atmospheric steam particle animation rising from the desk coffee mug.
 
 ### 4. 💬 Ask Me Anything
-* First-person chat in the sidebar (`AskMe.jsx` + `src/utils/askMe.js`): hand-written answers built from `src/data/profile.js`, typed out live, with tappable project cards, section jumps, follow-up questions and optional read-aloud. Fully offline.
+* First-person chat pop-up opened from the "Ask Lumi AI about me" button under my name (`AskMe.jsx` + `src/utils/askMe.js`): hand-written answers built from `src/data/profile.js`, typed out live, with tappable project cards, section jumps, follow-up questions and optional read-aloud. Fully offline.
 
 ### 5. 🔊 Pure Procedural Web Audio Engine (Zero External Audio Files)
 * **100% Code-Synthesized Audio**: Built completely using the native **Web Audio API** (`AudioEngine.js`) without any external MP3/WAV audio assets:
@@ -119,7 +119,6 @@ lumisphere/
 │   │   │   ├── Lamp.jsx            # Lamp housing, tilt physics, flicker controller
 │   │   │   └── PullChain.jsx       # Spring-physics pull chain mechanism
 │   │   ├── Login/
-│   │   │   ├── Header.jsx          # Top brand header banner
 │   │   │   └── LoginCard.jsx       # Interactive authentication / welcome card
 │   │   └── UI/
 │   │       ├── AudioToggle.jsx     # Ambient audio toggle control button
@@ -129,7 +128,7 @@ lumisphere/
 │   │       ├── GlassTiltCard.jsx   # 3D parallax tilt card container
 │   │       ├── InputField.jsx      # Glowing input component
 │   │       ├── LampReflection.jsx  # Light reflection effect
-│   │       ├── LumiAIModal.jsx     # Conversational AI assistant modal window
+│   │       ├── SecretModalsHost.jsx    # Easter-egg modals (arcade, dev room, achievements)
 │   │       ├── MagneticCustomCursor.jsx # Magnetic glowing mouse cursor
 │   │       ├── NoiseLayer.jsx      # SVG film grain/noise overlay
 │   │       ├── PremiumButton.jsx   # Dynamic glowing action button
@@ -146,7 +145,7 @@ lumisphere/
 │   │   └── LoginPage.jsx           # Welcome & authentication page entry
 │   ├── utils/
 │   │   ├── AudioEngine.js          # Procedural Web Audio API synthesizer engine
-│   │   ├── LumiAI.js               # AI knowledge base & query response engine
+│   │   ├── askMe.js                # First-person answer engine for the Ask Lumi AI chat
 │   │   └── SecretsManager.js       # Secret code & easter egg unlock engine
 │   ├── App.jsx                     # Core application router & main layout
 │   ├── global.css                  # Custom CSS styles, keyframes, & Tailwind directives

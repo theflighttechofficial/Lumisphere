@@ -53,12 +53,12 @@ Toggling the lamp ignites a dynamic WebGL volumetric lighting engine with atmosp
   * `/clear` – Clear terminal history log
 
 ### 6. 📊 Developer Portfolio & Career Showcase
-* **Interactive Navigation Tabs**:
-  * **Overview / Diagnostics**: Real-time halogen telemetry logs and live metrics (CGPA 7.7/10, 6+ major projects, 2 industry internships).
-  * **Experience**: Detailed summaries of internships at **Larsen & Toubro Ltd. (L&T)** and **Neoshaan Technologies**.
-  * **Skills Matrix**: Categorized skill tags across AI/ML (YOLOv8, RAG, PyTorch, scikit-learn), Web Development (React, Vite, Tailwind CSS, Node.js), Languages (Python, C/C++, SQL, JS), and Tools/Databases (MongoDB, Git, Linux).
-  * **Projects Gallery**: Interactive cards with links to live repositories (Road-AI, HomeFinder, Invisibility Cloak, AgriYield AI, Smart File Organiser).
-  * **Career Roadmap**: Interactive multi-stage timeline detailing education, technical certifications (IBM, Microsoft), research presentations, and graduate goals.
+* **Single source of truth**: every personal detail lives in [`src/data/profile.js`](lumisphere/src/data/profile.js). Portfolio sections, the résumé, the terminal, the Ask Lumi AI chat and the desk props all read from it.
+* **Sections**: Overview (impact numbers, featured work, live terminal), Experience (L&T, Neoshaan, education, leadership), Projects (25 projects, filterable and searchable, with detail sheets), Skills, Awards & Research, Journey and Contact.
+* **Résumé**: printable document view (Save as PDF), plain-text copy, and a gallery view.
+* **Entry**: pull the chain (or focus it and press Enter), then sign in with a name or continue as a guest. The intro plays once per session; add `?skipintro` to skip it.
+* **Ask Lumi AI about me**: a button under my name opens a chat pop-up that answers in first person from `src/utils/askMe.js` (offline, no AI service), with project links, follow-ups and read-aloud.
+* **Responsive**: phone, tablet and desktop layouts; the WebGL hologram loads only on desktop.
 
 ---
 
@@ -95,10 +95,9 @@ lumisphere/
 │   │   │   └── BulbGlow.jsx    # SVG & CSS radial halogen glow layers
 │   │   ├── Login/
 │   │   │   ├── LoginCard.jsx   # Interactive authentication / welcome card
-│   │   │   └── Header.jsx      # Top brand header banner
 │   │   └── UI/
 │   │       ├── AudioToggle.jsx # Ambient audio toggle control button
-│   │       ├── Drone.jsx       # Floating helper drone companion
+│   │       ├── SecretModalsHost.jsx # Easter-egg modals (arcade, dev room, achievements)
 │   │       ├── FloorReflection.jsx # Lighting reflection on floor surface
 │   │       ├── GlassBorder.jsx # Glassmorphic border container
 │   │       ├── InputField.jsx  # Glowing input component
@@ -176,7 +175,7 @@ Make sure you have **Node.js** (v18.0.0 or higher) and **npm** installed on your
 * **GitHub**: [@theflighttechofficial](https://github.com/theflighttechofficial)
 * **LinkedIn**: [varun-vaibhav-s-11b69a2ba](https://linkedin.com/in/varun-vaibhav-s-11b69a2ba)
 * **Hashnode**: [theflighttechlabs.hashnode.dev](https://theflighttechlabs.hashnode.dev)
-* **Experience**: Former Data Analyst Intern at **Larsen & Toubro Construction Analytics** (Pioneered PDF RAG Spec Extractor & SLD Diagram OCR, 91% token cost reduction, 1,200+ pgs daily).
+* **Experience**: Data Analyst Intern at **Larsen & Toubro Construction** (hybrid RAG tender-spec extractor: 3–4 days → ~15 min per run, $22 → $2 per run; Scan2Sheet OCR for AutoCAD SLDs).
 * **Certifications**: 8 Verified Certifications including Stanford Machine Learning (Andrew Ng), Google Prompting Essentials, HackerRank Python & SQL Gold Badges (5★), Cisco Packet Tracer, IBM & Microsoft ML.
 * **Target**: 1-Year Placement (May 2028 - May 2029) -> MS in CS/Data Science @ Arizona State University (Fall 2029).
 

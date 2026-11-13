@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     Sun,
@@ -14,11 +14,10 @@ import {
     SlidersHorizontal,
     X,
     GripVertical,
-    Activity,
-    Compass,
 } from "lucide-react";
 import { useLight } from "../../context/LightContext";
 import { AudioEngine } from "../../utils/AudioEngine";
+import useMobile from "../../hooks/useMobile";
 
 export default function EnvironmentControlPanel() {
     const {
@@ -34,6 +33,7 @@ export default function EnvironmentControlPanel() {
     } = useLight();
 
     const [isExpanded, setIsExpanded] = useState(false);
+    const isDesktop = !useMobile(768);
     const [currentTimeStr, setCurrentTimeStr] = useState("");
 
     // Live clock string
@@ -66,17 +66,19 @@ export default function EnvironmentControlPanel() {
     const weatherStatus = getWeatherStatus();
 
     return (
+        // Phones: a single icon button in the top-left corner, clear of the login card and lamp hint.
+        // Desktop: the full draggable pill in the bottom-left corner.
         <motion.div
-            drag
+            drag={isDesktop}
             dragMomentum={false}
-            className="fixed bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-3 sm:bottom-6 sm:left-6 z-[220] pointer-events-auto select-none max-w-[calc(100vw-1.5rem)]"
+            className="fixed top-[max(1rem,env(safe-area-inset-top))] left-4 md:top-auto md:bottom-6 md:left-6 z-[220] pointer-events-auto select-none max-w-[calc(100vw-2rem)]"
         >
             {/* Draggable Floating Widget Pill */}
             <motion.div
                 whileHover={{ scale: 1.02 }}
                 className="
-                    flex items-center gap-2.5 p-2 px-3.5
-                    rounded-2xl
+                    flex items-center gap-2.5 p-0.5 md:p-2 md:px-3.5
+                    rounded-xl md:rounded-2xl
                     bg-zinc-950/85
                     border border-white/20
                     backdrop-blur-xl
@@ -85,7 +87,7 @@ export default function EnvironmentControlPanel() {
                 "
             >
                 {/* Drag Handle */}
-                <div className="cursor-grab active:cursor-grabbing opacity-50 hover:opacity-100 transition-opacity">
+                <div className="hidden md:block cursor-grab active:cursor-grabbing opacity-50 hover:opacity-100 transition-opacity">
                     <GripVertical className="w-4 h-4 text-zinc-400" />
                 </div>
 
@@ -103,7 +105,7 @@ export default function EnvironmentControlPanel() {
                 </div>
 
                 {/* Quick Switcher Buttons */}
-                <div className="flex items-center gap-1">
+                <div className="hidden md:flex items-center gap-1">
                     <button
                         onClick={() => {
                             AudioEngine.playUISelect();
@@ -184,9 +186,11 @@ export default function EnvironmentControlPanel() {
                         setIsExpanded(!isExpanded);
                     }}
                     onMouseEnter={() => AudioEngine.playUIHover()}
-                    className={`p-1.5 rounded-xl border transition-all cursor-pointer ml-1 ${isExpanded ? "bg-violet-600/40 border-violet-500/60 text-violet-300 shadow-[0_0_12px_rgba(139,92,246,0.4)]" : "bg-white/5 border-white/10 text-zinc-400 hover:text-white"}`}
+                    aria-label={isExpanded ? "Close environment controls" : "Open environment controls"}
+                    aria-expanded={isExpanded}
+                    className={`p-2.5 md:p-1.5 rounded-xl border transition-all cursor-pointer md:ml-1 ${isExpanded ? "bg-violet-600/40 border-violet-500/60 text-violet-300 shadow-[0_0_12px_rgba(139,92,246,0.4)]" : "bg-white/5 border-white/10 text-zinc-400 hover:text-white"}`}
                 >
-                    <SlidersHorizontal className="w-3.5 h-3.5" />
+                    <SlidersHorizontal className="w-4 h-4 md:w-3.5 md:h-3.5" />
                 </button>
             </motion.div>
 
@@ -195,12 +199,12 @@ export default function EnvironmentControlPanel() {
                 {isExpanded && (
                     <motion.div
                         initial={{ opacity: 0, y: 12, scale: 0.95 }}
-                        animate={{ opacity: 1, y: -10, scale: 1 }}
+                        animate={{ opacity: 1, y: isDesktop ? -10 : 0, scale: 1 }}
                         exit={{ opacity: 0, y: 12, scale: 0.95 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className="
-                            absolute bottom-full left-0 mb-2
-                            w-72 sm:w-80
+                            absolute top-full mt-2 md:top-auto md:mt-0 md:bottom-full md:mb-2 left-0
+                            w-72 sm:w-80 max-w-[calc(100vw-2rem)]
                             p-4
                             rounded-3xl
                             bg-zinc-950/90

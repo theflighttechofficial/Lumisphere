@@ -9,6 +9,7 @@ import EnvironmentControlPanel from "../components/UI/EnvironmentControlPanel";
 import InteractiveDesk from "../components/InteractiveDesk/InteractiveDesk";
 
 import useSceneStartup from "../hooks/useSceneStartup";
+import useMobile from "../hooks/useMobile";
 import { useLight } from "../context/LightContext";
 
 // The portfolio only appears after the lamp is lit, so its code loads in the background meanwhile.
@@ -18,6 +19,7 @@ const AboutPage = lazy(loadAboutPage);
 export default function LoginPage() {
     const { isLightOn, isLoggedIn, toggleLight } = useLight();
     const sceneReady = useSceneStartup();
+    const isMobile = useMobile(1024);
     const containerRef = useRef(null);
 
     // Prefetch the portfolio chunk as soon as the light comes on.
@@ -73,8 +75,8 @@ export default function LoginPage() {
             {/* WebGL GPU Simulation Backdrop */}
             <SimulationCanvas />
 
-            {/* Lamp */}
-            <Lamp />
+            {/* Lamp — unmounted on phones once the portfolio covers it (it is parked off-screen there) */}
+            {!(isLoggedIn && isMobile) && <Lamp />}
 
             {/* First-visit cue: pull the chain, or tap this to switch the lamp on */}
             <AnimatePresence>

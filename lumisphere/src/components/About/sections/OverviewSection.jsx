@@ -92,7 +92,7 @@ export default function OverviewSection({ viewerName, college, onNavigate, onOpe
 
             {/* Now + terminal */}
             <div className="grid lg:grid-cols-5 gap-4">
-                <Card className="lg:col-span-2 p-5">
+                <Card className="min-w-0 lg:col-span-2 p-5">
                     <h3 className="flex items-center gap-2 text-[15px] font-semibold text-white">
                         <span className="relative flex w-2 h-2">
                             <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-60 animate-ping" />
@@ -112,7 +112,7 @@ export default function OverviewSection({ viewerName, college, onNavigate, onOpe
                         ))}
                     </ul>
                 </Card>
-                <div className="lg:col-span-3">
+                <div className="min-w-0 lg:col-span-3">
                     <Terminal viewerName={viewerName} college={college} {...terminalProps} />
                 </div>
             </div>

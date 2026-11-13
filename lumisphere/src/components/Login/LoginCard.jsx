@@ -84,7 +84,7 @@ export default function LoginCard() {
             setTimeout(() => {
                 AudioEngine.playDroneScan();
             }, 150);
-        }, data.viewerName ? 1600 : 700);
+        }, data.viewerName ? 900 : 150);
     };
 
     const onSubmit = (data) => enterPortfolio(data);

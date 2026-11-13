@@ -130,12 +130,12 @@ export default function AboutPage() {
         <motion.div
             ref={scrollRef}
             initial={{ opacity: 0 }}
-            animate={{ opacity: leaving ? 0 : 1, filter: leaving ? "blur(6px)" : "blur(0px)" }}
+            animate={leaving ? { opacity: 0, filter: "blur(6px)" } : { opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6 }}
-            className="fixed inset-0 z-50 overflow-y-auto overflow-x-clip lg:overflow-y-hidden bg-black/75 lg:bg-black/45 backdrop-blur-md"
+            transition={{ duration: isDesktop ? 0.6 : 0.3 }}
+            className="fixed inset-0 z-50 overflow-y-auto overflow-x-clip lg:overflow-y-hidden bg-zinc-950 lg:bg-black/45 lg:backdrop-blur-md"
         >
-            <div aria-hidden className="pointer-events-none fixed inset-0 overflow-hidden">
+            <div aria-hidden className="hidden lg:block pointer-events-none fixed inset-0 overflow-hidden">
                 <div className="absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-amber-500/10 blur-[160px]" />
                 <div className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-violet-500/10 blur-[180px]" />
             </div>
@@ -149,7 +149,7 @@ export default function AboutPage() {
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.7, ease: "easeOut" }}
-                    className="relative lg:w-[340px] xl:w-[380px] shrink-0 lg:h-full lg:overflow-y-auto scrollbar-none rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-950/90 via-zinc-900/70 to-zinc-950/90 backdrop-blur-2xl shadow-2xl"
+                    className="relative lg:w-[340px] xl:w-[380px] shrink-0 lg:h-full lg:overflow-y-auto scrollbar-none rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-950/90 via-zinc-900/70 to-zinc-950/90 lg:backdrop-blur-2xl shadow-2xl"
                 >
                     <NoiseLayer />
                     <div className="relative flex flex-col gap-5 p-5 sm:p-6 lg:min-h-full">
@@ -311,13 +311,13 @@ export default function AboutPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
-                    className="relative flex-1 min-w-0 lg:h-full flex flex-col rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-950/90 via-zinc-900/75 to-zinc-950/90 backdrop-blur-3xl shadow-2xl lg:overflow-hidden"
+                    className="relative flex-1 min-w-0 lg:h-full flex flex-col rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-950/90 via-zinc-900/75 to-zinc-950/90 lg:backdrop-blur-3xl shadow-2xl lg:overflow-hidden"
                 >
                     <NoiseLayer />
                     <nav
                         ref={navRef}
                         aria-label="Portfolio sections"
-                        className="sticky top-0 lg:static z-20 flex gap-1 overflow-x-auto scrollbar-none p-2 sm:p-3 border-b border-white/10 bg-zinc-950/90 lg:bg-transparent backdrop-blur-xl rounded-t-3xl"
+                        className="sticky top-0 lg:static z-20 flex gap-1 overflow-x-auto scrollbar-none p-2 sm:p-3 border-b border-white/10 bg-zinc-950 lg:bg-transparent lg:backdrop-blur-xl rounded-t-3xl"
                     >
                         {SECTIONS.map(({ id, label, icon: Icon }) => (
                             <button

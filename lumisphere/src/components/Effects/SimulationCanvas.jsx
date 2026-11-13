@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import useMobile from "../../hooks/useMobile";
 import * as THREE from "three";
 import { useLight } from "../../context/LightContext";
 
@@ -533,6 +534,9 @@ const SnowParticleShader = {
     `
 };
 
+// Phones get fewer particles; the effect reads the same at a fraction of the GPU cost.
+const IS_SMALL_SCREEN = typeof window !== "undefined" && window.innerWidth < 768;
+
 // --- Scene Elements Rendering Controller ---
 function SceneElements({ mouseRef }) {
     const {
@@ -568,7 +572,7 @@ function SceneElements({ mouseRef }) {
     
     // GPU Dust Particles (3000)
     const particleData = useMemo(() => {
-        const count = 3000;
+        const count = IS_SMALL_SCREEN ? 1200 : 3000;
         const positions = new Float32Array(count * 3);
         const sizes = new Float32Array(count);
         const speeds = new Float32Array(count);
@@ -610,7 +614,7 @@ function SceneElements({ mouseRef }) {
 
     // GPU Rain Drops (1200)
     const rainData = useMemo(() => {
-        const count = 1200;
+        const count = IS_SMALL_SCREEN ? 500 : 1200;
         const positions = new Float32Array(count * 3);
         const speeds = new Float32Array(count);
         const lengths = new Float32Array(count);
@@ -629,7 +633,7 @@ function SceneElements({ mouseRef }) {
 
     // GPU Snow Flakes (700)
     const snowData = useMemo(() => {
-        const count = 700;
+        const count = IS_SMALL_SCREEN ? 300 : 700;
         const positions = new Float32Array(count * 3);
         const sizes = new Float32Array(count);
         const speeds = new Float32Array(count);
@@ -928,6 +932,8 @@ function SceneElements({ mouseRef }) {
 // --- Main Simulation Canvas Component ---
 export default function SimulationCanvas() {
     const mouseRef = useRef(new THREE.Vector2(0, 0));
+    const { isLoggedIn } = useLight();
+    const isMobile = useMobile(1024);
 
     useEffect(() => {
         const handleMove = (e) => {
@@ -951,10 +957,14 @@ export default function SimulationCanvas() {
 
     return (
         <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+            {/* Phones render at ~1x pixel density without MSAA, and pause entirely while the
+                opaque portfolio sheet covers the scene — the old 3x-DPR loop starved the main thread. */}
             <Canvas
+                dpr={isMobile ? [1, 1.25] : [1, 2]}
+                frameloop={isMobile && isLoggedIn ? "never" : "always"}
                 gl={{
                     powerPreference: "high-performance",
-                    antialias: true,
+                    antialias: !isMobile,
                     alpha: false,
                     depth: false,
                     stencil: false,
